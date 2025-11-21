@@ -2,6 +2,9 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class LoginPanel extends JFrame {
 
@@ -21,7 +24,7 @@ public class LoginPanel extends JFrame {
     public LoginPanel(){
 
         setSize(700,700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setVisible(true);
         setLayout(new BorderLayout());
 
@@ -43,12 +46,27 @@ public class LoginPanel extends JFrame {
 
         add(backgroudPanel);
 
+        Login.addActionListener(e -> {
 
+        });
 
+        Exit.addActionListener(e -> {
+            closeProgram();
+        });
+
+        WindowListener windowListener = new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                closeProgram();
+            }
+        };
+        addWindowListener(windowListener);
 
         pack();
 
     }
-
+    public void closeProgram(){
+        IO.println("User closed the program");
+        System.exit(0);
+    }
 
 }
