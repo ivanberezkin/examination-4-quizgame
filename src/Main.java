@@ -1,11 +1,7 @@
-
-
-
+import GUI.LoginPanel;
 
 public class Main {
-
     static void main() {
-        IO.println("hej");
-        System.out.println("Jennifffffer");
+        LoginPanel loginPanel = new LoginPanel();
     }
 }
