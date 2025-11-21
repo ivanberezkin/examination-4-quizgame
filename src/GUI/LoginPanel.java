@@ -47,7 +47,15 @@ public class LoginPanel extends JFrame {
         add(backgroudPanel);
 
         Login.addActionListener(e -> {
-
+            String inputUsername = usernameInput.getText();
+            if(inputUsername.isEmpty()){
+                JOptionPane.showMessageDialog(LoginPanel.this,"Please enter correct username");
+            }else{
+                MenuPanel menuPanel = new MenuPanel(inputUsername);
+                setContentPane(menuPanel);
+                revalidate();
+                repaint();
+            }
         });
 
         Exit.addActionListener(e -> {
