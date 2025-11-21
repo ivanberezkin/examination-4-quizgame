@@ -11,6 +11,12 @@ public class LoginPanel extends JFrame {
     ImageIcon startImage = new ImageIcon("resources/QuizStartGame.jpg");
     JLabel backgroundImage = new JLabel(startImage);
 
+    JPanel buttonPanel = new JPanel();
+    JButton Login = new JButton("Login");
+    JButton Exit = new JButton("Exit");
+
+    JLabel usernameLabel = new JLabel("Username: ");
+    JTextField usernameInput = new JTextField(20);
 
     public LoginPanel(){
 
@@ -21,8 +27,6 @@ public class LoginPanel extends JFrame {
 
         backgroudPanel.setLayout(new BorderLayout());
         backgroundImage.setLayout(new BorderLayout());
-
-
         backgroudPanel.add(backgroundImage,BorderLayout.CENTER);
         backgroundImage.add(welcomeLabel,BorderLayout.NORTH);
 
@@ -30,7 +34,16 @@ public class LoginPanel extends JFrame {
         welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
         welcomeLabel.setForeground(Color.BLUE);
 
+        backgroundImage.add(buttonPanel, BorderLayout.SOUTH);
+        buttonPanel.add(usernameLabel);
+        buttonPanel.add(usernameInput);
+        buttonPanel.setLayout(new GridLayout(2,2));
+        buttonPanel.add(Login);
+        buttonPanel.add(Exit);
+
         add(backgroudPanel);
+
+
 
 
         pack();
