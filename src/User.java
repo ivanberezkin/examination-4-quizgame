@@ -41,10 +41,20 @@ public class User {
 
 
 
-    private void resetMatchStats() {
+    public void resetMatchStats() {
         this.score = 0;
         this.correctAnswers = 0;
         this.incorrectAnswers = 0;
     }
+
+    public void addCorrectAnswers(int points) {
+        this.correctAnswers++;
+        this.score += points;
+    }
+
+    public void addIncorrectAnswers() {
+        this.incorrectAnswers++;
+    }
+
 
 }
