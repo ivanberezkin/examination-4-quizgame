@@ -27,6 +27,20 @@ public class User {
         this.connected = true;
     }
 
+    public UUID getId() {return id;}
+    public String getUsername() {return username;}
+    public int getScore() {return score;}
+    public int getCorrectAnswers() {return correctAnswers;}
+    public int getIncorrectAnswers() {return incorrectAnswers;}
+    public UserState getState() {return state;}
+    public boolean isConnected() {return connected;}
+
+    public void setUsername(String username) {this.username = username;}
+    public void setState(UserState state) {this.state = state;}
+    public void setConnected(boolean connected) {this.connected = connected;}
+
+
+
     private void resetMatchStats() {
         this.score = 0;
         this.correctAnswers = 0;
