@@ -19,4 +19,11 @@ public class User {
     private int incorrectAnswers;
     private boolean connected;
 
+    public User(String username){
+        this.id = UUID.randomUUID();
+        this.username = username;
+        this.state = UserState.WAITING;
+        this.connected = true;
+    }
+
 }
