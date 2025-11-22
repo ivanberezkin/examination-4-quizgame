@@ -22,8 +22,15 @@ public class User {
     public User(String username){
         this.id = UUID.randomUUID();
         this.username = username;
+        resetMatchStats();
         this.state = UserState.WAITING;
         this.connected = true;
+    }
+
+    private void resetMatchStats() {
+        this.score = 0;
+        this.correctAnswers = 0;
+        this.incorrectAnswers = 0;
     }
 
 }
