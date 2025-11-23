@@ -62,7 +62,7 @@ public class MenuPanel {
         JPanel card = new JPanel();
         card.setLayout(new BorderLayout());
         card.setPreferredSize(new Dimension(200, 300));
-        card.setBackground(new Color(230, 230, 255));
+        card.setBackground(Color.GRAY);
         card.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
 
 
