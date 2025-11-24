@@ -22,6 +22,27 @@ public class ClientProtocol {
                 String username = scanner.nextLine();
                 client.sendMessage(new Message(MessageType.USERNAME, username));
             }
+
+            case USERNAME_OK -> System.out.println("Username accepted");
+
+            case USERNAME_TAKEN -> {
+                System.out.println("Username already taken, choose another username: ");
+                String username = scanner.nextLine();
+                client.sendMessage(new Message(MessageType.USERNAME, username));
+            }
+
+            case GAME_START -> {
+                // Add game logic here
+            }
+
+            case RESULT_ROUND -> {
+                // Add game logic here
+            }
+
+            case GAME_FINISHED -> {
+                //add game logic here
+            }
         }
+        client.stopClient();
     }
 }
