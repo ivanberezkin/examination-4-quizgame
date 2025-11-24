@@ -36,7 +36,6 @@ public class ClientBase {
     } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 
     public void sendMessage(Message message) {
@@ -48,6 +47,8 @@ public class ClientBase {
         }
     }
 
-
+    public void stopClient() {
+        running = false;
+    }
 }
 
