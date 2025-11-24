@@ -24,7 +24,18 @@ public class ClientBase {
             in = new ObjectInputStream(socket.getInputStream()):
 
             System.out.println("Connected to server");
-    }
+
+            while (running){
+                Object obj = in.readObject();
+                if (obj instanceof Message msg){
+                    protocol.handleMessage(msg);
+                }
+            }
+
+            System.out.println("Closing the client");
+    } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
     }
 
