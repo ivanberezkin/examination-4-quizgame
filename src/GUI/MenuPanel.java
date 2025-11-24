@@ -11,7 +11,7 @@ public class MenuPanel extends JPanel {
 
         // TOP PANEL
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        topPanel.setBackground(new Color(30, 144, 255)); // DodgerBlue
+        topPanel.setBackground(new Color(30, 144, 255));
         topPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
 
         JLabel title = new JLabel("Quizkampen");
@@ -47,7 +47,7 @@ public class MenuPanel extends JPanel {
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
 
         JButton startGameButton = new JButton("Starta nytt spel");
-        startGameButton.setBackground(new Color(34, 139, 34)); // ForestGreen
+        startGameButton.setBackground(new Color(34, 139, 34));
         startGameButton.setForeground(Color.WHITE);
         startGameButton.setFont(new Font("Arial", Font.BOLD, 16));
         startGameButton.setFocusPainted(false);
@@ -61,7 +61,7 @@ public class MenuPanel extends JPanel {
     private JPanel createCard(String title) {
         JPanel card = new JPanel(new BorderLayout());
         card.setPreferredSize(new Dimension(200, 300));
-        card.setBackground(new Color(245, 245, 245)); // light gray
+        card.setBackground(new Color(245, 245, 245));
         card.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
 
         JLabel label = new JLabel(title, SwingConstants.CENTER);
