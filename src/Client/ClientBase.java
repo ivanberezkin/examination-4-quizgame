@@ -26,7 +26,22 @@ public class ClientBase {
 
                     switch(msg.getType()) {
 
-                        case USERNAME
+                        case USERNAME_REQUEST -> {
+                            System.out.println("Enter username: ");
+                            String username = scanner.nextLine();
+                            out.writeObject(new Message(MessageType.USERNAME, username));
+                            out.flush();
+                        }
+
+                        case USERNAME_OK -> System.out.println("Username accepted");
+
+                        case USERNAME_TAKEN -> {
+                            System.out.println("Username already taken, please try again");
+                            String username = scanner.nextLine();
+                            out.writeObject(new Message(MessageType.USERNAME, username));
+                            out.flush();
+                        }
+
 
                     }
                 }
