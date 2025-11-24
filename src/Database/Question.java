@@ -5,7 +5,7 @@ import java.util.List;
 public class Question {
     private String prompt;
     private List<AnswerOption> answerOptions;
-    private Category qCat;
+    private String qCat;
 
     public enum Category {
         ANIMALS("animals"),
@@ -23,7 +23,7 @@ public class Question {
         }
     }
 
-    public Question(String prompt, List<AnswerOption> answerOptions, Category qCat) {
+    public Question(String prompt, List<AnswerOption> answerOptions, String qCat) {
         this.prompt = prompt;
         this.answerOptions = answerOptions;
         this.qCat = qCat;
@@ -37,7 +37,16 @@ public class Question {
         return answerOptions;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return qCat;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "prompt='" + prompt + '\'' +
+                ", answerOptions=" + answerOptions +
+                ", qCat='" + qCat + '\'' +
+                '}';
     }
 }
