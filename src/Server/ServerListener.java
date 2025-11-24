@@ -11,11 +11,12 @@ import java.util.List;
 
 public class ServerListener {
     private static final List<ObjectOutputStream> allServers = new ArrayList<>();
+    private static final List<User>allUsers = new ArrayList<>();
     private int port = 12345;
 
     public ServerListener() {
         try
-            (ServerSocket serverSocket = new ServerSocket(port)) {
+                (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
                 Socket socket = serverSocket.accept();
                 Server server = new Server(socket);
@@ -45,5 +46,23 @@ public class ServerListener {
     public static void processInput(Message message){
         if (ServerProtocol.processInput(message) != null);
         sendOutputToAll(message);
+    }
+    public static void addUser(Message message){
+
+    }
+    public static boolean checkIfNameIsAvailable(Message message){
+        for (User user : allUsers){
+            if(message.getData().equals(user.getUsername())){
+                return false;
+            }
         }
+        return true;
+    }
+    public static void saveNewUser(Message message){
+        allUsers.add((User) message.getData());
+    }
+
+    public List<User>getAllUsers(){
+        return allUsers;
+    }
 }
