@@ -1,5 +1,6 @@
 package Client;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -14,6 +15,23 @@ public class ClientBase {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
+            System.out.println("Connected to server");
+
+            boolean running = true;
+
+            while(running) {
+                Object obj = in.readObject();
+                if (obj instanceof Message msg) {
+                    switch(msg.getType()) {
+
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 }
