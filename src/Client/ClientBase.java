@@ -41,6 +41,7 @@ public class ClientBase {
                             out.writeObject(new Message(MessageType.USERNAME, username));
                             out.flush();
                         }
+                        //CONTINUE HERE
 
 
                     }
