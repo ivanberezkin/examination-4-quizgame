@@ -19,10 +19,13 @@ public class ClientBase {
 
             boolean running = true;
 
-            while(running) {
+            while(running) {  //Waiting for message from server.
                 Object obj = in.readObject();
                 if (obj instanceof Message msg) {
+
                     switch(msg.getType()) {
+
+                        case USERNAME
 
                     }
                 }
