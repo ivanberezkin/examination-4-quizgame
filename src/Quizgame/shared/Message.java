@@ -1,3 +1,5 @@
+package Quizgame.shared;
+
 import java.io.Serializable;
 
 public class Message implements Serializable {
@@ -16,4 +18,4 @@ public class Message implements Serializable {
         return data;}
 
     @Override public String toString() {
-        return "Message{" + "type=" + type + ", data=" + data + '}'; } }
+        return "Quizgame.shared.Message{" + "type=" + type + ", data=" + data + '}'; } }
