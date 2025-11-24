@@ -9,16 +9,23 @@ import java.util.Scanner;
 
 public class ClientBase {
 
-    public ClientBase() {
-        Scanner scanner = new Scanner(System.in);
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
+    private boolean running = true;
+    private final ClientProtocol protocol;
 
-        try(Socket socket = new Socket("127.0.0.1", 12345);
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+    public ClientBase(String host, int port) {
+        Scanner scanner = new Scanner(System.in);
+        protocol = new ClientProtocol(this, scanner);
+
+        try (Socket socket = new Socket(host,port)){
+            out = new ObjectOutputStream(socket.getOutputStream());
+            out.flush();
+            in = new ObjectInputStream(socket.getInputStream()):
 
             System.out.println("Connected to server");
+    }
 
-        }
     }
 
     public void sendMessage(Message message) {
