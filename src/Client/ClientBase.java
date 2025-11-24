@@ -1,0 +1,57 @@
+package Client;
+
+import Quizgame.shared.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class ClientBase {
+
+    public ClientBase() {
+        Scanner scanner = new Scanner(System.in);
+
+        try(Socket socket = new Socket("127.0.0.1", 12345);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+
+            System.out.println("Connected to server");
+
+            boolean running = true;
+
+            while(running) {  //Waiting for message from server.
+                Object obj = in.readObject();
+                if (obj instanceof Message msg) {
+
+                    switch(msg.getType()) {
+
+                        case USERNAME_REQUEST -> {
+                            System.out.println("Enter username: ");
+                            String username = scanner.nextLine();
+                            out.writeObject(new Message(MessageType.USERNAME, username));
+                            out.flush();
+                        }
+
+                        case USERNAME_OK -> System.out.println("Username accepted");
+
+                        case USERNAME_TAKEN -> {
+                            System.out.println("Username already taken, please try again");
+                            String username = scanner.nextLine();
+                            out.writeObject(new Message(MessageType.USERNAME, username));
+                            out.flush();
+                        }
+                        //CONTINUE HERE
+
+
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

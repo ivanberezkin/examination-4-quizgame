@@ -1,3 +1,5 @@
+package Quizgame.shared;
+
 import java.util.UUID;
 
 public class User {
