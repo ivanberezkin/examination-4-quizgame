@@ -1,3 +1,5 @@
+import Database.Question;
+
 public class ServerProtocol {
 
     public static Object processInput(Object object) {
