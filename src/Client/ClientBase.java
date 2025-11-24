@@ -33,7 +33,7 @@ public class ClientBase {
         }
     }
     static void main(String [] args){
-        GamePanel gamePanel = new GamePanel();
+        LoginPanel loginPanel = new LoginPanel();
         ClientBase clientBase = new ClientBase(host, port);
         run();
     }
