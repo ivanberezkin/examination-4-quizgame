@@ -1,3 +1,7 @@
+package Server;
+
+import Quizgame.shared.Message;
+
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
@@ -40,8 +44,8 @@ public class ServerListener {
             e.printStackTrace();
         }
     }
-    public static void processInput(Object object){
-        if (ServerProtocol.processInput(object) != null);
-        sendOutputToAll(object);
+    public static void processInput(Message message){
+        if (ServerProtocol.processInput(message) != null);
+        sendOutputToAll(message);
         }
 }
