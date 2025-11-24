@@ -1,11 +1,19 @@
 package GUI;
 
+import Database.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.List;
 
 
 public class GamePanel extends JPanel {
+
+
+    //TODO borde nog ligga någonstans på servern istället.
+    Database db = new Database();
 
     //Temporary label, byts mot något annat ev hur många frågor är kvar och ifall dom är rätt/fel.
     JLabel temporaryLabel = new JLabel("Welcome to the game");
@@ -45,11 +53,7 @@ public class GamePanel extends JPanel {
         answerButtonsPanel.add(answerB);
         answerButtonsPanel.add(answerC);
         answerButtonsPanel.add(answerD);
-        answerA.setText("Databas");
-        answerB.setText("Java");
-        answerC.setText("OOP");
-        answerD.setText("Idrott");
-
+        newQuestion();
 
         ActionListener answerButtonListener = e -> {
             //TODO ta bort hårdkodning
@@ -81,5 +85,20 @@ public class GamePanel extends JPanel {
         questionArea.setText(startOfHTML + categoryText + question + endOfHTML);
         questionArea.setHorizontalAlignment(JLabel.CENTER);
     }
+
+    private void newQuestion() {
+
+        Question newQuestion = db.getNewQuestion();
+        List<AnswerOption> answerOptions = newQuestion.getAnswerOptions();
+        Collections.shuffle(answerOptions);
+
+        questionAreaSetText(newQuestion.getPrompt(), newQuestion.getCategory());
+
+        answerA.setText(answerOptions.getFirst().getText());
+        answerB.setText(answerOptions.getLast().getText());
+        answerC.setText(answerOptions.get(1).getText());
+        answerD.setText(answerOptions.get(2).getText());
+    }
+
 
 }

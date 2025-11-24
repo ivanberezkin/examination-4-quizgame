@@ -6,49 +6,68 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Database {
 
     private final ArrayList<Question> questionsList = new ArrayList<>();
+    private final String questionPath = "resources/Questions";
 
-    Database() {
+    public Database() {
 
-
-
+        readFromQuestionsFile();
     }
 
-    public void readFromQuestionsFile(){
+    public void readFromQuestionsFile() {
 
-        try(BufferedReader br = new BufferedReader(new FileReader("questions.txt"))){
+        try (BufferedReader br = new BufferedReader(new FileReader(questionPath))) {
             String line;
             String category;
             String question;
             String correctAnswer;
 
-            List <AnswerOption> answerOptions = new ArrayList<>();
 
-            while((line = br.readLine()) != null){
-            String [] splitLine = line.split(":");
-            category = splitLine[0];
-            question = splitLine[1];
 
-            correctAnswer = splitLine[splitLine.length-1];
+            while ((line = br.readLine()) != null) {
+                List<AnswerOption> answerOptions = new ArrayList<>();
+                String[] splitLine = line.split(":");
+                category = splitLine[0];
+                question = splitLine[1];
 
-            for(int i = 2; i < splitLine.length-1; i++){
-                if(splitLine[i].equals(correctAnswer)){
-                    answerOptions.add(new AnswerOption(splitLine[i],true));
-                }else{
-                    answerOptions.add(new AnswerOption(splitLine[i],false));
+                correctAnswer = splitLine[splitLine.length - 1];
+
+                for (int i = 2; i < splitLine.length - 2; i++) {
+                    if (splitLine[i].equals(correctAnswer)) {
+                        answerOptions.add(new AnswerOption(splitLine[i], true));
+                    } else {
+                        answerOptions.add(new AnswerOption(splitLine[i], false));
+                    }
                 }
-            }
-                questionsList.add(new Question(question,answerOptions,category));
-                IO.println("Question added succesfully");
+                questionsList.add(new Question(question.trim(), answerOptions, category.trim()));
+//                IO.println("Category: " + category);
+//                IO.println("Question: " + question);
+//                IO.println(answerOptions.getFirst().getText());
+//                IO.println(answerOptions.get(1).getText());
+//                IO.println(answerOptions.get(2).getText());
+//                IO.println(answerOptions.getLast().getText());
+//                IO.println(answerOptions.getFirst().getCorrect());
+
+//                IO.println(answerOptions.getLast().getCorrect());
+//                IO.println("Answer: " + correctAnswer);
+//                IO.println(answerOptions.size());
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Question getNewQuestion() {
+        Random rand = new Random();
+        Question newQuestion = questionsList.get(rand.nextInt(questionsList.size()));
+
+        return newQuestion;
     }
 
 
