@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ServerListener {
     private static final List<ObjectOutputStream> allServers = new ArrayList<>();
-    private static final List<User>allUsers = new ArrayList<>();
+
     private int port = 12345;
 
     public ServerListener() {
@@ -27,7 +27,7 @@ public class ServerListener {
             e.printStackTrace();
         }
     }
-    public static void main (String [] args){
+    static void main(String[] args){
         ServerListener serverListener = new ServerListener();
     }
     public static void addOutputStream(ObjectOutputStream outputStream){
@@ -47,22 +47,6 @@ public class ServerListener {
         if (ServerProtocol.processInput(message) != null);
         sendOutputToAll(message);
     }
-    public static void addUser(Message message){
 
-    }
-    public static boolean checkIfNameIsAvailable(Message message){
-        for (User user : allUsers){
-            if(message.getData().equals(user.getUsername())){
-                return false;
-            }
-        }
-        return true;
-    }
-    public static void saveNewUser(Message message){
-        allUsers.add((User) message.getData());
-    }
 
-    public List<User>getAllUsers(){
-        return allUsers;
-    }
 }

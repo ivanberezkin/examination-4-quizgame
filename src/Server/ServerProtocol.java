@@ -7,8 +7,8 @@ public class ServerProtocol {
         if (checkIfValid(message)) {
             switch (messageType){
                 case USERNAME_REQUEST -> {
-                    if(ServerListener.checkIfNameIsAvailable(message)) {
-                        ServerListener.saveNewUser(message);
+                    if(UserDatabase.checkIfNameIsAvailable(message)) {
+                        UserDatabase.saveNewUser(message);
                         return new Message(MessageType.USERNAME_OK, message);
                     }
                     else {
