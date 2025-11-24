@@ -2,11 +2,14 @@ package Server;
 import Quizgame.shared.*;
 public class ServerProtocol {
 
-    public static Object processInput(Message message) {
+    public static Message processInput(Message message) {
         MessageType messageType = message.getType();
         if (checkIfValid(message)) {
             switch (messageType){
-                case USERNAME_REQUEST -> {}
+                case USERNAME_REQUEST -> {
+                    //check user database, if name doesn't already exist:
+                    return new Message(MessageType.USERNAME_OK, message);
+                }
                 case USERNAME -> {}
                 case USERNAME_OK -> {}
                 case USERNAME_TAKEN -> {}
@@ -17,7 +20,7 @@ public class ServerProtocol {
                 case GAME_FINISHED -> {}
             }
         }
-        return null;
+        return message;
     }
     private static boolean checkIfValid(Message message){
         if (message == null || message.getType() == null){

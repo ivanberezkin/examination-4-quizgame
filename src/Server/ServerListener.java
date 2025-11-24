@@ -1,15 +1,13 @@
 package Server;
 
-import Quizgame.shared.Message;
+import Quizgame.shared.*;
 
 import java.io.IOException;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ServerListener {
     private static final List<ObjectOutputStream> allServers = new ArrayList<>();
