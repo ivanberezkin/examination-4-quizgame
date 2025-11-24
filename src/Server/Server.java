@@ -1,3 +1,7 @@
+package Server;
+
+import Quizgame.shared.*;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -21,9 +25,9 @@ public class Server extends Thread {
     public void run (){
         while (true){
             try {
-                Object object = inputStream.readObject();
+                Message message = (Message) inputStream.readObject();
 
-                ServerListener.processInput(object);
+                ServerListener.processInput(message);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
