@@ -29,7 +29,7 @@ public class GamePanel extends JPanel {
     JButton answerB = new JButton("B");
     JButton answerC = new JButton("C");
     JButton answerD = new JButton("D");
-
+    String correctAnswer;
 
     GamePanel() {
 
@@ -53,19 +53,30 @@ public class GamePanel extends JPanel {
         answerButtonsPanel.add(answerB);
         answerButtonsPanel.add(answerC);
         answerButtonsPanel.add(answerD);
-        newQuestion();
+        answerA.setBackground(Color.LIGHT_GRAY);
+        answerB.setBackground(Color.LIGHT_GRAY);
+        answerC.setBackground(Color.LIGHT_GRAY);
+        answerD.setBackground(Color.LIGHT_GRAY);
+        answerA.setFocusable(false);
+        answerB.setFocusable(false);
+        answerC.setFocusable(false);
+        answerD.setFocusable(false);
+        correctAnswer = newQuestion();
 
         ActionListener answerButtonListener = e -> {
-            //TODO ta bort hårdkodning
-            String fakeCorrectAnswer = "OOP";
-
             JButton clickedButton = (JButton) e.getSource();
-            if (clickedButton.getText().equals(fakeCorrectAnswer)) {
+            if (clickedButton.getText().equals(correctAnswer)) {
                 clickedButton.setBackground(Color.GREEN);
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the correct answer.");
+                clickedButton.setBackground(Color.LIGHT_GRAY);
+                //TODO lägga till logik för antal rundor och sedan starta ny fråga
+                correctAnswer = newQuestion();
             } else{
                 clickedButton.setBackground(Color.RED);
-                JOptionPane.showMessageDialog(GamePanel.this, "You guessed the incorrect answer");
+                JOptionPane.showMessageDialog(GamePanel.this, "You guessed the incorrect answer" +
+                        "\n Correct Answer is: " +correctAnswer);
+                clickedButton.setBackground(Color.LIGHT_GRAY);
+                correctAnswer = newQuestion();
             }
         };
 
@@ -86,8 +97,8 @@ public class GamePanel extends JPanel {
         questionArea.setHorizontalAlignment(JLabel.CENTER);
     }
 
-    private void newQuestion() {
 
+    private String newQuestion() {
         Question newQuestion = db.getNewQuestion();
         List<AnswerOption> answerOptions = newQuestion.getAnswerOptions();
         Collections.shuffle(answerOptions);
@@ -98,6 +109,12 @@ public class GamePanel extends JPanel {
         answerB.setText(answerOptions.getLast().getText());
         answerC.setText(answerOptions.get(1).getText());
         answerD.setText(answerOptions.get(2).getText());
+
+        for(AnswerOption option : answerOptions) {
+            if(option.getCorrect())
+                return option.getText();
+        }
+        return null;
     }
 
 
