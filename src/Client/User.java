@@ -1,3 +1,5 @@
+package Client;
+
 import java.util.UUID;
 
 public class User {

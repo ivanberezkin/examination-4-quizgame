@@ -73,7 +73,7 @@ public class LoginPanel extends JFrame {
 
     }
     public void closeProgram(){
-        IO.println("User closed the program");
+        IO.println("Client.User closed the program");
         System.exit(0);
     }
 
