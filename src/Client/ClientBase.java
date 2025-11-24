@@ -21,7 +21,7 @@ public class ClientBase {
         try (Socket socket = new Socket(host,port)){
             out = new ObjectOutputStream(socket.getOutputStream());
             out.flush();
-            in = new ObjectInputStream(socket.getInputStream()):
+            in = new ObjectInputStream(socket.getInputStream());
 
             System.out.println("Connected to server");
 
