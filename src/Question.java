@@ -1,6 +1,8 @@
+import java.util.List;
+
 public class Question {
     private String prompt;
-    private String[] answerOptions;
+    private List<AnswerOption> answerOptions;
     private Category qCat;
 
     public enum Category{ ANIMALS("animals"), GEOGRAPHY("geography"), SPORT("sport");
@@ -10,7 +12,7 @@ public class Question {
     public String toString () {return  qCat; }
     }
 
-    public Question (String prompt, String[]answerOptions, Category qCat){
+    public Question (String prompt, List<AnswerOption>answerOptions, Category qCat){
         this.prompt = prompt;
         this.answerOptions = answerOptions;
         this.qCat = qCat;
@@ -18,10 +20,10 @@ public class Question {
     public String getPrompt(){
         return prompt;
     }
-    public String[]getAnswerOptions(){
+    public List<AnswerOption>getAnswerOptions(){
         return answerOptions;
     }
-    public Category getqCat(){
+    public Category getCategory(){
         return qCat;
     }
 }
