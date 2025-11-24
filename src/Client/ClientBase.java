@@ -5,13 +5,15 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client {
+public class ClientBase {
 
-    private Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
-    private final ClientProtocol clProtocol;
-    private final Scanner scanner;
-    private boolean running = true;
+    public ClientBase() {
+        Scanner scanner = new Scanner(System.in);
 
+        try(Socket socket = new Socket("127.0.0.1", 12345);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+
+        }
+    }
 }
