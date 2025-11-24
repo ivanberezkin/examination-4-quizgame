@@ -1,14 +1,19 @@
 package GUI;
 
+import Database.*;
+
 import javax.swing.*;
-import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.util.Collections;
+import java.util.List;
+
 
 public class GamePanel extends JPanel {
+
+
+    //TODO borde nog ligga någonstans på servern istället.
+    Database db = new Database();
 
     //Temporary label, byts mot något annat ev hur många frågor är kvar och ifall dom är rätt/fel.
     JLabel temporaryLabel = new JLabel("Welcome to the game");
@@ -24,9 +29,9 @@ public class GamePanel extends JPanel {
     JButton answerB = new JButton("B");
     JButton answerC = new JButton("C");
     JButton answerD = new JButton("D");
+    String correctAnswer;
 
-
-    GamePanel() {
+    public GamePanel() {
 
         setBackground(Color.CYAN);
         setLayout(new BorderLayout());
@@ -48,23 +53,30 @@ public class GamePanel extends JPanel {
         answerButtonsPanel.add(answerB);
         answerButtonsPanel.add(answerC);
         answerButtonsPanel.add(answerD);
-        answerA.setText("Databas");
-        answerB.setText("Java");
-        answerC.setText("OOP");
-        answerD.setText("Idrott");
-
+        answerA.setBackground(Color.LIGHT_GRAY);
+        answerB.setBackground(Color.LIGHT_GRAY);
+        answerC.setBackground(Color.LIGHT_GRAY);
+        answerD.setBackground(Color.LIGHT_GRAY);
+        answerA.setFocusable(false);
+        answerB.setFocusable(false);
+        answerC.setFocusable(false);
+        answerD.setFocusable(false);
+        correctAnswer = newQuestion();
 
         ActionListener answerButtonListener = e -> {
-            //TODO ta bort hårdkodning
-            String fakeCorrectAnswer = "OOP";
-
             JButton clickedButton = (JButton) e.getSource();
-            if (clickedButton.getText().equals(fakeCorrectAnswer)) {
+            if (clickedButton.getText().equals(correctAnswer)) {
                 clickedButton.setBackground(Color.GREEN);
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the correct answer.");
+                clickedButton.setBackground(Color.LIGHT_GRAY);
+                //TODO lägga till logik för antal rundor och sedan starta ny fråga
+                correctAnswer = newQuestion();
             } else{
                 clickedButton.setBackground(Color.RED);
-                JOptionPane.showMessageDialog(GamePanel.this, "You guessed the incorrect answer");
+                JOptionPane.showMessageDialog(GamePanel.this, "You guessed the incorrect answer" +
+                        "\n Correct Answer is: " +correctAnswer);
+                clickedButton.setBackground(Color.LIGHT_GRAY);
+                correctAnswer = newQuestion();
             }
         };
 
@@ -84,5 +96,26 @@ public class GamePanel extends JPanel {
         questionArea.setText(startOfHTML + categoryText + question + endOfHTML);
         questionArea.setHorizontalAlignment(JLabel.CENTER);
     }
+
+
+    private String newQuestion() {
+        Question newQuestion = db.getNewQuestion();
+        List<AnswerOption> answerOptions = newQuestion.getAnswerOptions();
+        Collections.shuffle(answerOptions);
+
+        questionAreaSetText(newQuestion.getPrompt(), newQuestion.getCategory());
+
+        answerA.setText(answerOptions.getFirst().getText());
+        answerB.setText(answerOptions.getLast().getText());
+        answerC.setText(answerOptions.get(1).getText());
+        answerD.setText(answerOptions.get(2).getText());
+
+        for(AnswerOption option : answerOptions) {
+            if(option.getCorrect())
+                return option.getText();
+        }
+        return null;
+    }
+
 
 }
