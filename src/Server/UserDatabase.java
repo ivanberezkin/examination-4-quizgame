@@ -26,9 +26,11 @@ public class UserDatabase {
                 return user;
             }
         }
+        return null; //No user with that name found.
     }
 
     public List<User>getAllUsers(){
+
         return allUsers;
     }
 }
