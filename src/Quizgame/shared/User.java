@@ -5,7 +5,6 @@ import java.util.UUID;
 
 public class User implements Serializable {
 
-    private final UUID id;
     private String username;
     private String password;
 
@@ -24,7 +23,6 @@ public class User implements Serializable {
     private boolean connected;
 
     public User(String username,String password){
-        this.id = UUID.randomUUID();
         this.username = username;
         this.password = password;
         resetMatchStats();
@@ -32,8 +30,9 @@ public class User implements Serializable {
         this.connected = true;
     }
 
-    public UUID getId() {return id;}
+
     public String getUsername() {return username;}
+    public String getPassword() {return password;}
     public int getScore() {return score;}
     public int getCorrectAnswers() {return correctAnswers;}
     public int getIncorrectAnswers() {return incorrectAnswers;}
@@ -41,6 +40,7 @@ public class User implements Serializable {
     public boolean isConnected() {return connected;}
 
     public void setUsername(String username) {this.username = username;}
+    public void setPassword(String password) {this.password = password;}
     public void setState(UserState state) {this.state = state;}
     public void setConnected(boolean connected) {this.connected = connected;}
 

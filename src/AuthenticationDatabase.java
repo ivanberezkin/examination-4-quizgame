@@ -16,5 +16,14 @@ public class AuthenticationDatabase {
         return false;
     }
 
+    public static boolean validdateLogin(String username, String password) {
+        for (User u : users) {
+            if (u.getUsername().equals(username) &&
+                    u.getPassword().equals(password)) {
+                return true;
+            }
+        }
+    }
+
 
 }
