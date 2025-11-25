@@ -62,6 +62,14 @@ public class ClientProtocol {
                 client.sendMessage(new Message(MessageType.MATCHMAKING,null));
             }
 
+            case LOGIN_CREATE_FAIL -> {
+                JOptionPane.showMessageDialog(null,
+                        "Username already taken.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                        )
+            }
+
 
 
             case GAME_START -> {
