@@ -20,6 +20,9 @@ public class ServerProtocol {
                 case USERNAME_TAKEN -> {}
                 case GAME_START -> {}
                 case QUESTION -> {}
+                case MATCHMAKING -> {
+                    IO.println("Spelare vill ha frågor!!");
+                }
                 case ANSWER -> {}
                 case RESULT_ROUND -> {}
                 case GAME_FINISHED -> {}

@@ -1,6 +1,9 @@
 package GUI;
 
+import Client.ClientBase;
 import Client.ClientStart;
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +67,9 @@ public class MenuPanel extends JPanel {
             frame.setContentPane(gamePanel);
             frame.revalidate();
             frame.repaint();
-            new ClientStart();
+            ClientStart cs = new ClientStart();
+            ClientBase client = cs.getClient();
+            client.sendMessage(new Message(MessageType.MATCHMAKING, null));
         });
 
         bottomPanel.add(startGameButton);
