@@ -5,7 +5,7 @@ import GUI.GamePanel;
 import Quizgame.shared.*;
 
 import javax.swing.*;
-import java.io.IO;
+//import java.io.IO;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -22,7 +22,7 @@ public class ClientProtocol {
     }
 
     public void handleMessage(Message message) {
-        IO.println("Message type to process" + message.getType());
+        IO.println("Message type to process " + message.getType());
         switch (message.getType()) {
 
             case USERNAME_REQUEST -> {
