@@ -23,6 +23,10 @@ public class AuthenticationDatabase {
                 return true;
             }
         }
+        return false;
+    }
+    public static void creatUser(String username, String password) {
+        users.add(new User(username, password));
     }
 
 
