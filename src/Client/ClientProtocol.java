@@ -22,7 +22,7 @@ public class ClientProtocol {
     }
 
     public void handleMessage(Message message) {
-        IO.println("Message type to process" + message.getType());
+        IO.println("Message type to process " + message.getType());
         switch (message.getType()) {
 
             case USERNAME_REQUEST -> {
