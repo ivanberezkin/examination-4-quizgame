@@ -36,6 +36,15 @@ public class ServerProtocol {
                         return new Message(MessageType.LOGIN_OK,existingUser);
                     }
                 }
+
+                case LOGIN_CREATE_REQUEST -> {
+                    User user = (User) message.getData();
+                    if(UserDatabase.checkIfNameIsAvailable(user.getUsername())) {
+                        UserDatabase.saveNewUser(user);
+                    } return new Message(MessageType.LOGIN_CREATE_OK,user);
+                } else {
+                    return new Message(MessageType.LOGIN_CREATE_FAIL,null);
+                }
             }
         }
         return message;

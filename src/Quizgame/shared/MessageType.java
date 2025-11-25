@@ -18,7 +18,7 @@ public enum MessageType implements Serializable {
     LOGIN_OK,
     LOGIN_WRONG_PASSWORD,
     LOGIN_USER_NOT_FOUND,
-    LOGIN_CREATE_REQEST,
+    LOGIN_CREATE_REQUEST,
     LOGIN_CREATE_OK,
     LOGIN_CREATE_FAIL
 }
