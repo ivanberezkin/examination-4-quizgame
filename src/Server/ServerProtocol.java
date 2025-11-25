@@ -23,6 +23,11 @@ public class ServerProtocol {
                 case ANSWER -> {}
                 case RESULT_ROUND -> {}
                 case GAME_FINISHED -> {}
+
+                case LOGIN_REQUEST -> {
+                    User user = (User) message.getData();
+                    User existingUser = UserDatabase.getUserByUsername(user.getUsername());
+                }
             }
         }
         return message;
