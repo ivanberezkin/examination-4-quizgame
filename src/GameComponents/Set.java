@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Set {
-    private int numberOfMatches = 2;
+    int numberOfPlayers = 0;
+    private static int numberOfQuestions;
+    private int numberOfMatches;
     private User player1;
     private User player2;
     private User[] players = new User[]{player1, player2};
@@ -15,25 +17,37 @@ public class Set {
     private int setScorePlayer2 = 0;
     private User setWinner;
     private List <int[]>setScores = new ArrayList<>();
-    private Match[]matches;
+    private List <Match> matches;
+    private Match match;
     Database.Question.Category[] category;
-    private static int numberOfQuestions = 3;
     private static List<Question> allSetQuestions;
     static Database db = new Database();
 
-    public Set (User[] players, Database.Question.Category[] category){
-        this.player1 = players[0];
-        this.player2 = players[1];
+    public Set (User player, Database.Question.Category[] category, int numberOfQuestions, int numberOfMatches){
+        this.player1 = player;
         this.category = category;
-        startNewMatch();
-
+        this.numberOfMatches = numberOfMatches;
+        this.numberOfQuestions = numberOfQuestions;
+        startMatch(player);
     }
-    public void startNewMatch (){
-        if (matches.length != numberOfMatches-1){
-            Match match = new Match(players, category[matches.length], numberOfQuestions);
+
+    public void startMatch (User player){
+        if (matches.size() != numberOfMatches-1){
+            match = new Match(player, category[matches.size()], numberOfQuestions);
+            matches.add(match);
+            numberOfPlayers+=1;
         }
     }
-    public void getMatchScore(Match match){
+    public void addPlayer(User player){
+        if (numberOfPlayers < 2){
+            this.player2 = player;
+            numberOfPlayers+=1;
+            match.addPlayer(player);
+        }
+    }
+
+    public void getMatchScore(Match match, Score score){
+        match.setPoints(score);
         if (match.checkIfComplete()){
             int[]matchPoints = match.getMatchPoints();
             setScorePlayer1 += matchPoints[0];
@@ -76,5 +90,11 @@ public class Set {
                 setWinner = null;
             }
         }
+    }
+    public List <Match> getMatches(){
+        return matches;
+    }
+    public int getNumberOfPlayers(){
+        return numberOfPlayers;
     }
 }

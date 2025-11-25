@@ -1,45 +1,62 @@
 package GameComponents;
 
 import Database.*;
+import Quizgame.shared.Message;
 import Quizgame.shared.User;
 
+import java.util.Random;
+
 public class Match {
+    private int matchID;
     private User player1;
     private User player2;
+    private User [] players;
     private Database.Question.Category category;
     private int pointsPlayer1 = 0;
     private int pointsPlayer2 = 0;
     private int[]matchPoints = new int []{50, 50};
     private int numberOfQuestions;
     private Question[]questions;
+    private int numberOfAnswers = 0;
+    Random random = new Random();
 
     private User winner;
     private boolean completed = false;
 
-    public Match(User[] users, Database.Question.Category category, int numberOfQuestions){
-        this.player1 = users[0];
-        this.player2 = users[1];
+    public Match(User user, Database.Question.Category category, int numberOfQuestions){
+        addPlayer(user);
         this.category = category;
         this.numberOfQuestions = numberOfQuestions;
         this.questions = Set.getQuestions();
+        this.matchID = random.nextInt(500) + random.nextInt(500);
+        sendQuestion(numberOfAnswers);
     }
-    public void setPoints(int score) {
-        if (matchPoints[0] == 50) {
-            pointsPlayer1 = score;
-            if (score == 0) {
-                player1.addIncorrectAnswers();
+    public void addPlayer(User user){
+        while (players.length <3) {
+            if (players.length == 0) {
+                this.player1 = user;
             } else {
-                player1.addCorrectAnswers(score);
+                player2 = user;
             }
-        }
-        else {
-            pointsPlayer2 = score;
-            if (score == 0) {
-                player2.addCorrectAnswers(score);
-            }
-            else player2.addIncorrectAnswers();
         }
     }
+
+    public void setPoints(Score score) {
+        int points = score.getPoints();
+        for (User player : players) {
+            if (player.getId().equals(score.getPlayer().getId())) {
+                if (points == 0) {
+                    player.addIncorrectAnswers();
+                } else {
+                    player.addCorrectAnswers(points);
+                }
+            }
+        }
+    }
+    public Question sendQuestion(int numberOfAnswers){
+        return questions[numberOfAnswers];
+    }
+
     public void setWinner(){
         if(checkIfComplete()){
             if(pointsPlayer1 > pointsPlayer2){
@@ -62,7 +79,7 @@ public class Match {
         return true;
     }
 
-    public Question[] getQuestions() {
+    public Question[] getMatchQuestions() {
         return questions;
     }
     public int[]getMatchPoints(){
@@ -85,6 +102,12 @@ public class Match {
     }
     public User getWinner(){
         return winner;
+    }
+    public int getNumberOfAnswers(){
+        return numberOfAnswers;
+    }
+    public int getMatchID(){
+        return matchID;
     }
 }
 
