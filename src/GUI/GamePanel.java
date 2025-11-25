@@ -5,6 +5,7 @@ import Database.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,10 +15,8 @@ public class GamePanel extends JPanel {
 
     //Temporary label, byts mot något annat ev hur många frågor är kvar och ifall dom är rätt/fel.
     JLabel temporaryLabel = new JLabel("Welcome to the game");
-
     JPanel questionPanel = new JPanel();
     JLabel questionCategoryLabel = new JLabel("Test Category");
-//    JTextArea questionArea = new JTextArea(8, 30);
     JLabel questionArea = new JLabel("");
 
 
@@ -27,8 +26,10 @@ public class GamePanel extends JPanel {
     JButton answerC = new JButton("C");
     JButton answerD = new JButton("D");
     String correctAnswer;
+    ArrayList<Question> questionsForRound;
 
-    public GamePanel() {
+    public GamePanel(ArrayList<Question> questionsForRound) {
+        this.questionsForRound = questionsForRound;
 
         setBackground(Color.CYAN);
         setLayout(new BorderLayout());
@@ -39,10 +40,6 @@ public class GamePanel extends JPanel {
 
         add(questionPanel, BorderLayout.CENTER);
         questionPanel.setBackground(Color.CYAN);
-
-        //TODO test bara, parametrar ska inte vara hårdkodade
-        questionAreaSetText("What is the name of our course?", "Java");
-        questionPanel.add(questionArea);
 
         add(answerButtonsPanel, BorderLayout.SOUTH);
         answerButtonsPanel.setLayout(new GridLayout(2, 2));
@@ -58,7 +55,9 @@ public class GamePanel extends JPanel {
         answerB.setFocusable(false);
         answerC.setFocusable(false);
         answerD.setFocusable(false);
-//        correctAnswer = newQuestion();
+        for(Question question : questionsForRound){
+            correctAnswer = newQuestion(question);
+        }
 
         ActionListener answerButtonListener = e -> {
             JButton clickedButton = (JButton) e.getSource();

@@ -63,11 +63,8 @@ public class MenuPanel extends JPanel {
         startGameButton.setPreferredSize(new Dimension(200, 50));
         startGameButton.addActionListener(e -> {
 
-            GamePanel gamePanel = new GamePanel();
-            frame.setContentPane(gamePanel);
-            frame.revalidate();
-            frame.repaint();
-            ClientStart cs = new ClientStart();
+
+            ClientStart cs = new ClientStart(frame);
             ClientBase client = cs.getClient();
             client.sendMessage(new Message(MessageType.MATCHMAKING, null));
         });
@@ -106,7 +103,7 @@ public class MenuPanel extends JPanel {
 
         modeFrame.add(playFriend);
 
-        playFriend.addActionListener(e -> new ClientStart());
+//        playFriend.addActionListener(e -> new ClientStart());
 
         modeFrame.setVisible(true);
     }

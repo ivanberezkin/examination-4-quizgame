@@ -1,11 +1,15 @@
 package Server;
-import Database.Database;
+import Database.*;
 import Quizgame.shared.*;
+
+import java.util.ArrayList;
+
 public class ServerProtocol {
 
-    Database db = new Database();
+    static Database db = new Database();
 
     public static Message processInput(Message message) {
+
         MessageType messageType = message.getType();
         if (checkIfValid(message)) {
             switch (messageType){
@@ -24,7 +28,10 @@ public class ServerProtocol {
                 case GAME_START -> {}
                 case QUESTION -> {}
                 case MATCHMAKING -> {
-                    IO.println("Spelare vill ha frågor!!");
+                    ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
+                    IO.println("Sending Questions to user");
+                    return new Message(MessageType.QUESTION, questionsForUserList);
+
                 }
                 case ANSWER -> {}
                 case RESULT_ROUND -> {}

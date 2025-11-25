@@ -22,31 +22,36 @@ public class ServerListener {
                 Server server = new Server(socket);
                 server.start();
             }
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         ServerListener serverListener = new ServerListener();
     }
-    public static void addOutputStream(ObjectOutputStream outputStream){
+
+    public static void addOutputStream(ObjectOutputStream outputStream) {
         allServers.add(outputStream);
     }
-    public static void sendOutputToAll(Object object){
+
+    public static void sendOutputToAll(Object object) {
         try {
             for (ObjectOutputStream outputStream : allServers) {
                 outputStream.writeObject(object);
             }
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static void processInput(Message message){
-        if (ServerProtocol.processInput(message) != null);
-        sendOutputToAll(message);
+
+    public static void processInput(Message message) {
+        if (message != null) {
+            Message messageFromServer = ServerProtocol.processInput(message);
+
+            IO.println("Message sent from processInput " + messageFromServer.getType());
+
+            sendOutputToAll(messageFromServer);
+        }
     }
-
-
 }
