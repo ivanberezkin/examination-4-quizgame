@@ -10,7 +10,7 @@ public class ClientProtocol {
     private final ClientBase client;
     private final Scanner scanner;
 
-    public ClientProtocol(ClientBase client, Scanner scanner, GamePanel gamePanel) {
+    public ClientProtocol(ClientBase client, Scanner scanner) {
         this.client = client;
         this.scanner = scanner;
     }

@@ -7,8 +7,10 @@ import java.awt.*;
 
 public class MenuPanel extends JPanel {
 
+    private JFrame frame;
 
-    public MenuPanel(String username) {
+    public MenuPanel(String username, JFrame frame) {
+        this.frame = frame;
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
@@ -56,7 +58,14 @@ public class MenuPanel extends JPanel {
         startGameButton.setFont(new Font("Arial", Font.BOLD, 16));
         startGameButton.setFocusPainted(false);
         startGameButton.setPreferredSize(new Dimension(200, 50));
-        startGameButton.addActionListener(e -> showMode());
+        startGameButton.addActionListener(e -> {
+
+            GamePanel gamePanel = new GamePanel();
+            frame.setContentPane(gamePanel);
+            frame.revalidate();
+            frame.repaint();
+            new ClientStart();
+        });
 
         bottomPanel.add(startGameButton);
         add(bottomPanel, BorderLayout.SOUTH);
@@ -92,7 +101,7 @@ public class MenuPanel extends JPanel {
 
         modeFrame.add(playFriend);
 
-        playFriend.addActionListener(e -> new Client.ClientStart());
+        playFriend.addActionListener(e -> new ClientStart());
 
         modeFrame.setVisible(true);
     }
