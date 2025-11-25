@@ -32,6 +32,13 @@ public class ClientProtocol {
                 //Continue with matchmaking or game
             }
 
+            case LOGIN_WRONG_PASSWORD -> {
+                JOptionPane.showMessageDialog(null,
+                        "Wrong password. Try again",
+                        "Login failed",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
 
 
             case GAME_START -> {
