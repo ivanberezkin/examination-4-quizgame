@@ -7,6 +7,7 @@ public class User implements Serializable {
 
     private final UUID id;
     private String username;
+    private String password;
 
     public enum UserState {
         CONNECTED,
@@ -22,9 +23,10 @@ public class User implements Serializable {
     private int incorrectAnswers;
     private boolean connected;
 
-    public User(String username){
+    public User(String username,String password){
         this.id = UUID.randomUUID();
         this.username = username;
+        this.password = password;
         resetMatchStats();
         this.state = UserState.WAITING;
         this.connected = true;
@@ -42,6 +44,9 @@ public class User implements Serializable {
     public void setState(UserState state) {this.state = state;}
     public void setConnected(boolean connected) {this.connected = connected;}
 
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
+    }
 
 
     public void resetMatchStats() {
