@@ -2,6 +2,8 @@ package Client;
 
 import GUI.*;
 import Quizgame.shared.*;
+
+import javax.swing.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -16,10 +18,12 @@ public class ClientBase extends Thread {
     private static ClientProtocol protocol;
     private final static String host = "127.0.0.1";
     private final static int port = 12345;
+    private JFrame frame;
 
-    public ClientBase(String host, int port) {
+    public ClientBase(String host, int port, JFrame frame) {
+        this.frame = frame;
         Scanner scanner = new Scanner(System.in);
-        protocol = new ClientProtocol(this, scanner);
+        protocol = new ClientProtocol(this, scanner, frame);
 
         try {
             Socket socket = new Socket(host,port);
@@ -37,7 +41,9 @@ public class ClientBase extends Thread {
         while (running){
             try  {
                     Object obj = in.readObject();
+                    IO.println("Message received from server");
                     if (obj instanceof Message msg){
+                        IO.println("Message valid moving to handleMessage (protocol)");
                         protocol.handleMessage(msg);
                     }
             } catch (IOException | ClassNotFoundException e) {

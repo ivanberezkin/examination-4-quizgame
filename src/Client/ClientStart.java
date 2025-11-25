@@ -8,7 +8,15 @@ public class ClientStart {
     private final static String host = "127.0.0.1";
     private final static int port = 12345;
 
-    public ClientStart() {
+    private ClientBase client;
+    private JFrame frame;
+
+    public ClientBase getClient() {
+        return client;
+    }
+
+    public ClientStart(JFrame frame) {
+        this.frame = frame;
 //        SwingUtilities.invokeLater(() -> {
 //            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor();
 //            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,7 +30,7 @@ public class ClientStart {
 //
 
         try {
-            ClientBase client = new ClientBase(host, port);
+            client = new ClientBase(host, port, frame);
             client.start();
         } catch (RuntimeException e) {
             System.out.println("Kunde inte ansluta till servern: " + e.getMessage());
