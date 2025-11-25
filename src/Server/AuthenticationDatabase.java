@@ -1,3 +1,5 @@
+package Server;
+
 import Quizgame.shared.User;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class AuthenticationDatabase {
         }
         return false;
     }
-    public static void creatUser(String username, String password) {
+    public static void createUser(String username, String password) {
         users.add(new User(username, password));
     }
 

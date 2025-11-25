@@ -21,8 +21,6 @@ public class ServerProtocol {
 //                    }
 //                    else {
 //                        return new Message(MessageType.USERNAME_TAKEN, message);
-//                    }
-//                }
                 case USERNAME -> {
                 }
                 case USERNAME_OK -> {
@@ -47,26 +45,26 @@ public class ServerProtocol {
                 }
 
                 case LOGIN_REQUEST -> {
-                    User user = (User) message.getData();
-                    User existingUser = UserDatabase.getUserByUsername(user.getUsername());
+                    User loginUser = (User) message.getData();
+                    User existingUser = UserDatabase.getUserByUsername(loginUser.getUsername());
 
                     if (existingUser == null) {
                         return new Message(MessageType.LOGIN_USER_NOT_FOUND, null);
-                    } else if (!existingUser.checkPassword(user.getPassword())) {
+                    }
+                    if (!existingUser.getPassword().equals(loginUser.getPassword())) {
                         return new Message(MessageType.LOGIN_WRONG_PASSWORD, null);
-                    } else {
+                    }
                         return new Message(MessageType.LOGIN_OK, existingUser);
                     }
-                }
 
                 case LOGIN_CREATE_REQUEST -> {
-                    User user = (User) message.getData();
-                    if (UserDatabase.checkIfNameIsAvailable(user.getUsername())) {
-                        UserDatabase.saveNewUser(user);
-                        return new Message(MessageType.LOGIN_CREATE_OK, user);
-                    } else {
+                    User newUser = (User) message.getData();
+                    if (AuthenticationDatabase.userExists(newUser.getUsername())) {
                         return new Message(MessageType.LOGIN_CREATE_FAIL, null);
                     }
+
+                    AuthenticationDatabase.createUser(newUser.getUsername(), newUser.getPassword());
+                    return new Message(MessageType.LOGIN_CREATE_OK, newUser);
                 }
             }
         }
