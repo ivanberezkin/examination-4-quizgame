@@ -1,6 +1,9 @@
 package Server;
+import Database.Database;
 import Quizgame.shared.*;
 public class ServerProtocol {
+
+    Database db = new Database();
 
     public static Message processInput(Message message) {
         MessageType messageType = message.getType();
