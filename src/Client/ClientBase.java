@@ -17,9 +17,9 @@ public class ClientBase {
     private final static String host = "127.0.0.1";
     private final static int port = 12345;
 
-    public ClientBase(String host, int port) {
+    public ClientBase(String host, int port, GamePanel gamePanel) {
         Scanner scanner = new Scanner(System.in);
-        protocol = new ClientProtocol(this, scanner);
+        protocol = new ClientProtocol(this, scanner, gamePanel);
 
         try {
             Socket socket = new Socket(host,port);
@@ -32,11 +32,11 @@ public class ClientBase {
             throw new RuntimeException(e);
         }
     }
-    static void main(String [] args){
-        GamePanel gamePanel = new GamePanel();
-        ClientBase clientBase = new ClientBase(host, port);
-        run();
-    }
+//    static void main(String [] args){
+//        GamePanel gamePanel = new GamePanel();
+//        ClientBase clientBase = new ClientBase(host, port);
+//        run();
+//    }
 
     public static void run(){
         while (running){

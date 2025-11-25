@@ -1,5 +1,6 @@
 package Client;
 
+import GUI.GamePanel;
 import Quizgame.shared.*;
 
 import java.util.Scanner;
@@ -9,7 +10,7 @@ public class ClientProtocol {
     private final ClientBase client;
     private final Scanner scanner;
 
-    public ClientProtocol(ClientBase client, Scanner scanner) {
+    public ClientProtocol(ClientBase client, Scanner scanner, GamePanel gamePanel) {
         this.client = client;
         this.scanner = scanner;
     }
