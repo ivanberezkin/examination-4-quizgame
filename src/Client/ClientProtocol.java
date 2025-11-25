@@ -5,6 +5,7 @@ import GUI.GamePanel;
 import Quizgame.shared.*;
 
 import javax.swing.*;
+import java.io.IO;
 import java.util.ArrayList;
 import java.util.Scanner;
 
