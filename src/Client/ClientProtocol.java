@@ -55,7 +55,11 @@ public class ClientProtocol {
             }
 
             case LOGIN_CREATE_OK -> {
+                User newUser = (User) message.getData();
+                JOptionPane.showMessageDialog(null,
+                        "User created! Logged in as " + newUser.getUsername());
 
+                client.sendMessage(new Message(MessageType.MATCHMAKING,null));
             }
 
 
