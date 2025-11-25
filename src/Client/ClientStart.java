@@ -23,7 +23,6 @@ public class ClientStart {
 
         try {
             ClientBase client = new ClientBase(host, port, gamePanel);
-            client.run();
         } catch (RuntimeException e) {
             System.out.println("Kunde inte ansluta till servern: " + e.getMessage());
         }

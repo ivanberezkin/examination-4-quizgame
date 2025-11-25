@@ -27,7 +27,7 @@ public class ServerListener {
             e.printStackTrace();
         }
     }
-    static void main(String[] args){
+    public static void main(String[] args){
         ServerListener serverListener = new ServerListener();
     }
     public static void addOutputStream(ObjectOutputStream outputStream){

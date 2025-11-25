@@ -31,7 +31,7 @@ public class GamePanel extends JPanel {
     JButton answerD = new JButton("D");
     String correctAnswer;
 
-    GamePanel() {
+    public GamePanel() {
 
         setBackground(Color.CYAN);
         setLayout(new BorderLayout());
