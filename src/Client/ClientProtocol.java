@@ -67,7 +67,6 @@ public class ClientProtocol {
                         "Username already taken.",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
-                        )
             }
 
 
