@@ -34,6 +34,7 @@ public class ServerProtocol {
                 case QUESTION -> {
                 }
                 case MATCHMAKING -> {
+                    IO.println("User requesting Questions");
                     ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
                     IO.println("Sending Questions to user");
                     return new Message(MessageType.QUESTION, questionsForUserList);
