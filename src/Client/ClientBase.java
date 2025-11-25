@@ -8,7 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ClientBase {
+public class ClientBase extends Thread {
 
     private ObjectOutputStream out;
     private static ObjectInputStream in;
@@ -17,9 +17,9 @@ public class ClientBase {
     private final static String host = "127.0.0.1";
     private final static int port = 12345;
 
-    public ClientBase(String host, int port, GamePanel gamePanel) {
+    public ClientBase(String host, int port) {
         Scanner scanner = new Scanner(System.in);
-        protocol = new ClientProtocol(this, scanner, gamePanel);
+        protocol = new ClientProtocol(this, scanner);
 
         try {
             Socket socket = new Socket(host,port);
@@ -32,13 +32,8 @@ public class ClientBase {
             throw new RuntimeException(e);
         }
     }
-//    static void main(String [] args){
-//        GamePanel gamePanel = new GamePanel();
-//        ClientBase clientBase = new ClientBase(host, port);
-//        run();
-//    }
 
-    public static void run(){
+    public void run(){
         while (running){
             try  {
                     Object obj = in.readObject();
