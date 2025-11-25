@@ -25,19 +25,14 @@ public class ClientProtocol {
         IO.println("Message type to process " + message.getType());
         switch (message.getType()) {
 
-            case USERNAME_REQUEST -> {
-                System.out.print("Enter username: ");
-                String username = scanner.nextLine();
-                client.sendMessage(new Message(MessageType.USERNAME, username));
+            case LOGIN_OK -> {
+                User loggedInUser = (User) message.getData();
+                JOptionPane.showMessageDialog(frame, "Welcome " + loggedInUser.getUsername());
+
+                //Continue with matchmaking or game
             }
 
-            case USERNAME_OK -> System.out.println("Username accepted");
 
-            case USERNAME_TAKEN -> {
-                System.out.println("Username already taken, choose another username: ");
-                String username = scanner.nextLine();
-                client.sendMessage(new Message(MessageType.USERNAME, username));
-            }
 
             case GAME_START -> {
                 // Add game logic here
