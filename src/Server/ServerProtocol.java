@@ -36,6 +36,28 @@ public class ServerProtocol {
                 case ANSWER -> {}
                 case RESULT_ROUND -> {}
                 case GAME_FINISHED -> {}
+
+                case LOGIN_REQUEST -> {
+                    User user = (User) message.getData();
+                    User existingUser = UserDatabase.getUserByUsername(user.getUsername());
+
+                    if(existingUser == null){
+                        return new Message(MessageType.LOGIN_USER_NOT_FOUND,null);
+                    } else if (!existingUser.checkPassword(user.getPassword())){
+                        return new Message(MessageType.LOGIN_WRONG_PASSWORD,null);
+                    } else {
+                        return new Message(MessageType.LOGIN_OK,existingUser);
+                    }
+                }
+
+                case LOGIN_CREATE_REQUEST -> {
+                    User user = (User) message.getData();
+                    if(UserDatabase.checkIfNameIsAvailable(user.getUsername())) {
+                        UserDatabase.saveNewUser(user);
+                    } return new Message(MessageType.LOGIN_CREATE_OK,user);
+                } else {
+                    return new Message(MessageType.LOGIN_CREATE_FAIL,null);
+                }
             }
         }
         return message;
