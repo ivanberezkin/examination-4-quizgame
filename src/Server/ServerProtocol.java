@@ -27,6 +27,14 @@ public class ServerProtocol {
                 case LOGIN_REQUEST -> {
                     User user = (User) message.getData();
                     User existingUser = UserDatabase.getUserByUsername(user.getUsername());
+
+                    if(existingUser == null){
+                        return new Message(MessageType.LOGIN_USER_NOT_FOUND,null);
+                    } else if (!existingUser.checkPassword(user.getPassword())){
+                        return new Message(MessageType.LOGIN_WRONG_PASSWORD,null);
+                    } else {
+                        return new Message(MessageType.LOGIN_OK,existingUser);
+                    }
                 }
             }
         }
