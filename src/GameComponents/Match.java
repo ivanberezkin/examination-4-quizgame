@@ -4,42 +4,24 @@ import Database.*;
 import Quizgame.shared.User;
 
 public class Match {
-    Database db = new Database();
     private User player1;
     private User player2;
     private Database.Question.Category category;
     private int pointsPlayer1 = 0;
     private int pointsPlayer2 = 0;
     private int[]matchPoints = new int []{50, 50};
-    private int numberOfQuestions = 3;
-    Question[]questions = new Question[numberOfQuestions];
+    private int numberOfQuestions;
+    private Question[]questions;
+
     private User winner;
     private boolean completed = false;
 
-    public Match(User[] users, Database.Question.Category category){
+    public Match(User[] users, Database.Question.Category category, int numberOfQuestions){
         this.player1 = users[0];
         this.player2 = users[1];
         this.category = category;
-    }
-    private void setUpQuestions(){
-        for (int i = 0; i<= numberOfQuestions; i++) {
-            Question question = db.getNewQuestion();
-            if (!checkQuestion(question)) {
-                questions[i] = question;
-            }
-        }
-    }
-    public Question[] sendQuestions(){
-        setUpQuestions();
-        return questions;
-    }
-    private boolean checkQuestion(Question question){
-        for (Question q : questions){
-            if (q.getPrompt().equals(question.getPrompt())){
-                return true;
-            }
-        }
-        return false;
+        this.numberOfQuestions = numberOfQuestions;
+        this.questions = Set.getQuestions();
     }
     public void setPoints(int score) {
         if (matchPoints[0] == 50) {
@@ -78,6 +60,10 @@ public class Match {
         }
         completed = true;
         return true;
+    }
+
+    public Question[] getQuestions() {
+        return questions;
     }
     public int[]getMatchPoints(){
         return matchPoints;

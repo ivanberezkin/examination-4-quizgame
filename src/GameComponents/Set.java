@@ -17,16 +17,20 @@ public class Set {
     private List <int[]>setScores = new ArrayList<>();
     private Match[]matches;
     Database.Question.Category[] category;
+    private static int numberOfQuestions = 3;
+    private static List<Question> allSetQuestions;
+    static Database db = new Database();
 
     public Set (User[] players, Database.Question.Category[] category){
         this.player1 = players[0];
         this.player2 = players[1];
         this.category = category;
+        startNewMatch();
 
     }
     public void startNewMatch (){
         if (matches.length != numberOfMatches-1){
-            Match match = new Match(players, category[matches.length]);
+            Match match = new Match(players, category[matches.length], numberOfQuestions);
         }
     }
     public void getMatchScore(Match match){
@@ -37,6 +41,26 @@ public class Set {
             setScores.add(matchPoints);
         }
     }
+    public static Question[] getQuestions(){
+        Question[]questions = new Question[numberOfQuestions];
+        for (int i = 0; i<= numberOfQuestions; i++) {
+            Question question = db.getNewQuestion();
+            if (!previousQuestion(question)) {
+                allSetQuestions.add(question);
+                questions[i] = question;
+            }
+        }
+        return questions;
+    }
+    private static boolean previousQuestion(Question question){
+        for (Question q : allSetQuestions){
+            if (q.getPrompt().equals(question.getPrompt())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean checkIfCompleted(){
         return setScores.size() == numberOfMatches - 1;
     }
