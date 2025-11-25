@@ -40,6 +40,7 @@ public class GamePanel extends JPanel {
 
         add(questionPanel, BorderLayout.CENTER);
         questionPanel.setBackground(Color.CYAN);
+        questionPanel.add(questionArea);
 
         add(answerButtonsPanel, BorderLayout.SOUTH);
         answerButtonsPanel.setLayout(new GridLayout(2, 2));
@@ -55,9 +56,9 @@ public class GamePanel extends JPanel {
         answerB.setFocusable(false);
         answerC.setFocusable(false);
         answerD.setFocusable(false);
-        for(Question question : questionsForRound){
-            correctAnswer = newQuestion(question);
-        }
+
+
+        nextQuestion();
 
         ActionListener answerButtonListener = e -> {
             JButton clickedButton = (JButton) e.getSource();
@@ -66,13 +67,14 @@ public class GamePanel extends JPanel {
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the correct answer.");
                 clickedButton.setBackground(Color.LIGHT_GRAY);
                 //TODO lägga till logik för antal rundor och sedan starta ny fråga
-//                correctAnswer = newQuestion();
-            } else{
+                nextQuestion();
+
+            } else {
                 clickedButton.setBackground(Color.RED);
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the incorrect answer" +
-                        "\n Correct Answer is: " +correctAnswer);
+                        "\n Correct Answer is: " + correctAnswer);
                 clickedButton.setBackground(Color.LIGHT_GRAY);
-//                correctAnswer = newQuestion();
+                nextQuestion();
             }
         };
 
@@ -84,6 +86,7 @@ public class GamePanel extends JPanel {
 
     }
 
+
     private void questionAreaSetText(String question, String category) {
         final String startOfHTML = "<html><div style='text-align: center; padding: 20px;'>";
         final String endOfHTML = "</div></html>";
@@ -91,8 +94,18 @@ public class GamePanel extends JPanel {
 
         questionArea.setText(startOfHTML + categoryText + question + endOfHTML);
         questionArea.setHorizontalAlignment(JLabel.CENTER);
+        questionArea.updateUI();
     }
 
+    private void nextQuestion() {
+        if (questionsForRound.size() == 0) {
+            IO.println("There are no questions to play.");
+        } else {
+            Question temp = questionsForRound.getFirst();
+            questionsForRound.removeFirst();
+            correctAnswer = newQuestion(temp);
+        }
+    }
 
     private String newQuestion(Question newQuestion) {
 //        Question newQuestion = db.getNewQuestion();
@@ -106,8 +119,9 @@ public class GamePanel extends JPanel {
         answerC.setText(answerOptions.get(1).getText());
         answerD.setText(answerOptions.get(2).getText());
 
-        for(AnswerOption option : answerOptions) {
-            if(option.getCorrect())
+
+        for (AnswerOption option : answerOptions) {
+            if (option.getCorrect())
                 return option.getText();
         }
         return null;
