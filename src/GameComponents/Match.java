@@ -11,41 +11,39 @@ public class Match {
     Random random = new Random();
     private final int matchID;
     private final int numberOfQuestions;
-    private final int numberOfPlayers;
-    private final User[] players;
+    private final int maxPlayers;
+    private User[] players;
     private Database.Question.Category category;
     private final List<Integer> pointsPlayer1 = new ArrayList<>();
     private final List<Integer> pointsPlayer2 = new ArrayList<>();
-    private final Question[] questions;
+    private Question[] questions;
     private int numberOfCompletedQuestion = 0;
     private int numberOfSentQuestions = 0;
     private User winner;
-    private boolean completed = false;
+    private Question firstQuestion;
 
-    public Match(User player, Database.Question.Category category, int numberOfQuestions, int numberOfPlayers) {
-        players = new User[2];
-        addPlayer(player);
+    public Match(User player, Database.Question.Category category, int numberOfQuestions, int maxPlayers) {
+
         this.category = category;
         this.numberOfQuestions = numberOfQuestions;
-        this.questions = Set.getQuestions();
-        this.numberOfPlayers = numberOfPlayers;
+        this.maxPlayers = maxPlayers;
         this.matchID = random.nextInt(500) + random.nextInt(500);
-        sendQuestion();
-        numberOfSentQuestions += 1;
+        players = new User[maxPlayers];
+        addPlayer(player);
+        loadMatchQuestions();
     }
 
     public void addPlayer(User user) {
-        if (players.length < numberOfPlayers) {
-            if (players.length == 0) {
+            if (players[0] == null) {
                 players[0] = user;
-            } else {
+            } else if (players[1] == null){
                 players[1] = user;
-            }
         }
+        sendFirstQuestion(user);
     }
 
     private int getPlayerIndex(Score score) {
-        for (int i = 0; i <= players.length; i++) {
+        for (int i = 0; i < players.length; i++) {
             if (players[i].getId().equals(score.getPlayer().getId())) {
                 return i;
             }
@@ -65,7 +63,6 @@ public class Match {
             }
             addPointsToList(index, score);
             numberOfCompletedQuestion += 1;
-            Set.getMatchScore();
             Game.sendScore(score, players);
         }
     }
@@ -78,15 +75,23 @@ public class Match {
         }
     }
 
-    public void sendQuestion() {
+    public void sendFirstQuestion(User player) {
         //Adjust method in DataBase, to get specific category?
-
-        Game.sendQuestion(questions[numberOfSentQuestions], players);
-        numberOfSentQuestions += 1;
+        if (players[1] == null || (players[1].getId()!= null) && pointsPlayer2.isEmpty()){
+            Game.sendFirstQuestion(questions[0], player);
+        }
+        if (!pointsPlayer1.isEmpty() && !pointsPlayer2.isEmpty()) {
+        }
+    }
+    public void sendQuestion() {
+        if((pointsPlayer1.size() == pointsPlayer2.size()) && !completedMatch()){
+            Game.sendQuestion(questions[numberOfSentQuestions], players);
+            numberOfSentQuestions += 1;
+        }
     }
 
     public void setWinner() {
-        if (checkIfComplete()) {
+        if (completedMatch()) {
             int points1 = pointsPlayer1.get(numberOfQuestions - 1);
             int points2 = pointsPlayer2.get(numberOfQuestions - 1);
             if (points1 > points2) {
@@ -99,26 +104,12 @@ public class Match {
         Game.sendMatchScore(players, matchID);
     }
 
-    public boolean checkIfComplete() {
-        if ((numberOfCompletedQuestion == numberOfQuestions) && (finalQuestion())) {
-            completed = true;
-                return true;
-            }
-        else {
-            return false;
-        }
+    public boolean completedMatch() {
+        return pointsPlayer1.size() == numberOfQuestions  && pointsPlayer2.size() == numberOfQuestions;
     }
 
-    public boolean finalQuestion() {
-        return pointsPlayer2.size() == numberOfPlayers - 1;
-    }
-
-    public Question[] getMatchQuestions() {
-        return questions;
-    }
-
-    public boolean ifCompleted() {
-        return completed;
+    public void loadMatchQuestions() {
+        this.questions = Set.getQuestions();
     }
 
     public User getWinner() {
@@ -133,9 +124,6 @@ public class Match {
         return matchID;
     }
 
-    public int getNumberOfPlayers() {
-        return numberOfPlayers;
-    }
     public List<Integer> getPointsPlayer1(){
        return pointsPlayer1;
     }
