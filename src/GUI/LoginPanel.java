@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.IO;
+
 
 
 public class LoginPanel extends JFrame {
@@ -53,7 +53,7 @@ public class LoginPanel extends JFrame {
             if(inputUsername.isEmpty()){
                 JOptionPane.showMessageDialog(LoginPanel.this,"Please enter correct username");
             }else{
-                MenuPanel menuPanel = new MenuPanel(inputUsername);
+                MenuPanel menuPanel = new MenuPanel(inputUsername, this);
                 setContentPane(menuPanel);
                 revalidate();
                 repaint();
