@@ -9,15 +9,12 @@ import java.util.List;
 public class Game {
     private int numberOfQuestions;
     private int numberOfMatches = 2;
-    private User player1;
-    private User player2;
-    private User[]players;
+
     private Database.Question.Category[] category;
-    private List<Set> activeSets = new ArrayList<>();
+    private static List<Set> activeSets = new ArrayList<>();
     private Set set;
 
     public Game(User player, Database.Question.Category[] category){
-        this.player1 = player;
         this.category = category;
         startGame(player);
     }
@@ -34,12 +31,28 @@ public class Game {
                 activeSets.add(set);
             }
         }
+        public static void sendQuestion(Question question, User [] players) {
+
+        }
 
     public void receiveScore (Score score){
         for (Set s : activeSets){
-            for (Match m :  s.getMatches()){
-                if (m.getMatchID() == score.getMatch().getMatchID()){
-                    s.getMatchScore(m, score);
+            for (Match thisMatch :  s.getMatches()){
+                if (thisMatch.getMatchID() == score.getMatch().getMatchID()){
+                    thisMatch.setPoints(score);
+                    s.continuePlaying();
+                }
+            }
+        }
+    }
+    public static void sendScore(Score score, User [] players){
+        //send results for question
+    }
+    public static void sendMatchScore(User [] players, int matchID){
+        for (Set s : activeSets){
+            for (Match thisMatch :  s.getMatches()) {
+                if (thisMatch.getMatchID() == matchID) {
+                    //send results for match
                 }
             }
         }
