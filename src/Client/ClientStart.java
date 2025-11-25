@@ -21,16 +21,16 @@ public class ClientStart {
             frame.setVisible(true);
 
 
-        });
         try {
-            ClientBase client = new ClientBase(host, port, new GamePanel());
-            ClientBase.run();
+            ClientBase client = new ClientBase(host, port, gamePanel);
+            client.run();
         } catch (RuntimeException e) {
             System.out.println("Kunde inte ansluta till servern: " + e.getMessage());
         }
+        });
     }
 
-    public static void main(String[] args) {
-        ClientStart client = new ClientStart();
-    }
+//    public static void main(String[] args) {
+//        ClientStart client = new ClientStart();
+//    }
 }
