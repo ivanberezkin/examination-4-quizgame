@@ -44,6 +44,5 @@ public class ClientProtocol {
                 //add game logic here
             }
         }
-        client.stopClient();
     }
 }

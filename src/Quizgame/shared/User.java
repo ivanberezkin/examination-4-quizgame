@@ -1,8 +1,9 @@
 package Quizgame.shared;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
 
     private final UUID id;
     private String username;
