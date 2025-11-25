@@ -39,6 +39,25 @@ public class ClientProtocol {
                         JOptionPane.ERROR_MESSAGE);
             }
 
+            case LOGIN_USER_NOT_FOUND -> {
+                int choice = JOptionPane.showConfirmDialog(null,
+                        "User does not exist. Create a new user?",
+                        "Create user",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    User newUser = (User) message.getData();
+                    client.sendMessage(new Message(MessageType.LOGIN_CREATE_REQUEST,newUser));
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Please try again.");
+                }
+            }
+
+            case LOGIN_CREATE_OK -> {
+
+            }
+
 
 
             case GAME_START -> {
