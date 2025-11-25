@@ -33,7 +33,7 @@ public class Set {
 
     public void startMatch (User player){
         if (matches.size() != numberOfMatches-1){
-            match = new Match(player, category[matches.size()], numberOfQuestions);
+            match = new Match(player, category[matches.size()], numberOfQuestions, numberOfPlayers);
             matches.add(match);
             numberOfPlayers+=1;
         }
@@ -46,23 +46,22 @@ public class Set {
         }
     }
     public static void continuePlaying(){
-        List<int[]>matchPoints = match.getMatchPoints();
-        int numberOfAnsweredQuestions = match.getNumberOfCompletedQuestion();
-        if (numberOfPlayers == 2 && matches.size()< numberOfQuestions-1 && (matchPoints.get(numberOfAnsweredQuestions)[1] != 50)){
+        if (numberOfPlayers == 2 && matches.size() < numberOfQuestions-1 && (!match.finalQuestion())){
             match.sendQuestion();
         }
     }
-    public static void getMatchScore(Score score, int completedQuestions){
+    public static void getMatchScore(){
         if (!match.checkIfComplete()){
-            setSetScore(completedQuestions);
+            setSetScore();
             continuePlaying();
         }
     }
-    private static void setSetScore(int completedQuestions){
-        List<int[]>matchPoints = match.getMatchPoints();
-        setScorePlayer1 += matchPoints.get(completedQuestions-1)[0];
-        setScorePlayer2 += matchPoints.get(completedQuestions-1)[1];
-        setScores.add(new int [] {setScorePlayer1, setScorePlayer2});
+    private static void setSetScore(){
+        for (int i = 0; i <= numberOfQuestions; i++){
+            setScorePlayer1 = match.getPointsPlayer1().get(i);
+            setScorePlayer2 = match.getPointsPlayer2().get(i);
+            setScores.add(new int [] {setScorePlayer1, setScorePlayer2});
+        }
     }
     public static Question[] getQuestions(){
         Question[]questions = new Question[numberOfQuestions];

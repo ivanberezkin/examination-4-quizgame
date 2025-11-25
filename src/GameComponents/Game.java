@@ -39,7 +39,7 @@ public class Game {
         for (Set s : activeSets){
             for (Match thisMatch :  s.getMatches()){
                 if (thisMatch.getMatchID() == score.getMatch().getMatchID()){
-                    thisMatch.setPoints(score);
+                    thisMatch.assignPoints(score);
                     s.continuePlaying();
                 }
             }
@@ -56,13 +56,12 @@ public class Game {
                 }
             }
         }
+        checkSets();
     }
-
-
-    private void removeCompletedSet(Set set){
+    private static void removeCompletedSet(Set set){
         activeSets.remove(set);
     }
-    private void checkSets(){
+    private static void checkSets(){
         for (Set s : activeSets){
             if(s.checkIfCompleted()){
                 removeCompletedSet(s);
