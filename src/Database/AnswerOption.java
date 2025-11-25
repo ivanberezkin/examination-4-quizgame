@@ -1,6 +1,8 @@
 package Database;
 
-public class AnswerOption {
+import java.io.Serializable;
+
+public class AnswerOption implements Serializable {
     private final String text;
     private final boolean correct;
 

@@ -1,6 +1,9 @@
 package GUI;
 
+import Client.ClientBase;
 import Client.ClientStart;
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,11 +63,10 @@ public class MenuPanel extends JPanel {
         startGameButton.setPreferredSize(new Dimension(200, 50));
         startGameButton.addActionListener(e -> {
 
-            GamePanel gamePanel = new GamePanel();
-            frame.setContentPane(gamePanel);
-            frame.revalidate();
-            frame.repaint();
-            new ClientStart();
+
+            ClientStart cs = new ClientStart(frame);
+            ClientBase client = cs.getClient();
+            client.sendMessage(new Message(MessageType.MATCHMAKING, null));
         });
 
         bottomPanel.add(startGameButton);
@@ -101,7 +103,7 @@ public class MenuPanel extends JPanel {
 
         modeFrame.add(playFriend);
 
-        playFriend.addActionListener(e -> new ClientStart());
+//        playFriend.addActionListener(e -> new ClientStart());
 
         modeFrame.setVisible(true);
     }

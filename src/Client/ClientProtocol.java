@@ -1,21 +1,27 @@
 package Client;
 
+import Database.Question;
 import GUI.GamePanel;
 import Quizgame.shared.*;
 
+import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ClientProtocol {
 
     private final ClientBase client;
     private final Scanner scanner;
+    private JFrame frame;
 
-    public ClientProtocol(ClientBase client, Scanner scanner) {
+    public ClientProtocol(ClientBase client, Scanner scanner, JFrame frame) {
+        this.frame = frame;
         this.client = client;
         this.scanner = scanner;
     }
 
-    public void handleMessage (Message message) {
+    public void handleMessage(Message message) {
+        IO.println("Message type to process" + message.getType());
         switch (message.getType()) {
 
             case USERNAME_REQUEST -> {
@@ -34,6 +40,16 @@ public class ClientProtocol {
 
             case GAME_START -> {
                 // Add game logic here
+            }
+
+            case QUESTION -> {
+                IO.println("Questions Received by User");
+                ArrayList<Question> questionsForRound = (ArrayList<Question>) message.getData();
+                GamePanel gamePanel = new GamePanel(questionsForRound);
+                frame.setContentPane(gamePanel);
+                frame.revalidate();
+                frame.repaint();
+
             }
 
             case RESULT_ROUND -> {
