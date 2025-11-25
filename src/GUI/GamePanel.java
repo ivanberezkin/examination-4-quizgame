@@ -12,9 +12,6 @@ import java.util.List;
 public class GamePanel extends JPanel {
 
 
-    //TODO borde nog ligga någonstans på servern istället.
-    Database db = new Database();
-
     //Temporary label, byts mot något annat ev hur många frågor är kvar och ifall dom är rätt/fel.
     JLabel temporaryLabel = new JLabel("Welcome to the game");
 
@@ -61,7 +58,7 @@ public class GamePanel extends JPanel {
         answerB.setFocusable(false);
         answerC.setFocusable(false);
         answerD.setFocusable(false);
-        correctAnswer = newQuestion();
+//        correctAnswer = newQuestion();
 
         ActionListener answerButtonListener = e -> {
             JButton clickedButton = (JButton) e.getSource();
@@ -70,13 +67,13 @@ public class GamePanel extends JPanel {
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the correct answer.");
                 clickedButton.setBackground(Color.LIGHT_GRAY);
                 //TODO lägga till logik för antal rundor och sedan starta ny fråga
-                correctAnswer = newQuestion();
+//                correctAnswer = newQuestion();
             } else{
                 clickedButton.setBackground(Color.RED);
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the incorrect answer" +
                         "\n Correct Answer is: " +correctAnswer);
                 clickedButton.setBackground(Color.LIGHT_GRAY);
-                correctAnswer = newQuestion();
+//                correctAnswer = newQuestion();
             }
         };
 
@@ -98,8 +95,8 @@ public class GamePanel extends JPanel {
     }
 
 
-    private String newQuestion() {
-        Question newQuestion = db.getNewQuestion();
+    private String newQuestion(Question newQuestion) {
+//        Question newQuestion = db.getNewQuestion();
         List<AnswerOption> answerOptions = newQuestion.getAnswerOptions();
         Collections.shuffle(answerOptions);
 
