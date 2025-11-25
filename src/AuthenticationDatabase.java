@@ -9,7 +9,7 @@ public class AuthenticationDatabase {
 
     public static boolean userExists(String username) {
         for (User u : users) {
-            if (u.getUsername().equals(username) {
+            if (u.getUsername().equals(username)) {
                 return true;
             }
         }
