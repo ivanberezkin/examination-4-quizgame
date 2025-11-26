@@ -2,7 +2,6 @@ package GameComponents;
 
 import Database.*;
 import Quizgame.shared.User;
-
 import java.util.ArrayList;
 import java.util.List;
 

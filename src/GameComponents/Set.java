@@ -1,11 +1,8 @@
 package GameComponents;
-
 import Database.*;
 import Quizgame.shared.User;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Set {
     static int maxPlayers;
@@ -73,10 +70,13 @@ public class Set {
 
     public static Question[] getQuestions() {
         Question[] questions = new Question[maxNumberOfQuestions];
+        ArrayList<Question> questionList = db.getQuestionsForRound(maxNumberOfQuestions);
+
         for (int i = 0; i < maxNumberOfQuestions; i++) {
             Question question;
             do {
-                question = db.getNewQuestion();
+
+                question = questionList.get(i);
             }
             while (ensureNewQuestion(question));
             allSetQuestions.add(question);

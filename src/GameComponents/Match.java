@@ -1,8 +1,6 @@
 package GameComponents;
-
 import Database.*;
 import Quizgame.shared.User;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -44,7 +42,7 @@ public class Match {
 
     private int getPlayerIndex(Score score) {
         for (int i = 0; i < players.length; i++) {
-            if (players[i].getId().equals(score.getPlayer().getId())) {
+            if (players[i].getUsername().equals(score.getPlayer().getUsername())) {
                 return i;
             }
         }
@@ -77,10 +75,11 @@ public class Match {
 
     public void sendFirstQuestion(User player) {
         //Adjust method in DataBase, to get specific category?
-        if (players[1] == null || (players[1].getId()!= null) && pointsPlayer2.isEmpty()){
+        if (players[0] != null && pointsPlayer1.isEmpty()){
             Game.sendFirstQuestion(questions[0], player);
         }
-        if (!pointsPlayer1.isEmpty() && !pointsPlayer2.isEmpty()) {
+        else if (!pointsPlayer1.isEmpty() && players[1] != null && pointsPlayer2.isEmpty()) {
+            Game.sendFirstQuestion(questions[0], player);
         }
     }
     public void sendQuestion() {
