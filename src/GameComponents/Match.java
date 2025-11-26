@@ -11,7 +11,7 @@ public class Match {
     private final int numberOfQuestions;
     private final int maxPlayers;
     private User[] players;
-    private Database.Question.Category category;
+    private Question.Category category;
     private final List<Integer> pointsPlayer1 = new ArrayList<>();
     private final List<Integer> pointsPlayer2 = new ArrayList<>();
     private Question[] questions;
@@ -20,7 +20,7 @@ public class Match {
     private User winner;
     private Question firstQuestion;
 
-    public Match(User player, Database.Question.Category category, int numberOfQuestions, int maxPlayers) {
+    public Match(User player, Question.Category category, int numberOfQuestions, int maxPlayers) {
 
         this.category = category;
         this.numberOfQuestions = numberOfQuestions;

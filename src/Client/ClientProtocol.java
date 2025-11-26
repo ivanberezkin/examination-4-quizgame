@@ -25,19 +25,51 @@ public class ClientProtocol {
         IO.println("Message type to process " + message.getType());
         switch (message.getType()) {
 
-            case USERNAME_REQUEST -> {
-                System.out.print("Enter username: ");
-                String username = scanner.nextLine();
-                client.sendMessage(new Message(MessageType.USERNAME, username));
+            case LOGIN_OK -> {
+                User loggedInUser = (User) message.getData();
+                JOptionPane.showMessageDialog(frame, "Welcome " + loggedInUser.getUsername());
+
+                //Continue with matchmaking or game
             }
 
-            case USERNAME_OK -> System.out.println("Username accepted");
-
-            case USERNAME_TAKEN -> {
-                System.out.println("Username already taken, choose another username: ");
-                String username = scanner.nextLine();
-                client.sendMessage(new Message(MessageType.USERNAME, username));
+            case LOGIN_WRONG_PASSWORD -> {
+                JOptionPane.showMessageDialog(null,
+                        "Wrong password. Try again",
+                        "Login failed",
+                        JOptionPane.ERROR_MESSAGE);
             }
+
+            case LOGIN_USER_NOT_FOUND -> {
+                int choice = JOptionPane.showConfirmDialog(null,
+                        "User does not exist. Create a new user?",
+                        "Create user",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    User newUser = (User) message.getData();
+                    client.sendMessage(new Message(MessageType.LOGIN_CREATE_REQUEST,newUser));
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Please try again.");
+                }
+            }
+
+            case LOGIN_CREATE_OK -> {
+                User newUser = (User) message.getData();
+                JOptionPane.showMessageDialog(null,
+                        "User created! Logged in as " + newUser.getUsername());
+
+                client.sendMessage(new Message(MessageType.MATCHMAKING,null));
+            }
+
+            case LOGIN_CREATE_FAIL -> {
+                JOptionPane.showMessageDialog(null,
+                        "Username already taken.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+
 
             case GAME_START -> {
                 // Add game logic here
