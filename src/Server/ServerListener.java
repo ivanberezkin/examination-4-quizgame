@@ -12,7 +12,7 @@ import java.util.List;
 public class ServerListener {
     private static final List<ObjectOutputStream> allServers = new ArrayList<>();
 
-    private int port = 12345;
+    private int port = 12344;
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {

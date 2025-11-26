@@ -17,13 +17,12 @@ public class ClientBase extends Thread {
     private static boolean running = true;
     private static ClientProtocol protocol;
     private final static String host = "127.0.0.1";
-    private final static int port = 12345;
+    private final static int port = 12344;
     private JFrame frame;
 
     public ClientBase(String host, int port, JFrame frame) {
         this.frame = frame;
-        Scanner scanner = new Scanner(System.in);
-        protocol = new ClientProtocol(this, scanner, frame);
+        protocol = new ClientProtocol(this, frame);
 
         try {
             Socket socket = new Socket(host,port);
