@@ -1,12 +1,12 @@
 package GUI;
 
+import Quizgame.shared.User;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-//import java.io.IO;
-
 
 public class LoginPanel extends JFrame {
 
@@ -22,6 +22,9 @@ public class LoginPanel extends JFrame {
 
     JLabel usernameLabel = new JLabel("Username: ");
     JTextField usernameInput = new JTextField(20);
+
+    JLabel passwordLabel = new JLabel("Password: ");
+    JPasswordField passwordInput = new JPasswordField(20);
 
     public LoginPanel(){
 
@@ -40,9 +43,11 @@ public class LoginPanel extends JFrame {
         welcomeLabel.setForeground(Color.BLUE);
 
         backgroundImage.add(buttonPanel, BorderLayout.SOUTH);
+        buttonPanel.setLayout(new GridLayout(3,2,10,10));
         buttonPanel.add(usernameLabel);
         buttonPanel.add(usernameInput);
-        buttonPanel.setLayout(new GridLayout(2,2));
+        buttonPanel.add(passwordLabel);
+        buttonPanel.add(passwordInput);
         buttonPanel.add(Login);
         buttonPanel.add(Exit);
 
@@ -50,9 +55,13 @@ public class LoginPanel extends JFrame {
 
         Login.addActionListener(e -> {
             String inputUsername = usernameInput.getText();
-            if(inputUsername.isEmpty()){
-                JOptionPane.showMessageDialog(LoginPanel.this,"Please enter correct username");
+            String inputPassword = passwordInput.getText();
+
+            if(inputUsername.isEmpty()|| inputPassword.isEmpty()){
+                JOptionPane.showMessageDialog(LoginPanel.this,"Please fill all the fields", "Error", JOptionPane.ERROR_MESSAGE);
             }else{
+                User user = new User(inputUsername,inputPassword);
+                //client.sendMessage(new Message/MessageType.LOGIN_REQUEST,user));
                 MenuPanel menuPanel = new MenuPanel(inputUsername, this);
                 setContentPane(menuPanel);
                 revalidate();
