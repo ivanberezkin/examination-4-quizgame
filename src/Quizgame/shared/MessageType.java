@@ -3,6 +3,7 @@ package Quizgame.shared;
 import java.io.Serializable;
 
 public enum MessageType implements Serializable {
+    ERROR,
     USERNAME_REQUEST,
     USERNAME,
     USERNAME_OK,

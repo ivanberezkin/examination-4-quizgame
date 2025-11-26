@@ -12,26 +12,31 @@ import java.util.List;
 public class ServerListener {
     private static final List<ObjectOutputStream> allServers = new ArrayList<>();
 
-    private int port = 12345;
+    private int port = 12344;
 
-    public ServerListener() {
-        try
-                (ServerSocket serverSocket = new ServerSocket(port)) {
+    public void start() {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("Server listening on port " + port);
+
             while (true) {
                 Socket socket = serverSocket.accept();
-                Server server = new Server(socket);
-                server.start();
+                System.out.println("Client connected!");
+
+                ClientHandler handler = new ClientHandler(socket);
+                handler.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) {
-        ServerListener serverListener = new ServerListener();
-    }
 
-    public static void addOutputStream(ObjectOutputStream outputStream) {
+    public static void main(String[] args) {
+        new ServerListener().start();
+    }
+}
+
+   /* public static void addOutputStream(ObjectOutputStream outputStream) {
         allServers.add(outputStream);
     }
 
@@ -54,4 +59,4 @@ public class ServerListener {
             sendOutputToAll(messageFromServer);
         }
     }
-}
+} */

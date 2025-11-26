@@ -63,13 +63,14 @@ public class Database {
     }
 
     public ArrayList<Question> getQuestionsForRound(int questionsPerRound) {
-
+        ArrayList<Question> result = new ArrayList<>();
         Random rand = new Random();
-        for(int i = 0; i < questionsPerRound; i++){
-            questionsListForUser.add(questionsList.get(rand.nextInt(questionsList.size())));
-        }
 
-        return questionsListForUser;
+        for(int i = 0; i < questionsPerRound; i++){
+            Question q = questionsList.get(rand.nextInt(questionsList.size()));
+            result.add(q);
+        }
+        return result;
     }
 
 
