@@ -17,11 +17,11 @@ public class Set {
     private static List<int[]> setScores = new ArrayList<>();
     private List<Match> matches = new ArrayList<>();
     private static Match match;
-    Database.Question.Category[] category;
+    Question.Category[] category;
     private static List<Question> allSetQuestions = new ArrayList<>();
     static Database db = new Database();
 
-    public Set(User player, Database.Question.Category[] category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
+    public Set(User player, Question.Category[] category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
         this.player1 = player;
         this.category = category;
         this.maxPlayers = maxPlayers;

@@ -10,11 +10,11 @@ public class Game {
     private int maxNumberOfMatches = 2;
     private int maxPlayers = 2;
 
-    private Database.Question.Category[] category;
+    private Question.Category[] category;
     private static List<Set> activeSets = new ArrayList<>();
     private Set set;
 
-    public Game(User player, Database.Question.Category[] category){
+    public Game(User player,Question.Category[] category){
         this.category = category;
         startGame(player);
     }

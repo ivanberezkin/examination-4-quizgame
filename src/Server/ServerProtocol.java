@@ -10,29 +10,37 @@ public class ServerProtocol {
     static Database db = new Database();
 
     public static Message processInput(Message message) {
-
         MessageType messageType = message.getType();
         if (checkIfValid(message)) {
             switch (messageType) {
-//                case USERNAME_REQUEST -> {
-//                    if(UserDatabase.checkIfNameIsAvailable(message)) {
-//                        UserDatabase.saveNewUser(message);
-//                        return new Message(MessageType.USERNAME_OK, message);
-//                    }
-//                    else {
-//                        return new Message(MessageType.USERNAME_TAKEN, message);
-                case USERNAME -> {
+                case LOGIN_REQUEST -> {
+                    User loginUser = (User) message.getData();
+                    User existingUser = UserDatabase.getUserByUsername(loginUser.getUsername());
+
+                    if (existingUser == null) {
+                        return new Message(MessageType.LOGIN_USER_NOT_FOUND, null);
+                    }
+                    if (!existingUser.getPassword().equals(loginUser.getPassword())) {
+                        return new Message(MessageType.LOGIN_WRONG_PASSWORD, null);
+                    }
+                    return new Message(MessageType.LOGIN_OK, existingUser);
                 }
-                case USERNAME_OK -> {
+
+                case LOGIN_CREATE_REQUEST -> {
+                    User newUser = (User) message.getData();
+                    if (AuthenticationDatabase.userExists(newUser.getUsername())) {
+                        return new Message(MessageType.LOGIN_CREATE_FAIL, null);
+                    }
+
+                    AuthenticationDatabase.createUser(newUser.getUsername(), newUser.getPassword());
+                    return new Message(MessageType.LOGIN_CREATE_OK, newUser);
                 }
-                case USERNAME_TAKEN -> {
-                }
+
                 case GAME_START -> {
                 }
                 case QUESTION -> {
                 }
                 case MATCHMAKING -> {
-                    IO.println("User requesting Questions");
                     ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
                     IO.println("Sending Questions to user");
                     return new Message(MessageType.QUESTION, questionsForUserList);
@@ -45,28 +53,7 @@ public class ServerProtocol {
                 case GAME_FINISHED -> {
                 }
 
-                case LOGIN_REQUEST -> {
-                    User loginUser = (User) message.getData();
-                    User existingUser = UserDatabase.getUserByUsername(loginUser.getUsername());
 
-                    if (existingUser == null) {
-                        return new Message(MessageType.LOGIN_USER_NOT_FOUND, null);
-                    }
-                    if (!existingUser.getPassword().equals(loginUser.getPassword())) {
-                        return new Message(MessageType.LOGIN_WRONG_PASSWORD, null);
-                    }
-                        return new Message(MessageType.LOGIN_OK, existingUser);
-                    }
-
-                case LOGIN_CREATE_REQUEST -> {
-                    User newUser = (User) message.getData();
-                    if (AuthenticationDatabase.userExists(newUser.getUsername())) {
-                        return new Message(MessageType.LOGIN_CREATE_FAIL, null);
-                    }
-
-                    AuthenticationDatabase.createUser(newUser.getUsername(), newUser.getPassword());
-                    return new Message(MessageType.LOGIN_CREATE_OK, newUser);
-                }
             }
         }
         return message;
