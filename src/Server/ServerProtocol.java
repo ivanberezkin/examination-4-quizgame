@@ -15,7 +15,7 @@ public class ServerProtocol {
             switch (messageType) {
                 case LOGIN_REQUEST -> {
                     User loginUser = (User) message.getData();
-                    User existingUser = UserDatabase.getUserByUsername(loginUser.getUsername());
+                    User existingUser = AuthenticationDatabase.getUserByUsername(loginUser.getUsername());
 
                     if (existingUser == null) {
                         return new Message(MessageType.LOGIN_USER_NOT_FOUND, null);
