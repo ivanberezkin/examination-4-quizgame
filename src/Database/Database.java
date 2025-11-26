@@ -12,6 +12,7 @@ public class Database {
 
     private final ArrayList<Question> questionsList = new ArrayList<>();
     private final String questionPath = "resources/Questions";
+    private ArrayList<Question> questionsListForUser = new ArrayList<>();
 
     public Database() {
 
@@ -25,8 +26,6 @@ public class Database {
             String category;
             String question;
             String correctAnswer;
-
-
 
             while ((line = br.readLine()) != null) {
                 List<AnswerOption> answerOptions = new ArrayList<>();
@@ -63,11 +62,14 @@ public class Database {
         }
     }
 
-    public Question getNewQuestion() {
-        Random rand = new Random();
-        Question newQuestion = questionsList.get(rand.nextInt(questionsList.size()));
+    public ArrayList<Question> getQuestionsForRound(int questionsPerRound) {
 
-        return newQuestion;
+        Random rand = new Random();
+        for(int i = 0; i < questionsPerRound; i++){
+            questionsListForUser.add(questionsList.get(rand.nextInt(questionsList.size())));
+        }
+
+        return questionsListForUser;
     }
 
 
