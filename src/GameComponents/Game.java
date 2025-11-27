@@ -2,6 +2,7 @@ package GameComponents;
 
 import Database.*;
 import GUI.LoginPanel;
+import Quizgame.shared.Answer;
 import Quizgame.shared.Message;
 import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
@@ -43,14 +44,18 @@ public class Game implements Serializable {
         set = new Set(players, category, maxPlayers, maxNumberOfQuestions, maxNumberOfMatches);
         activeSets.add(set);
     }
-    public static void continueGame(){
+    public static void continueGame(Answer answer){
+        System.out.println("In Game, continueGame is reached");
         for (Set s : getActiveSets())
             for (Match m : s.getMatches()) {
-                for (User u : m.getPlayerList()) {
-                    m.sendQuestion();
+                for (User u : m.getPlayerList())
+                    if (u == answer.getUser()){
+                        System.out.println("Username in continueGame is: " + answer.getUser().getUsername());
+                        m.addPointsToList(answer);
+                        m.sendQuestion();
+                    }
                 }
             }
-    }
 
     public static void sendQuestion(List<Connections> connections, Question question) {
         ServerProtocol.processInput(new Message(MessageType.QUESTION, question));
@@ -63,17 +68,6 @@ public class Game implements Serializable {
 
     }
 
-    public void receiveScore (Score score){
-        for (Set s : activeSets){
-            for (Match thisMatch :  s.getMatches()){
-                if (thisMatch.getMatchID() == score.getMatch().getMatchID()){
-                    thisMatch.assignPoints(score);
-                    s.getMatchScore();
-                    s.continuePlaying();
-                }
-            }
-        }
-    }
     public static void sendMatchScore(List<Connections>players, int matchID){
         for (Set s : activeSets){
             for (Match thisMatch :  s.getMatches()) {

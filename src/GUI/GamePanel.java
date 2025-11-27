@@ -2,8 +2,10 @@ package GUI;
 
 import Client.ClientBase;
 import Database.*;
+import Quizgame.shared.Answer;
 import Quizgame.shared.Message;
 import Quizgame.shared.MessageType;
+import Quizgame.shared.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,11 +35,13 @@ public class GamePanel extends JPanel {
     ArrayList<Question> questionsForRound;
     private ClientBase clientBase;
     private Question question;
+    private User user;
 
-    public GamePanel(ClientBase client, Question question) {
+    public GamePanel(ClientBase client, Question question, User user) {
         this.clientBase = client;
         this.question = question;
         this.questionsForRound = questionsForRound;
+        this.user = user;
 
         setBackground(Color.CYAN);
         setLayout(new BorderLayout());
@@ -64,9 +68,7 @@ public class GamePanel extends JPanel {
         answerB.setFocusable(false);
         answerC.setFocusable(false);
         answerD.setFocusable(false);
-
-
-         client.sendMessage(new Message(MessageType.ANSWER, nextQuestion()));
+        newQuestion(question);
 
         ActionListener answerButtonListener = e -> {
             JButton clickedButton = (JButton) e.getSource();
@@ -76,7 +78,7 @@ public class GamePanel extends JPanel {
                 clickedButton.setBackground(Color.LIGHT_GRAY);
                 //TODO lägga till logik för antal rundor och sedan starta ny fråga
 
-                client.sendMessage(new Message(MessageType.ANSWER, nextQuestion()));
+                client.sendMessage(new Message(MessageType.ANSWER, new Answer(user, question, nextQuestion())));
                 answerButtonsPanel.removeAll();
 
             } else {
@@ -84,7 +86,7 @@ public class GamePanel extends JPanel {
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the incorrect answer" +
                         "\n Correct Answer is: " + correctAnswer);
                 clickedButton.setBackground(Color.LIGHT_GRAY);
-                client.sendMessage(new Message(MessageType.ANSWER, nextQuestion()));
+                client.sendMessage(new Message(MessageType.ANSWER, new Answer(user, question, nextQuestion())));
                 answerButtonsPanel.removeAll();
             }
         };
@@ -113,7 +115,7 @@ public class GamePanel extends JPanel {
 //            IO.println("There are no questions to play.");
 //        } else {
             Question temp = question;
-            correctAnswer = question.getCorrect();
+
             return newQuestion(temp);
 //        }
     }
@@ -130,11 +132,11 @@ public class GamePanel extends JPanel {
         answerC.setText(answerOptions.get(1).getText());
         answerD.setText(answerOptions.get(2).getText());
 
-
         for (AnswerOption option : answerOptions) {
-            if (option.getCorrect())
+            if (option.getCorrect()) {
+                correctAnswer = option.getText();
                 return true;
-                option.getText();
+            }
         }
         return false;
     }

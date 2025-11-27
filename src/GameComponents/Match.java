@@ -1,5 +1,6 @@
 package GameComponents;
 import Database.*;
+import Quizgame.shared.Answer;
 import Quizgame.shared.User;
 import Server.Connections;
 
@@ -24,9 +25,10 @@ public class Match {
     private int numberOfSentQuestions = 0;
     private User winner;
     private Question firstQuestion;
+    private Set set;
 
-    public Match(List <Connections> playerList, Question.Category category, int numberOfQuestions, int maxPlayers) {
-
+    public Match(Set set, List <Connections> playerList, Question.Category category, int numberOfQuestions, int maxPlayers) {
+        this.set = set;
         this.category = category;
         this.numberOfQuestions = numberOfQuestions;
         this.maxPlayers = maxPlayers;
@@ -59,32 +61,24 @@ public class Match {
         return -1;
     }
 
-    public void assignPoints(Score score) {
-        int points = score.getPoints();
-        int index = getPlayerIndex(score);
-        User player = score.getPlayer();
-        if (index != -1) {
-            if (points == 0) {
-                player.addIncorrectAnswers();
-            } else {
-                player.addCorrectAnswers(points);
-            }
-            addPointsToList(index, score);
-            numberOfCompletedQuestion += 1;
+    public void addPointsToList(Answer answer) {
+        System.out.println("addPointsToList in Match was reached");
+        int score = 0;
+        if (answer.getIsAnswerCorrect()){
+            score = 1;
         }
-    }
-
-    private void addPointsToList(int index, Score score) {
-        if (index == 0) {
-            pointsPlayer1.add(score.getPoints());
-        } else if (index == 1) {
-            pointsPlayer2.add(score.getPoints());
+        if (answer.getUser() == player1){
+            pointsPlayer1.add(score);
         }
+        else if (answer.getUser() == player2) {
+            pointsPlayer2.add(score);
+        }
+        numberOfCompletedQuestion += 1;
     }
 
     public void sendFirstQuestion() {
         //Adjust method in DataBase, to get specific category?
-        questions = Set.getQuestions();
+        questions = set.getQuestions();
         if (players[0] != null && pointsPlayer1.isEmpty()){
             Game.sendFirstQuestion(playerList.get(0), questions[0]);
         }
@@ -131,7 +125,7 @@ public class Match {
     }
 
     public void loadMatchQuestions() {
-        this.questions = Set.getQuestions();
+        this.questions = set.getQuestions();
     }
 
     public User getWinner() {

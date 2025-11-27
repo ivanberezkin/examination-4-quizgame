@@ -126,8 +126,11 @@ public class ServerProtocol {
 
 //            }
             case ANSWER -> {
-                System.out.println("--- case Answer was reached, message type is: " + message.getData());
-                Game.continueGame();
+                System.out.println("--- case Answer was reached, message type is: " + message.getData().getClass());
+                if (message.getData() instanceof Answer) {
+                    Answer answer = (Answer) message.getData();
+                    Game.continueGame(answer);
+                }
             }
             case RESULT_ROUND -> {
                 //TODO: logik för rundresultatet

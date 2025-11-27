@@ -14,13 +14,13 @@ public class Set {
     private Connections player1;
     private Connections player2;
     private int setScorePlayer1 = 0;
-    private static int setScorePlayer2 = 0;
+    private int setScorePlayer2 = 0;
     private Connections setWinner;
-    private static List<int[]> setScores = new ArrayList<>();
+    private  List<int[]> setScores = new ArrayList<>();
     private List<Match> matches = new ArrayList<>();
-    private static Match match;
+    private Match match;
     Question.Category category;
-    private static List<Question> allSetQuestions = new ArrayList<>();
+    private List<Question> allSetQuestions = new ArrayList<>();
     static Database db = new Database();
 
     public Set(List <Connections> players, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
@@ -34,10 +34,10 @@ public class Set {
     public void startMatch(List<Connections> players) {
         if (matches.size() < maxNumberOfMatches) {
         if (players.size() == 2) {
-            match = new Match(players, category, maxNumberOfQuestions, maxPlayers);
+            match = new Match(this, players, category, maxNumberOfQuestions, maxPlayers);
             matches.add(match);
         } else {
-                match = new Match(players, category, maxNumberOfQuestions, maxPlayers);
+                match = new Match(this, players, category, maxNumberOfQuestions, maxPlayers);
                 matches.add(match);
             }
         }
@@ -81,7 +81,7 @@ public class Set {
         }
     }
 
-    public static Question[] getQuestions() {
+    public Question[] getQuestions() {
         Question[] questions = new Question[maxNumberOfQuestions];
         ArrayList<Question> questionList = db.getQuestionsForRound(maxNumberOfQuestions);
 
@@ -97,7 +97,7 @@ public class Set {
         }
         return questions;
     }
-    private static boolean ensureNewQuestion(Question question){
+    private boolean ensureNewQuestion(Question question){
         for (Question q : allSetQuestions){
             if (q.getPrompt().equals(question.getPrompt())){
                 return true;
