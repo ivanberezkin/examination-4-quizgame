@@ -70,18 +70,18 @@ public class MatchmakingPanel extends JPanel {
 
 
     //TESTTT
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Test Matchmaking");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        MatchmakingPanel panel = new MatchmakingPanel(() -> {
-            System.out.println("Matchmaking canceled!");
-        });
-
-        frame.setContentPane(panel);
-        frame.setSize(400, 300);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        JFrame frame = new JFrame("Test Matchmaking");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//        MatchmakingPanel panel = new MatchmakingPanel(() -> {
+//            System.out.println("Matchmaking canceled!");
+//        });
+//
+//        frame.setContentPane(panel);
+//        frame.setSize(400, 300);
+//        frame.setLocationRelativeTo(null);
+//        frame.setVisible(true);
+//    }
 
 }
