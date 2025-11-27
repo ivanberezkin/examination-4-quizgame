@@ -14,6 +14,7 @@ public enum MessageType implements Serializable {
     RESULT_ROUND,
     GAME_FINISHED,
     MATCHMAKING,
+    WAITING,
 
     //for authentication
     LOGIN_REQUEST,
