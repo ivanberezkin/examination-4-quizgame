@@ -1,6 +1,8 @@
 package GameComponents;
 import Database.*;
 import Quizgame.shared.User;
+import Server.Connections;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +11,11 @@ public class Set {
     static int numberOfPlayers = 0;
     private static int maxNumberOfQuestions;
     private final int maxNumberOfMatches;
-    private User player1;
-    private User player2;
+    private Connections player1;
+    private Connections player2;
     private int setScorePlayer1 = 0;
     private static int setScorePlayer2 = 0;
-    private User setWinner;
+    private Connections setWinner;
     private static List<int[]> setScores = new ArrayList<>();
     private List<Match> matches = new ArrayList<>();
     private static Match match;
@@ -21,7 +23,7 @@ public class Set {
     private static List<Question> allSetQuestions = new ArrayList<>();
     static Database db = new Database();
 
-    public Set(List <User> players, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
+    public Set(List <Connections> players, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
         this.category = category;
         this.maxPlayers = maxPlayers;
         this.maxNumberOfMatches = maxNumberOfMatches;
@@ -29,12 +31,11 @@ public class Set {
         startMatch(players);
     }
 
-    public void startMatch(List<User> players) {
+    public void startMatch(List<Connections> players) {
         if (matches.size() < maxNumberOfMatches) {
         if (players.size() == 2) {
             match = new Match(players, category, maxNumberOfQuestions, maxPlayers);
         } else {
-
                 match = new Match(players, category, maxNumberOfQuestions, maxPlayers);
                 matches.add(match);
             }
@@ -46,11 +47,11 @@ public class Set {
         }
     }
 
-    public void addPlayer(User player) {
+    public void addPlayer(Connections player) {
         if (numberOfPlayers < 2) {
             this.player2 = player;
             numberOfPlayers += 1;
-            List<User>players = new ArrayList<>();
+            List<Connections>players = new ArrayList<>();
             players.add(player);
             match.addPlayer(players);
         }

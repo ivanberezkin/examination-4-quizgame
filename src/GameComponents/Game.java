@@ -1,9 +1,11 @@
 package GameComponents;
 
 import Database.*;
+import GUI.LoginPanel;
 import Quizgame.shared.Message;
 import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
+import Server.Connections;
 import Server.ServerListener;
 import Server.ServerProtocol;
 
@@ -20,11 +22,11 @@ public class Game implements Serializable {
     private static List<Set> activeSets = new ArrayList<>();
     private Set set;
 
-    public Game(List <User> players, Question.Category category){
+    public Game(List <Connections> players, Question.Category category){
         this.category = category;
         startGame(players);
     }
-    public void startGame(List<User>players){
+    public void startGame(List<Connections>players){
          if (players.size() == 1 && !activeSets.isEmpty()) {
             for (Set s : activeSets) {
                 if (s.getNumberOfPlayers() == 1) {
@@ -36,12 +38,12 @@ public class Game implements Serializable {
             startNewSet(players);
         }
     }
-    private void startNewSet(List <User> players) {
+    private void startNewSet(List <Connections> players) {
         set = new Set(players, category, maxPlayers, maxNumberOfQuestions, maxNumberOfMatches);
         activeSets.add(set);
     }
-    public static void continueGame(List<User> players){
-        for (Game g : players.getFirst().getGames()){
+    public static void continueGame(List<Connections> players){
+        for (Game g : players.getFirst().getUser().getGames()){
             for (Set s : g.getActiveSets())
                 for (Match m : s.getMatches()) {
                     for (User u : m.getPlayerList()) {
@@ -53,13 +55,15 @@ public class Game implements Serializable {
         }
     }
 
-    public static void sendQuestion(Question question, List<User> players, Match match) {
-        ServerProtocol.processInput(new Message(MessageType.QUESTION, question, players));
+    public static void sendQuestion(List<Connections> connections, Question question) {
+        ServerProtocol.processInput(new Message(MessageType.QUESTION, question));
+        send(connections, new Message(MessageType.QUESTION, question));
     }
-    public static void sendFirstQuestion(Question question, User player) {
-        List<User> players = new ArrayList<>();
-        players.add(player);
-        ServerProtocol.processInput(new Message(MessageType.QUESTION, question, players));
+    public static void sendFirstQuestion(Connections connection, Question question) {
+        List <Connections> onePlayer = new ArrayList<>();
+        onePlayer.add(connection);
+        send(onePlayer, new Message(MessageType.QUESTION, question));
+
     }
 
     public void receiveScore (Score score){
@@ -73,11 +77,11 @@ public class Game implements Serializable {
             }
         }
     }
-    public static void sendMatchScore(List<User>players, int matchID){
+    public static void sendMatchScore(List<Connections>players, int matchID){
         for (Set s : activeSets){
             for (Match thisMatch :  s.getMatches()) {
                 if (thisMatch.getMatchID() == matchID) {
-                    Message message = new Message(MessageType.RESULT_ROUND, thisMatch, players);
+                    send(players, new Message(MessageType.RESULT_ROUND, thisMatch));
                 }
             }
         }
@@ -95,5 +99,10 @@ public class Game implements Serializable {
     }
     private List<Set>getActiveSets(){
         return activeSets;
+    }
+    private static void send(List<Connections> players, Message message){
+        for (Connections c : players){
+            c.send(message);
+        }
     }
 }

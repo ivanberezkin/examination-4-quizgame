@@ -1,6 +1,8 @@
 package GameComponents;
 import Database.*;
 import Quizgame.shared.User;
+import Server.Connections;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,7 +16,7 @@ public class Match {
     private User player1;
     private User player2;
     private Question.Category category;
-    private List<User>playerList = new ArrayList<>();
+    private List<Connections>playerList = new ArrayList<>();
     private final List<Integer> pointsPlayer1 = new ArrayList<>();
     private final List<Integer> pointsPlayer2 = new ArrayList<>();
     private Question[] questions;
@@ -23,7 +25,7 @@ public class Match {
     private User winner;
     private Question firstQuestion;
 
-    public Match(List <User> playerList, Question.Category category, int numberOfQuestions, int maxPlayers) {
+    public Match(List <Connections> playerList, Question.Category category, int numberOfQuestions, int maxPlayers) {
 
         this.category = category;
         this.numberOfQuestions = numberOfQuestions;
@@ -35,13 +37,13 @@ public class Match {
         loadMatchQuestions();
     }
 
-    public void addPlayer(List <User> playerList) {
+    public void addPlayer(List <Connections> playerList) {
         if (playerList != null) {
             if (players[0] == null) {
-                player1 = playerList.getFirst();
+                player1 = playerList.getFirst().getUser();
                 players[0] = player1;
             } else if (players[1] == null) {
-                player2 = playerList.getFirst();
+                player2 = playerList.getFirst().getUser();
                 players[1] = player2;
             }
         }
@@ -83,15 +85,18 @@ public class Match {
     public void sendFirstQuestion() {
         //Adjust method in DataBase, to get specific category?
         if (players[0] != null && pointsPlayer1.isEmpty()){
-            Game.sendFirstQuestion(questions[0], player1);
+            Game.sendFirstQuestion(playerList.get(0), questions[0]);
         }
         else if (!pointsPlayer1.isEmpty() && players[1] != null && pointsPlayer2.isEmpty()) {
-            Game.sendFirstQuestion(questions[0], player2);
+            Game.sendFirstQuestion(playerList.get(1), questions[0]);
+        }
+        else if (playerList.size() == 2 && pointsPlayer1.isEmpty() && pointsPlayer2.isEmpty()){
+            sendQuestion();
         }
     }
     public void sendQuestion() {
         if((pointsPlayer1.size() == pointsPlayer2.size()) && !completedMatch()){
-            Game.sendQuestion(questions[numberOfSentQuestions], getPlayerList(), this);
+            Game.sendQuestion(playerList, questions[numberOfSentQuestions]);
             numberOfSentQuestions += 1;
         }
     }
