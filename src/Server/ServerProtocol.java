@@ -1,6 +1,7 @@
 package Server;
 
 import Database.*;
+import GameComponents.TestGame;
 import Quizgame.shared.*;
 
 import java.util.ArrayList;
@@ -44,6 +45,10 @@ public class ServerProtocol {
                     //TODO: Starta spel
                 }
 
+                case MATCHMAKING_WAITING_FOR_OPPONENT -> {
+
+
+                }
                 case MATCHMAKING -> {
 
                     Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
@@ -55,6 +60,9 @@ public class ServerProtocol {
                         Connections OpponentB = matchmaking.getFirstConnectionFromMatchMakingList();
                         IO.println("MATCHMAKING:" + OpponentA.getUser().getUsername() + " entered game against " + OpponentB.getUser().getUsername());
 
+                        TestGame testGame = new TestGame(OpponentA.getUser().getUsername(),
+                                OpponentB.getUser().getUsername());
+                        return new Message(MessageType.QUESTION, testGame);
                         //TODO här bör ett Game objekt skapas och skickas tillbaka till bägge klienterna.
 
                     }else{

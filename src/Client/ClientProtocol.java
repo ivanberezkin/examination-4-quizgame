@@ -3,6 +3,7 @@ package Client;
 import Database.Question;
 import GUI.GamePanel;
 import GUI.MenuPanel;
+import GameComponents.TestGame;
 import Quizgame.shared.*;
 
 import javax.swing.*;
@@ -82,7 +83,8 @@ public class ClientProtocol {
 
             case QUESTION -> {
                 IO.println("Questions Received by User");
-                ArrayList<Question> questionsForRound = (ArrayList<Question>) message.getData();
+                TestGame testGame = (TestGame) message.getData();
+                ArrayList<Question> questionsForRound = testGame.getQuestionsForRound();
                 GamePanel gamePanel = new GamePanel(questionsForRound);
                 frame.setContentPane(gamePanel);
                 frame.revalidate();
