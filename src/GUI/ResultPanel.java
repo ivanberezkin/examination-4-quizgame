@@ -43,12 +43,12 @@ public class ResultPanel extends JPanel {
         return label;
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Test");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.setSize(400, 300);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        JFrame frame = new JFrame("Test");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//        frame.setSize(400, 300);
+//        frame.setLocationRelativeTo(null);
+//        frame.setVisible(true);
+//    }
 }
