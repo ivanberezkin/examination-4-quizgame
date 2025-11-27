@@ -11,7 +11,7 @@ public class Matchmaking {
      matchMakingList.add(connections);
     }
 
-    public int getMatchMakingListSize() {
+    public static int getMatchMakingListSize() {
         return matchMakingList.size();
     }
     public Connections getFirstConnectionFromMatchMakingList() {
