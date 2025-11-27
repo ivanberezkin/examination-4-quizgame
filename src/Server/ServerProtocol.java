@@ -46,10 +46,20 @@ public class ServerProtocol {
 
                 case MATCHMAKING -> {
 
-                    Matchmaking matchmakingUser = new Matchmaking(ServerListener.findConnectionsByUser(
+                    Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
                             message.getData().toString().trim()));
                     IO.println("MATCHMAKING:" + message.getData().toString() + " added to matchmaking List!");
-                    return new Message(MessageType.WAITING, null);
+
+                    if(matchmaking.getMatchMakingListSize() > 1){
+                        Connections OpponentA = matchmaking.getFirstConnectionFromMatchMakingList();
+                        Connections OpponentB = matchmaking.getFirstConnectionFromMatchMakingList();
+                        IO.println("MATCHMAKING:" + OpponentA.getUser().getUsername() + " entered game against " + OpponentB.getUser().getUsername());
+
+
+                    }else{
+                        return new Message(MessageType.WAITING, null);
+                    }
+
 //                    ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
 //                    return new Message(MessageType.QUESTION, questionsForUserList);
 

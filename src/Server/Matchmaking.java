@@ -10,4 +10,14 @@ public class Matchmaking {
     public Matchmaking(Connections connections) {
      matchMakingList.add(connections);
     }
+
+    public int getMatchMakingListSize() {
+        return matchMakingList.size();
+    }
+    public Connections getFirstConnectionFromMatchMakingList() {
+        Connections tempConnection = matchMakingList.iterator().next();
+        matchMakingList.remove(tempConnection);
+        return tempConnection;
+    }
+
 }
