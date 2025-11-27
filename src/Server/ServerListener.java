@@ -34,6 +34,10 @@ public class ServerListener {
         allConnectedClientsList.add(conn);
     }
 
+    public static int numberOfConnectionsInAllConnectedClientsList() {
+        return allConnectedClientsList.size();
+    }
+
     public static void main(String[] args) {
         new ServerListener().start();
     }

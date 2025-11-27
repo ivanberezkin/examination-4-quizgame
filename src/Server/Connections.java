@@ -20,6 +20,18 @@ public class Connections {
         return out;
     }
 
+    public void setOut(ObjectOutputStream out) {
+        this.out = out;
+    }
+
+    public void setIn(ObjectInputStream in) {
+        this.in = in;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public ObjectInputStream getIn() {
         return in;
     }

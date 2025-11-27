@@ -12,29 +12,39 @@ import java.net.Socket;
 public class ClientHandler extends Thread {
     ObjectOutputStream out;
     ObjectInputStream in;
+    Connections newConnection;
 
-    public ClientHandler(Socket socket){
+    public ClientHandler(Socket socket) {
         try {
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
-            ServerListener.addNewConnection(new Connections(out,in));
-        }
-        catch (IOException e){
+             newConnection = new Connections(out,in);
+            ServerListener.addNewConnection(newConnection);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
     @Override
-    public void run (){
+    public void run() {
         try {
             while (true) {
                 Message message = (Message) in.readObject();
                 Message response = ServerProtocol.processInput(message);
 
+                //If Login OK then we are assigning a User to the connection.
+                if (response.getType() == MessageType.LOGIN_OK
+                        || response.getType() == MessageType.LOGIN_CREATE_OK) {
+                    newConnection.setUser((User) response.getData());
+                    IO.println(newConnection.getUser().getUsername() + " added to connectionList");
+                    IO.println(ServerListener.numberOfConnectionsInAllConnectedClientsList() + " connected users total.");
+                }
+
                 out.writeObject(response);
                 out.flush();
             }
         } catch (IOException | ClassNotFoundException e) {
-                System.out.println("Client disconnected");
-            }
+            System.out.println("Client disconnected");
         }
     }
+}
