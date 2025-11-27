@@ -49,12 +49,21 @@ public class ClientProtocol {
 
                 if (choice == JOptionPane.YES_OPTION) {
                     String username = JOptionPane.showInputDialog(frame, "Enter your username:");
+                    if (username == null || username.isEmpty()) {
+                        JOptionPane.showMessageDialog(frame, "Username cannot be empty.");
+                        return;
+                    }
+
                     String password = JOptionPane.showInputDialog(frame, "Enter your password:");
+                    if (password == null || password.isEmpty()) {
+                        JOptionPane.showMessageDialog(frame, "Password cannot be empty.");
+                        return;
+                    }
+
                     User newUser = new User(username, password);
                     client.sendMessage(new Message(MessageType.LOGIN_CREATE_REQUEST, newUser));
                 } else {
-                    JOptionPane.showMessageDialog(frame,
-                            "Please try again.");
+                    JOptionPane.showMessageDialog(frame, "Please try again.");
                 }
             }
 
@@ -66,7 +75,6 @@ public class ClientProtocol {
             }
 
             case LOGIN_CREATE_FAIL -> {
-                loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(frame,
                         "Username already taken.",
                         "Error",
