@@ -72,6 +72,10 @@ public class ClientProtocol {
                         JOptionPane.ERROR_MESSAGE);
             }
 
+            case WAITING -> {
+                IO.println("MATCHMAKING:" + loggedInUser.getUsername() + " waiting for opponent.");
+            }
+
             case MATCHMAKING -> {
                 //Server skickar frågor i en Message_type question
             }
@@ -99,7 +103,7 @@ public class ClientProtocol {
     }
 
     private void moveUserToMenuPanel() {
-        MenuPanel menuPanel = new MenuPanel(loggedInUser.getUsername(), frame);
+        MenuPanel menuPanel = new MenuPanel(loggedInUser.getUsername(), frame, client);
         frame.setContentPane(menuPanel);
         frame.revalidate();
         frame.repaint();

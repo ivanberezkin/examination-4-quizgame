@@ -11,8 +11,9 @@ import java.awt.*;
 public class MenuPanel extends JPanel {
 
     private JFrame frame;
+    private ClientBase client;
 
-    public MenuPanel(String username, JFrame frame) {
+    public MenuPanel(String username, JFrame frame, ClientBase client) {
         this.frame = frame;
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -64,9 +65,11 @@ public class MenuPanel extends JPanel {
         startGameButton.addActionListener(e -> {
 
 
-            ClientStart cs = new ClientStart(frame);
-            ClientBase client = cs.getClient();
-            client.sendMessage(new Message(MessageType.MATCHMAKING, null));
+//            ClientStart cs = new ClientStart(frame);
+//            ClientBase client = cs.getClient();
+            client.sendMessage(new Message(MessageType.MATCHMAKING, username));
+            //TODO move to MatchMaking Panel
+            IO.println(username + " moved to Matchmaking");
         });
 
         bottomPanel.add(startGameButton);

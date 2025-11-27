@@ -45,8 +45,24 @@ public class ServerProtocol {
                 }
 
                 case MATCHMAKING -> {
-                    ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
-                    return new Message(MessageType.QUESTION, questionsForUserList);
+
+                    Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
+                            message.getData().toString().trim()));
+                    IO.println("MATCHMAKING:" + message.getData().toString() + " added to matchmaking List!");
+
+                    if(matchmaking.getMatchMakingListSize() > 1){
+                        Connections OpponentA = matchmaking.getFirstConnectionFromMatchMakingList();
+                        Connections OpponentB = matchmaking.getFirstConnectionFromMatchMakingList();
+                        IO.println("MATCHMAKING:" + OpponentA.getUser().getUsername() + " entered game against " + OpponentB.getUser().getUsername());
+
+                        //TODO här bör ett Game objekt skapas och skickas tillbaka till bägge klienterna.
+
+                    }else{
+                        return new Message(MessageType.WAITING, null);
+                    }
+
+//                    ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
+//                    return new Message(MessageType.QUESTION, questionsForUserList);
 
                 }
                 case ANSWER -> {
