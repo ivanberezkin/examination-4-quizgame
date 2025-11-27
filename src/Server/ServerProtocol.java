@@ -1,6 +1,7 @@
 package Server;
 
 import Database.*;
+import GameComponents.TestGame;
 import Quizgame.shared.*;
 
 import java.util.ArrayList;
@@ -44,9 +45,30 @@ public class ServerProtocol {
                     //TODO: Starta spel
                 }
 
+                case MATCHMAKING_WAITING_FOR_OPPONENT -> {
+                    while(Matchmaking.getMatchMakingListSize() < 2) {
+
+                    }
+
+                }
                 case MATCHMAKING -> {
-                    ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
-                    return new Message(MessageType.QUESTION, questionsForUserList);
+
+                    Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
+                            message.getData().toString().trim()));
+                    IO.println("MATCHMAKING:" + message.getData().toString() + " added to matchmaking List!");
+
+                    if(Matchmaking.getMatchMakingListSize() > 1){
+                        Connections opponentA = matchmaking.getFirstConnectionFromMatchMakingList();
+                        Connections opponentB = matchmaking.getFirstConnectionFromMatchMakingList();
+                        sendQuestionsToClients(opponentA, opponentB);
+                        
+                        //TODO här bör ett Game objekt skapas och skickas tillbaka till bägge klienterna.
+                    }else{
+                        return new Message(MessageType.WAITING, null);
+                    }
+
+//                    ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
+//                    return new Message(MessageType.QUESTION, questionsForUserList);
 
                 }
                 case ANSWER -> {
@@ -65,5 +87,15 @@ public class ServerProtocol {
             }
             return new Message(MessageType.ERROR, "Unhandled messagetype");
         }
+
+        private static void sendQuestionsToClients(Connections opponentA, Connections opponentB) {
+            IO.println("MATCHMAKING:" + opponentA.getUser().getUsername() + " entered game against " + opponentB.getUser().getUsername());
+            TestGame testGame = new TestGame(opponentA.getUser().getUsername(),
+                    opponentB.getUser().getUsername());
+
+            opponentA.send(new Message(MessageType.QUESTION,testGame));
+            opponentB.send(new Message(MessageType.QUESTION,testGame));
+        }
+
     }
 

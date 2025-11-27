@@ -3,6 +3,7 @@ package Client;
 import Database.Question;
 import GUI.GamePanel;
 import GUI.MenuPanel;
+import GameComponents.TestGame;
 import Quizgame.shared.*;
 
 import javax.swing.*;
@@ -48,12 +49,21 @@ public class ClientProtocol {
 
                 if (choice == JOptionPane.YES_OPTION) {
                     String username = JOptionPane.showInputDialog(frame, "Enter your username:");
+                    if (username == null || username.isEmpty()) {
+                        JOptionPane.showMessageDialog(frame, "Username cannot be empty.");
+                        return;
+                    }
+
                     String password = JOptionPane.showInputDialog(frame, "Enter your password:");
+                    if (password == null || password.isEmpty()) {
+                        JOptionPane.showMessageDialog(frame, "Password cannot be empty.");
+                        return;
+                    }
+
                     User newUser = new User(username, password);
                     client.sendMessage(new Message(MessageType.LOGIN_CREATE_REQUEST, newUser));
                 } else {
-                    JOptionPane.showMessageDialog(frame,
-                            "Please try again.");
+                    JOptionPane.showMessageDialog(frame, "Please try again.");
                 }
             }
 
@@ -65,11 +75,14 @@ public class ClientProtocol {
             }
 
             case LOGIN_CREATE_FAIL -> {
-                loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(frame,
                         "Username already taken.",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
+            }
+
+            case WAITING -> {
+                IO.println("MATCHMAKING:" + loggedInUser.getUsername() + " waiting for opponent.");
             }
 
             case MATCHMAKING -> {
@@ -78,7 +91,8 @@ public class ClientProtocol {
 
             case QUESTION -> {
                 IO.println("Questions Received by User");
-                ArrayList<Question> questionsForRound = (ArrayList<Question>) message.getData();
+                TestGame testGame = (TestGame) message.getData();
+                ArrayList<Question> questionsForRound = testGame.getQuestionsForRound();
                 GamePanel gamePanel = new GamePanel(questionsForRound);
                 frame.setContentPane(gamePanel);
                 frame.revalidate();
@@ -99,7 +113,7 @@ public class ClientProtocol {
     }
 
     private void moveUserToMenuPanel() {
-        MenuPanel menuPanel = new MenuPanel(loggedInUser.getUsername(), frame);
+        MenuPanel menuPanel = new MenuPanel(loggedInUser.getUsername(), frame, client);
         frame.setContentPane(menuPanel);
         frame.revalidate();
         frame.repaint();

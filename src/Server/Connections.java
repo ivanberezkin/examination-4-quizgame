@@ -1,7 +1,10 @@
 package Server;
 
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -14,6 +17,16 @@ public class Connections {
     public Connections(ObjectOutputStream out, ObjectInputStream in) {
         this.out = out;
         this.in = in;
+    }
+
+    public void send(Message message){
+        try {
+            out.writeObject(message);
+            out.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public ObjectOutputStream getOut() {

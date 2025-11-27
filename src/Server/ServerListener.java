@@ -37,6 +37,15 @@ public class ServerListener {
         return allConnectedClientsList.size();
     }
 
+    public static Connections findConnectionsByUser(String username) {
+        for (Connections conn : allConnectedClientsList) {
+            if(conn.getUser().getUsername().equals(username)) {
+                return conn;
+            }
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         new ServerListener().start();
     }
