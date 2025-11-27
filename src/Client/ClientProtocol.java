@@ -80,8 +80,13 @@ public class ClientProtocol {
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
+            case DUMMY -> {
+
+
+            }
 
             case WAITING -> {
+
                 IO.println("MATCHMAKING:" + loggedInUser.getUsername() + " waiting for opponent.");
             }
 
@@ -90,14 +95,17 @@ public class ClientProtocol {
             }
 
             case QUESTION -> {
+                System.out.println("Message type is:" + message.getData().getClass());
                 IO.println("Questions Received by User");
-                TestGame testGame = (TestGame) message.getData();
-                ArrayList<Question> questionsForRound = testGame.getQuestionsForRound();
-                GamePanel gamePanel = new GamePanel(questionsForRound);
-                frame.setContentPane(gamePanel);
-                frame.revalidate();
-                frame.repaint();
-
+//                TestGame testGame = (TestGame) message.getData();
+//                ArrayList<Question> questionsForRound = testGame.getQuestionsForRound();
+                Question question = (Question) message.getData();
+                if (question != null) {
+                    GamePanel gamePanel = new GamePanel(client, question);
+                    frame.setContentPane(gamePanel);
+                    frame.revalidate();
+                    frame.repaint();
+                }
             }
 
             case RESULT_ROUND -> {
@@ -113,7 +121,7 @@ public class ClientProtocol {
     }
 
     private void moveUserToMenuPanel() {
-        MenuPanel menuPanel = new MenuPanel(loggedInUser.getUsername(), frame, client);
+        MenuPanel menuPanel = new MenuPanel(loggedInUser, frame, client);
         frame.setContentPane(menuPanel);
         frame.revalidate();
         frame.repaint();

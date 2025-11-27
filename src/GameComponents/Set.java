@@ -35,6 +35,7 @@ public class Set {
         if (matches.size() < maxNumberOfMatches) {
         if (players.size() == 2) {
             match = new Match(players, category, maxNumberOfQuestions, maxPlayers);
+            matches.add(match);
         } else {
                 match = new Match(players, category, maxNumberOfQuestions, maxPlayers);
                 matches.add(match);

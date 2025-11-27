@@ -53,6 +53,7 @@ public class ClientBase extends Thread {
     }
 
     public void sendMessage(Message message) {
+        System.out.println("sendMessage in ClientBase was reached. MessageType is: " + message.getType());
         try {
             out.writeObject(message);
             out.flush();

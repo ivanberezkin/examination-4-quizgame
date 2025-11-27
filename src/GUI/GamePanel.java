@@ -1,6 +1,9 @@
 package GUI;
 
+import Client.ClientBase;
 import Database.*;
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,8 +31,12 @@ public class GamePanel extends JPanel {
     JButton answerD = new JButton("D");
     String correctAnswer;
     ArrayList<Question> questionsForRound;
+    private ClientBase clientBase;
+    private Question question;
 
-    public GamePanel(ArrayList<Question> questionsForRound) {
+    public GamePanel(ClientBase client, Question question) {
+        this.clientBase = client;
+        this.question = question;
         this.questionsForRound = questionsForRound;
 
         setBackground(Color.CYAN);
@@ -59,7 +66,7 @@ public class GamePanel extends JPanel {
         answerD.setFocusable(false);
 
 
-        nextQuestion();
+         client.sendMessage(new Message(MessageType.ANSWER, nextQuestion()));
 
         ActionListener answerButtonListener = e -> {
             JButton clickedButton = (JButton) e.getSource();
@@ -68,14 +75,17 @@ public class GamePanel extends JPanel {
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the correct answer.");
                 clickedButton.setBackground(Color.LIGHT_GRAY);
                 //TODO lägga till logik för antal rundor och sedan starta ny fråga
-                nextQuestion();
+
+                client.sendMessage(new Message(MessageType.ANSWER, nextQuestion()));
+                answerButtonsPanel.removeAll();
 
             } else {
                 clickedButton.setBackground(Color.RED);
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the incorrect answer" +
                         "\n Correct Answer is: " + correctAnswer);
                 clickedButton.setBackground(Color.LIGHT_GRAY);
-                nextQuestion();
+                client.sendMessage(new Message(MessageType.ANSWER, nextQuestion()));
+                answerButtonsPanel.removeAll();
             }
         };
 
@@ -98,17 +108,17 @@ public class GamePanel extends JPanel {
         questionArea.updateUI();
     }
 
-    private void nextQuestion() {
-        if (questionsForRound.size() == 0) {
-            IO.println("There are no questions to play.");
-        } else {
-            Question temp = questionsForRound.getFirst();
-            questionsForRound.removeFirst();
-            correctAnswer = newQuestion(temp);
-        }
+    private boolean nextQuestion() {
+//        if (questionsForRound.size() == 0) {
+//            IO.println("There are no questions to play.");
+//        } else {
+            Question temp = question;
+            correctAnswer = question.getCorrect();
+            return newQuestion(temp);
+//        }
     }
 
-    private String newQuestion(Question newQuestion) {
+    private boolean newQuestion(Question newQuestion) {
 //        Question newQuestion = db.getNewQuestion();
         List<AnswerOption> answerOptions = newQuestion.getAnswerOptions();
         Collections.shuffle(answerOptions);
@@ -123,9 +133,10 @@ public class GamePanel extends JPanel {
 
         for (AnswerOption option : answerOptions) {
             if (option.getCorrect())
-                return option.getText();
+                return true;
+                option.getText();
         }
-        return null;
+        return false;
     }
 
 

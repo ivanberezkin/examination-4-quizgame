@@ -11,7 +11,7 @@ import java.util.List;
 public class ServerListener {
     private static final List<Connections> allConnectedClientsList = new ArrayList<>();
 
-    private int port = 12344;
+    private int port = 12345;
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {

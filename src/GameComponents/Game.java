@@ -22,12 +22,13 @@ public class Game implements Serializable {
     private static List<Set> activeSets = new ArrayList<>();
     private Set set;
 
-    public Game(List <Connections> players, Question.Category category){
-        this.category = category;
-        startGame(players);
+    public Game(){
+        System.out.println("Game was reached");
+
     }
-    public void startGame(List<Connections>players){
-         if (players.size() == 1 && !activeSets.isEmpty()) {
+    public void startGame(List<Connections>players, Question.Category category){
+        this.category = category;
+        if (players.size() == 1 && !activeSets.isEmpty()) {
             for (Set s : activeSets) {
                 if (s.getNumberOfPlayers() == 1) {
                     s.addPlayer(players.getFirst());
@@ -42,17 +43,13 @@ public class Game implements Serializable {
         set = new Set(players, category, maxPlayers, maxNumberOfQuestions, maxNumberOfMatches);
         activeSets.add(set);
     }
-    public static void continueGame(List<Connections> players){
-        for (Game g : players.getFirst().getUser().getGames()){
-            for (Set s : g.getActiveSets())
-                for (Match m : s.getMatches()) {
-                    for (User u : m.getPlayerList()) {
-                        if (u.getUsername().equals(players.get(0)) || u.getUsername().equals(players.get(1))){
-                            m.sendQuestion();
-                        }
-                    }
+    public static void continueGame(){
+        for (Set s : getActiveSets())
+            for (Match m : s.getMatches()) {
+                for (User u : m.getPlayerList()) {
+                    m.sendQuestion();
                 }
-        }
+            }
     }
 
     public static void sendQuestion(List<Connections> connections, Question question) {
@@ -97,7 +94,7 @@ public class Game implements Serializable {
             }
         }
     }
-    private List<Set>getActiveSets(){
+    private static List<Set>getActiveSets(){
         return activeSets;
     }
     private static void send(List<Connections> players, Message message){

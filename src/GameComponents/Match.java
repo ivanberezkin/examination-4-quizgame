@@ -84,14 +84,17 @@ public class Match {
 
     public void sendFirstQuestion() {
         //Adjust method in DataBase, to get specific category?
+        questions = Set.getQuestions();
         if (players[0] != null && pointsPlayer1.isEmpty()){
             Game.sendFirstQuestion(playerList.get(0), questions[0]);
         }
         else if (!pointsPlayer1.isEmpty() && players[1] != null && pointsPlayer2.isEmpty()) {
             Game.sendFirstQuestion(playerList.get(1), questions[0]);
+            numberOfSentQuestions+=1;
         }
         else if (playerList.size() == 2 && pointsPlayer1.isEmpty() && pointsPlayer2.isEmpty()){
             sendQuestion();
+
         }
     }
     public void sendQuestion() {

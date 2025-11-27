@@ -4,6 +4,7 @@ import Client.ClientBase;
 import Client.ClientStart;
 import Quizgame.shared.Message;
 import Quizgame.shared.MessageType;
+import Quizgame.shared.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,7 @@ public class MenuPanel extends JPanel {
     private JFrame frame;
     private ClientBase client;
 
-    public MenuPanel(String username, JFrame frame, ClientBase client) {
+    public MenuPanel(User user, JFrame frame, ClientBase client) {
         this.frame = frame;
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -35,7 +36,7 @@ public class MenuPanel extends JPanel {
         middlePanel.setBackground(new Color(30, 144, 255));
         middlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-        JLabel welcomeLabel = new JLabel("Välkommen " + username, SwingConstants.CENTER);
+        JLabel welcomeLabel = new JLabel("Välkommen " + user.getUsername(), SwingConstants.CENTER);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
         welcomeLabel.setForeground(Color.WHITE);
 
@@ -67,9 +68,10 @@ public class MenuPanel extends JPanel {
 
 //            ClientStart cs = new ClientStart(frame);
 //            ClientBase client = cs.getClient();
-            client.sendMessage(new Message(MessageType.MATCHMAKING, username));
+            User thisUser = user;
+            client.sendMessage(new Message(MessageType.MATCHMAKING, user));
             //TODO move to MatchMaking Panel
-            IO.println(username + " moved to Matchmaking");
+            IO.println(user.getUsername() + " moved to Matchmaking");
         });
 
         bottomPanel.add(startGameButton);
