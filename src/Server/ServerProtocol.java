@@ -55,6 +55,7 @@ public class ServerProtocol {
                         Connections OpponentB = matchmaking.getFirstConnectionFromMatchMakingList();
                         IO.println("MATCHMAKING:" + OpponentA.getUser().getUsername() + " entered game against " + OpponentB.getUser().getUsername());
 
+                        //TODO här bör ett Game objekt skapas och skickas tillbaka till bägge klienterna.
 
                     }else{
                         return new Message(MessageType.WAITING, null);
