@@ -2,6 +2,7 @@ package Client;
 
 import Database.Question;
 import GUI.GamePanel;
+import GUI.MatchmakingPanel;
 import GUI.MenuPanel;
 import GameComponents.TestGame;
 import Quizgame.shared.*;
@@ -88,6 +89,12 @@ public class ClientProtocol {
             case WAITING -> {
 
                 IO.println("MATCHMAKING:" + loggedInUser.getUsername() + " waiting for opponent.");
+                MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
+                    System.out.println("Matchmaking canceled!");
+                });
+                frame.setContentPane(matchmakingPanel);
+                frame.revalidate();
+                frame.repaint();
             }
 
             case MATCHMAKING -> {
