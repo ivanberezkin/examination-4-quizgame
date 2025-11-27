@@ -91,25 +91,25 @@ public class MenuPanel extends JPanel {
         return card;
     }
 
-    private void showMode() {
-        JFrame modeFrame = new JFrame("Klassiskt läge");
-        modeFrame.setSize(350, 200);
-        modeFrame.setLocationRelativeTo(null);
-        modeFrame.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
-
-        JButton playFriend = new JButton("Spela");
-        playFriend.setBackground(new Color(34, 139, 34));
-        playFriend.setForeground(Color.WHITE);
-        playFriend.setFont(new Font("Arial", Font.BOLD, 16));
-        playFriend.setFocusPainted(false);
-        playFriend.setPreferredSize(new Dimension(200, 50));
-
-        modeFrame.add(playFriend);
-
-//        playFriend.addActionListener(e -> new ClientStart());
-
-        modeFrame.setVisible(true);
-    }
+//    private void showMode() {
+//        JFrame modeFrame = new JFrame("Klassiskt läge");
+//        modeFrame.setSize(350, 200);
+//        modeFrame.setLocationRelativeTo(null);
+//        modeFrame.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+//
+//        JButton playFriend = new JButton("Spela");
+//        playFriend.setBackground(new Color(34, 139, 34));
+//        playFriend.setForeground(Color.WHITE);
+//        playFriend.setFont(new Font("Arial", Font.BOLD, 16));
+//        playFriend.setFocusPainted(false);
+//        playFriend.setPreferredSize(new Dimension(200, 50));
+//
+//        modeFrame.add(playFriend);
+//
+////        playFriend.addActionListener(e -> new ClientStart());
+//
+//        modeFrame.setVisible(true);
+//    }
 
     //test
 //    public static void main(String[] args) {
