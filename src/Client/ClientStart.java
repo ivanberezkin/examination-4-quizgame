@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public class ClientStart {
     private final static String host = "127.0.0.1";
-    private final static int port = 12345;
+    private final static int port = 12344;
 
     private ClientBase client;
     private JFrame frame;

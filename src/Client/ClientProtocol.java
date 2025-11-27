@@ -2,6 +2,7 @@ package Client;
 
 import Database.Question;
 import GUI.GamePanel;
+import GUI.MenuPanel;
 import Quizgame.shared.*;
 
 import javax.swing.*;
@@ -29,7 +30,7 @@ public class ClientProtocol {
                 loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(frame, "Welcome " + loggedInUser.getUsername());
                 //Continue with matchmaking or game
-                client.sendMessage(new Message(MessageType.MATCHMAKING,null));
+                moveUserToMenuPanel();
             }
 
             case LOGIN_WRONG_PASSWORD -> {
@@ -49,7 +50,7 @@ public class ClientProtocol {
                     String username = JOptionPane.showInputDialog(frame, "Enter your username:");
                     String password = JOptionPane.showInputDialog(frame, "Enter your password:");
                     User newUser = new User(username, password);
-                    client.sendMessage(new Message(MessageType.LOGIN_CREATE_REQUEST,newUser));
+                    client.sendMessage(new Message(MessageType.LOGIN_CREATE_REQUEST, newUser));
                 } else {
                     JOptionPane.showMessageDialog(frame,
                             "Please try again.");
@@ -60,7 +61,7 @@ public class ClientProtocol {
                 loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(null,
                         "User created! Logged in as " + loggedInUser.getUsername());
-                client.sendMessage(new Message(MessageType.MATCHMAKING,null));
+                moveUserToMenuPanel();
             }
 
             case LOGIN_CREATE_FAIL -> {
@@ -92,6 +93,15 @@ public class ClientProtocol {
             case GAME_FINISHED -> {
                 //add game logic here
             }
+
+
         }
+    }
+
+    private void moveUserToMenuPanel() {
+        MenuPanel menuPanel = new MenuPanel(loggedInUser.getUsername(), frame);
+        frame.setContentPane(menuPanel);
+        frame.revalidate();
+        frame.repaint();
     }
 }
