@@ -7,15 +7,19 @@ import java.util.ArrayList;
 
 public class ServerProtocol {
 
-    static Database db = new Database();
+    private static Database db = new Database();
 
     public static Message processInput(Message message) {
-        MessageType messageType = message.getType();
-        if (checkIfValid(message)) {
-            switch (messageType) {
+
+        if(message == null || message.getType() == null) {
+            return new Message(MessageType.ERROR, "Invalid message");
+        }
+        MessageType type = message.getType();
+
+            switch (type) {
                 case LOGIN_REQUEST -> {
                     User loginUser = (User) message.getData();
-                    User existingUser = UserDatabase.getUserByUsername(loginUser.getUsername());
+                    User existingUser = AuthenticationDatabase.getUserByUsername(loginUser.getUsername());
 
                     if (existingUser == null) {
                         return new Message(MessageType.LOGIN_USER_NOT_FOUND, null);
@@ -37,33 +41,45 @@ public class ServerProtocol {
                 }
 
                 case GAME_START -> {
+                    //TODO: Starta spel
                 }
-                case QUESTION -> {
-                }
+
                 case MATCHMAKING -> {
-                    ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
-                    IO.println("Sending Questions to user");
-                    return new Message(MessageType.QUESTION, questionsForUserList);
+
+                    Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
+                            message.getData().toString().trim()));
+                    IO.println("MATCHMAKING:" + message.getData().toString() + " added to matchmaking List!");
+
+                    if(matchmaking.getMatchMakingListSize() > 1){
+                        Connections OpponentA = matchmaking.getFirstConnectionFromMatchMakingList();
+                        Connections OpponentB = matchmaking.getFirstConnectionFromMatchMakingList();
+                        IO.println("MATCHMAKING:" + OpponentA.getUser().getUsername() + " entered game against " + OpponentB.getUser().getUsername());
+
+                        //TODO här bör ett Game objekt skapas och skickas tillbaka till bägge klienterna.
+
+                    }else{
+                        return new Message(MessageType.WAITING, null);
+                    }
+
+//                    ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
+//                    return new Message(MessageType.QUESTION, questionsForUserList);
 
                 }
                 case ANSWER -> {
+                    //TODO: svarshantering
                 }
                 case RESULT_ROUND -> {
+                    //TODO: logik för rundresultatet
                 }
                 case GAME_FINISHED -> {
+                    return new Message(MessageType.GAME_FINISHED, null);
                 }
 
-
+                default -> {
+                    return new Message(MessageType.ERROR, "Invalid message");
+                }
             }
+            return new Message(MessageType.ERROR, "Unhandled messagetype");
         }
-        return message;
     }
 
-    private static boolean checkIfValid(Message message) {
-        if (message == null || message.getType() == null) {
-            return false;
-        }
-        return true;
-    }
-
-}

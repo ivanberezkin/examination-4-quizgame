@@ -3,6 +3,7 @@ package Quizgame.shared;
 import java.io.Serializable;
 
 public enum MessageType implements Serializable {
+    ERROR,
     USERNAME_REQUEST,
     USERNAME,
     USERNAME_OK,
@@ -13,6 +14,7 @@ public enum MessageType implements Serializable {
     RESULT_ROUND,
     GAME_FINISHED,
     MATCHMAKING,
+    WAITING,
 
     //for authentication
     LOGIN_REQUEST,

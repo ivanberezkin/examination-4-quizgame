@@ -10,31 +10,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerListener {
-    private static final List<ObjectOutputStream> allServers = new ArrayList<>();
+    private static final List<Connections> allConnectedClientsList = new ArrayList<>();
 
-    private int port = 12345;
+    private int port = 12344;
 
-    public ServerListener() {
-        try
-                (ServerSocket serverSocket = new ServerSocket(port)) {
+    public void start() {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("Server listening on port " + port);
+
             while (true) {
                 Socket socket = serverSocket.accept();
-                Server server = new Server(socket);
-                server.start();
+                System.out.println("Client connected!");
+
+                ClientHandler handler = new ClientHandler(socket);
+                handler.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public static void addNewConnection(Connections conn) {
+        allConnectedClientsList.add(conn);
+    }
+
+    public static int numberOfConnectionsInAllConnectedClientsList() {
+        return allConnectedClientsList.size();
+    }
+
+    public static Connections findConnectionsByUser(String username) {
+        for (Connections conn : allConnectedClientsList) {
+            if(conn.getUser().getUsername().equals(username)) {
+                return conn;
+            }
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
-        ServerListener serverListener = new ServerListener();
+        new ServerListener().start();
     }
+}
 
-    public static void addOutputStream(ObjectOutputStream outputStream) {
-        allServers.add(outputStream);
-    }
-
+ /*
     public static void sendOutputToAll(Object object) {
         try {
             for (ObjectOutputStream outputStream : allServers) {
@@ -54,4 +72,4 @@ public class ServerListener {
             sendOutputToAll(messageFromServer);
         }
     }
-}
+} */

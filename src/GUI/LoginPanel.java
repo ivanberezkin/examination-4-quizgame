@@ -1,5 +1,9 @@
 package GUI;
 
+import Client.ClientBase;
+import Client.ClientStart;
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
 
 import javax.swing.*;
@@ -26,24 +30,24 @@ public class LoginPanel extends JFrame {
     JLabel passwordLabel = new JLabel("Password: ");
     JPasswordField passwordInput = new JPasswordField(20);
 
-    public LoginPanel(){
+    public LoginPanel() {
 
-        setSize(700,700);
+        setSize(700, 700);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setVisible(true);
         setLayout(new BorderLayout());
 
         backgroudPanel.setLayout(new BorderLayout());
         backgroundImage.setLayout(new BorderLayout());
-        backgroudPanel.add(backgroundImage,BorderLayout.CENTER);
-        backgroundImage.add(welcomeLabel,BorderLayout.NORTH);
+        backgroudPanel.add(backgroundImage, BorderLayout.CENTER);
+        backgroundImage.add(welcomeLabel, BorderLayout.NORTH);
 
-        welcomeLabel.setFont(new Font("Times New Roman",Font.BOLD,30));
+        welcomeLabel.setFont(new Font("Times New Roman", Font.BOLD, 30));
         welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
         welcomeLabel.setForeground(Color.BLUE);
 
         backgroundImage.add(buttonPanel, BorderLayout.SOUTH);
-        buttonPanel.setLayout(new GridLayout(3,2,10,10));
+        buttonPanel.setLayout(new GridLayout(3, 2, 10, 10));
         buttonPanel.add(usernameLabel);
         buttonPanel.add(usernameInput);
         buttonPanel.add(passwordLabel);
@@ -57,15 +61,13 @@ public class LoginPanel extends JFrame {
             String inputUsername = usernameInput.getText();
             String inputPassword = passwordInput.getText();
 
-            if(inputUsername.isEmpty()|| inputPassword.isEmpty()){
-                JOptionPane.showMessageDialog(LoginPanel.this,"Please fill all the fields", "Error", JOptionPane.ERROR_MESSAGE);
-            }else{
-                User user = new User(inputUsername,inputPassword);
-                //client.sendMessage(new Message/MessageType.LOGIN_REQUEST,user));
-                MenuPanel menuPanel = new MenuPanel(inputUsername, this);
-                setContentPane(menuPanel);
-                revalidate();
-                repaint();
+            if (inputUsername.isEmpty() || inputPassword.isEmpty()) {
+                JOptionPane.showMessageDialog(LoginPanel.this, "Please fill all the fields", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                User user = new User(inputUsername, inputPassword);
+                ClientStart cs = new ClientStart(this);
+                ClientBase client = cs.getClient();
+                client.sendMessage(new Message(MessageType.LOGIN_REQUEST, user));
             }
         });
 
@@ -83,7 +85,8 @@ public class LoginPanel extends JFrame {
         pack();
 
     }
-    public void closeProgram(){
+
+    public void closeProgram() {
         IO.println("Quizgame.shared.User closed the program");
         System.exit(0);
     }

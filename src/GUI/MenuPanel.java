@@ -11,8 +11,9 @@ import java.awt.*;
 public class MenuPanel extends JPanel {
 
     private JFrame frame;
+    private ClientBase client;
 
-    public MenuPanel(String username, JFrame frame) {
+    public MenuPanel(String username, JFrame frame, ClientBase client) {
         this.frame = frame;
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -62,20 +63,13 @@ public class MenuPanel extends JPanel {
         startGameButton.setFocusPainted(false);
         startGameButton.setPreferredSize(new Dimension(200, 50));
         startGameButton.addActionListener(e -> {
-            ClientStart cs = new ClientStart(frame);
-            ClientBase client = cs.getClient();
 
-            client.sendMessage(new Message(MessageType.MATCHMAKING, null));
 
-            MatchmakingPanel panel = new MatchmakingPanel(() -> {
-                frame.setContentPane(new MenuPanel(username, frame));
-                frame.revalidate();
-                frame.repaint();
-            });
-
-            frame.setContentPane(panel);
-            frame.revalidate();
-            frame.repaint();
+//            ClientStart cs = new ClientStart(frame);
+//            ClientBase client = cs.getClient();
+            client.sendMessage(new Message(MessageType.MATCHMAKING, username));
+            //TODO move to MatchMaking Panel
+            IO.println(username + " moved to Matchmaking");
         });
 
         bottomPanel.add(startGameButton);
@@ -97,25 +91,25 @@ public class MenuPanel extends JPanel {
         return card;
     }
 
-//    private void showMode() {
-//        JFrame modeFrame = new JFrame("Klassiskt läge");
-//        modeFrame.setSize(350, 200);
-//        modeFrame.setLocationRelativeTo(null);
-//        modeFrame.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
-//
-//        JButton playFriend = new JButton("Spela");
-//        playFriend.setBackground(new Color(34, 139, 34));
-//        playFriend.setForeground(Color.WHITE);
-//        playFriend.setFont(new Font("Arial", Font.BOLD, 16));
-//        playFriend.setFocusPainted(false);
-//        playFriend.setPreferredSize(new Dimension(200, 50));
+    private void showMode() {
+        JFrame modeFrame = new JFrame("Klassiskt läge");
+        modeFrame.setSize(350, 200);
+        modeFrame.setLocationRelativeTo(null);
+        modeFrame.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
-//        modeFrame.add(playFriend);
+        JButton playFriend = new JButton("Spela");
+        playFriend.setBackground(new Color(34, 139, 34));
+        playFriend.setForeground(Color.WHITE);
+        playFriend.setFont(new Font("Arial", Font.BOLD, 16));
+        playFriend.setFocusPainted(false);
+        playFriend.setPreferredSize(new Dimension(200, 50));
+
+        modeFrame.add(playFriend);
 
 //        playFriend.addActionListener(e -> new ClientStart());
 
-//        modeFrame.setVisible(true);
-//    }
+        modeFrame.setVisible(true);
+    }
 
     //test
 //    public static void main(String[] args) {

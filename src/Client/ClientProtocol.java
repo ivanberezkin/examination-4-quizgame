@@ -2,34 +2,35 @@ package Client;
 
 import Database.Question;
 import GUI.GamePanel;
+import GUI.MenuPanel;
 import Quizgame.shared.*;
 
 import javax.swing.*;
-//import java.io.IO;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ClientProtocol {
 
     private final ClientBase client;
-    private final Scanner scanner;
     private JFrame frame;
+    private User loggedInUser;
 
-    public ClientProtocol(ClientBase client, Scanner scanner, JFrame frame) {
+
+    public ClientProtocol(ClientBase client, JFrame frame) {
         this.frame = frame;
         this.client = client;
-        this.scanner = scanner;
     }
 
     public void handleMessage(Message message) {
         IO.println("Message type to process " + message.getType());
+
         switch (message.getType()) {
 
             case LOGIN_OK -> {
-                User loggedInUser = (User) message.getData();
+                loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(frame, "Welcome " + loggedInUser.getUsername());
-
                 //Continue with matchmaking or game
+                moveUserToMenuPanel();
             }
 
             case LOGIN_WRONG_PASSWORD -> {
@@ -46,33 +47,37 @@ public class ClientProtocol {
                         JOptionPane.YES_NO_OPTION);
 
                 if (choice == JOptionPane.YES_OPTION) {
-                    User newUser = (User) message.getData();
-                    client.sendMessage(new Message(MessageType.LOGIN_CREATE_REQUEST,newUser));
+                    String username = JOptionPane.showInputDialog(frame, "Enter your username:");
+                    String password = JOptionPane.showInputDialog(frame, "Enter your password:");
+                    User newUser = new User(username, password);
+                    client.sendMessage(new Message(MessageType.LOGIN_CREATE_REQUEST, newUser));
                 } else {
-                    JOptionPane.showMessageDialog(null,
+                    JOptionPane.showMessageDialog(frame,
                             "Please try again.");
                 }
             }
 
             case LOGIN_CREATE_OK -> {
-                User newUser = (User) message.getData();
+                loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(null,
-                        "User created! Logged in as " + newUser.getUsername());
-
-                client.sendMessage(new Message(MessageType.MATCHMAKING,null));
+                        "User created! Logged in as " + loggedInUser.getUsername());
+                moveUserToMenuPanel();
             }
 
             case LOGIN_CREATE_FAIL -> {
-                JOptionPane.showMessageDialog(null,
+                loggedInUser = (User) message.getData();
+                JOptionPane.showMessageDialog(frame,
                         "Username already taken.",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
 
+            case WAITING -> {
+                IO.println("MATCHMAKING:" + loggedInUser.getUsername() + " waiting for opponent.");
+            }
 
-
-            case GAME_START -> {
-                // Add game logic here
+            case MATCHMAKING -> {
+                //Server skickar frågor i en Message_type question
             }
 
             case QUESTION -> {
@@ -92,6 +97,15 @@ public class ClientProtocol {
             case GAME_FINISHED -> {
                 //add game logic here
             }
+
+
         }
+    }
+
+    private void moveUserToMenuPanel() {
+        MenuPanel menuPanel = new MenuPanel(loggedInUser.getUsername(), frame, client);
+        frame.setContentPane(menuPanel);
+        frame.revalidate();
+        frame.repaint();
     }
 }
