@@ -30,7 +30,7 @@ public class ServerListener {
         }
     }
 
-    public void addNewConnection(Connections conn) {
+    public static void addNewConnection(Connections conn) {
         allConnectedClientsList.add(conn);
     }
 

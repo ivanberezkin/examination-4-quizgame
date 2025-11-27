@@ -17,6 +17,7 @@ public class ClientHandler extends Thread {
         try {
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
+            ServerListener.addNewConnection(new Connections(out,in));
         }
         catch (IOException e){
             throw new RuntimeException(e);
