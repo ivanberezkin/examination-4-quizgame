@@ -67,7 +67,7 @@ public class ServerProtocol {
                         players.add(player);
                         player.send(new Message(MessageType.DUMMY, null));
                     }
-                    game.startGame(players, Question.Category.ANIMALS);//Category will be chosen by user later on
+                    game.startGame(players.getFirst(), Question.Category.ANIMALS);//Category will be chosen by user later on
 
                     return new Message(MessageType.DUMMY, null);
                 }
@@ -101,7 +101,7 @@ public class ServerProtocol {
                         players.add(player);
                         player.send(new Message(MessageType.DUMMY, null));
                     }
-                    game.startGame(players, Question.Category.ANIMALS);//Category will be chosen by user later on
+                    game.startGame(players.getFirst(), Question.Category.ANIMALS);//Category will be chosen by user later on
 
                     return new Message(MessageType.DUMMY, null);
                 }

@@ -7,56 +7,56 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Set {
-    static int maxPlayers;
-    static int numberOfPlayers = 0;
-    private static int maxNumberOfQuestions;
+    int maxPlayers;
+    int numberOfPlayers;
+    private int maxNumberOfQuestions;
     private final int maxNumberOfMatches;
+    private List<User>players = new ArrayList<>();
     private Connections player1;
     private Connections player2;
     private int setScorePlayer1 = 0;
     private int setScorePlayer2 = 0;
     private Connections setWinner;
-    private  List<int[]> setScores = new ArrayList<>();
+    private List<int[]> setScores = new ArrayList<>();
     private List<Match> matches = new ArrayList<>();
     private Match match;
     Question.Category category;
-    private List<Question> allSetQuestions = new ArrayList<>();
+    private final List<Question> allSetQuestions = new ArrayList<>();
     static Database db = new Database();
 
-    public Set(List <Connections> players, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
+    public Set(Connections player, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
         this.category = category;
         this.maxPlayers = maxPlayers;
         this.maxNumberOfMatches = maxNumberOfMatches;
         this.maxNumberOfQuestions = maxNumberOfQuestions;
-        startMatch(players);
+        players.add(player.getUser());
+        this.numberOfPlayers = players.size();
+        startMatch(player);
     }
 
-    public void startMatch(List<Connections> players) {
+    public void startMatch(Connections player) {
         if (matches.size() < maxNumberOfMatches) {
-        if (players.size() == 2) {
-            match = new Match(this, players, category, maxNumberOfQuestions, maxPlayers);
+            match = new Match(this, player, category, maxNumberOfQuestions, maxPlayers);
             matches.add(match);
-        } else {
-                match = new Match(this, players, category, maxNumberOfQuestions, maxPlayers);
-                matches.add(match);
-            }
         }
         else {
             if (checkIfCompleted()){
-                Game.sendMatchScore(players, match.getMatchID());
+                Game.sendMatchScore(match);
             }
         }
     }
 
     public void addPlayer(Connections player) {
-        if (numberOfPlayers < 2) {
-            this.player2 = player;
-            numberOfPlayers += 1;
-            List<Connections>players = new ArrayList<>();
-            players.add(player);
-            match.addPlayer(players);
+        System.out.println("addPlayer in Set was reached");
+        if (numberOfPlayers == 0){
+            this.player1 = player;
         }
-    }
+       else if (numberOfPlayers == 1) {
+            this.player2 = player;
+        }
+            numberOfPlayers += 1;
+            match.addPlayer(player);
+        }
 
     public void continuePlaying() {
         if (numberOfPlayers == 2 && matches.size() < maxNumberOfMatches && (!match.completedMatch()) && (match.getPointsPlayer1().size() == match.getPointsPlayer2().size())) {

@@ -13,9 +13,11 @@ public class MenuPanel extends JPanel {
 
     private JFrame frame;
     private ClientBase client;
+    private User user;
 
     public MenuPanel(User user, JFrame frame, ClientBase client) {
         this.frame = frame;
+        this.user = user;
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
@@ -68,7 +70,6 @@ public class MenuPanel extends JPanel {
 
 //            ClientStart cs = new ClientStart(frame);
 //            ClientBase client = cs.getClient();
-            User thisUser = user;
             client.sendMessage(new Message(MessageType.MATCHMAKING, user));
             //TODO move to MatchMaking Panel
             IO.println(user.getUsername() + " moved to Matchmaking");
