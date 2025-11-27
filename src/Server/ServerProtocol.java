@@ -49,7 +49,7 @@ public class ServerProtocol {
                     Matchmaking matchmakingUser = new Matchmaking(ServerListener.findConnectionsByUser(
                             message.getData().toString().trim()));
                     IO.println("MATCHMAKING:" + message.getData().toString() + " added to matchmaking List!");
-
+                    return new Message(MessageType.WAITING, null);
 //                    ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
 //                    return new Message(MessageType.QUESTION, questionsForUserList);
 

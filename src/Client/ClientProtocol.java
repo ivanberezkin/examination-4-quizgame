@@ -72,6 +72,10 @@ public class ClientProtocol {
                         JOptionPane.ERROR_MESSAGE);
             }
 
+            case WAITING -> {
+                IO.println("MATCHMAKING:" + loggedInUser.getUsername() + " waiting for opponent.");
+            }
+
             case MATCHMAKING -> {
                 //Server skickar frågor i en Message_type question
             }
