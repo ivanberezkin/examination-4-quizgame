@@ -15,11 +15,11 @@ public class ServerListener {
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Server listening on port " + port);
+            System.out.println("SERVERLISTENER: listening on port " + port);
 
             while (true) {
                 Socket socket = serverSocket.accept();
-                System.out.println("Client connected!");
+                System.out.println("SERVERLISTENER: Client connected!");
 
                 ClientHandler handler = new ClientHandler(socket);
                 handler.start();
