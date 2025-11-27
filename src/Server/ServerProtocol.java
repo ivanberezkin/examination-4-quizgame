@@ -45,8 +45,13 @@ public class ServerProtocol {
                 }
 
                 case MATCHMAKING -> {
-                    ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
-                    return new Message(MessageType.QUESTION, questionsForUserList);
+
+                    Matchmaking matchmakingUser = new Matchmaking(ServerListener.findConnectionsByUser(
+                            message.getData().toString().trim()));
+                    IO.println("MATCHMAKING:" + message.getData().toString() + " added to matchmaking List!");
+
+//                    ArrayList<Question> questionsForUserList = db.getQuestionsForRound(3);
+//                    return new Message(MessageType.QUESTION, questionsForUserList);
 
                 }
                 case ANSWER -> {

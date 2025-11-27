@@ -99,7 +99,7 @@ public class ClientProtocol {
     }
 
     private void moveUserToMenuPanel() {
-        MenuPanel menuPanel = new MenuPanel(loggedInUser.getUsername(), frame);
+        MenuPanel menuPanel = new MenuPanel(loggedInUser.getUsername(), frame, client);
         frame.setContentPane(menuPanel);
         frame.revalidate();
         frame.repaint();
