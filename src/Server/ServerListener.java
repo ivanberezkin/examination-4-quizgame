@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerListener {
-    private static final List<ObjectOutputStream> allServers = new ArrayList<>();
+    private static final List<Connections> allConnectedClientsList = new ArrayList<>();
 
     private int port = 12344;
 
@@ -30,16 +30,16 @@ public class ServerListener {
         }
     }
 
+    public void addNewConnection(Connections conn) {
+        allConnectedClientsList.add(conn);
+    }
 
     public static void main(String[] args) {
         new ServerListener().start();
     }
 }
 
-   /* public static void addOutputStream(ObjectOutputStream outputStream) {
-        allServers.add(outputStream);
-    }
-
+ /*
     public static void sendOutputToAll(Object object) {
         try {
             for (ObjectOutputStream outputStream : allServers) {
