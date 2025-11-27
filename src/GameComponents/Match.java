@@ -11,7 +11,10 @@ public class Match {
     private final int numberOfQuestions;
     private final int maxPlayers;
     private User[] players;
+    private User player1;
+    private User player2;
     private Question.Category category;
+    private List<User>playerList = new ArrayList<>();
     private final List<Integer> pointsPlayer1 = new ArrayList<>();
     private final List<Integer> pointsPlayer2 = new ArrayList<>();
     private Question[] questions;
@@ -20,24 +23,29 @@ public class Match {
     private User winner;
     private Question firstQuestion;
 
-    public Match(User player, Question.Category category, int numberOfQuestions, int maxPlayers) {
+    public Match(List <User> playerList, Question.Category category, int numberOfQuestions, int maxPlayers) {
 
         this.category = category;
         this.numberOfQuestions = numberOfQuestions;
         this.maxPlayers = maxPlayers;
         this.matchID = random.nextInt(500) + random.nextInt(500);
         players = new User[maxPlayers];
-        addPlayer(player);
+        this.playerList = playerList;
+        addPlayer(playerList);
         loadMatchQuestions();
     }
 
-    public void addPlayer(User user) {
+    public void addPlayer(List <User> playerList) {
+        if (playerList != null) {
             if (players[0] == null) {
-                players[0] = user;
-            } else if (players[1] == null){
-                players[1] = user;
+                player1 = playerList.getFirst();
+                players[0] = player1;
+            } else if (players[1] == null) {
+                player2 = playerList.getFirst();
+                players[1] = player2;
+            }
         }
-        sendFirstQuestion(user);
+        sendFirstQuestion();
     }
 
     private int getPlayerIndex(Score score) {
@@ -61,7 +69,6 @@ public class Match {
             }
             addPointsToList(index, score);
             numberOfCompletedQuestion += 1;
-            Game.sendScore(score, players);
         }
     }
 
@@ -73,18 +80,18 @@ public class Match {
         }
     }
 
-    public void sendFirstQuestion(User player) {
+    public void sendFirstQuestion() {
         //Adjust method in DataBase, to get specific category?
         if (players[0] != null && pointsPlayer1.isEmpty()){
-            Game.sendFirstQuestion(questions[0], player);
+            Game.sendFirstQuestion(questions[0], player1);
         }
         else if (!pointsPlayer1.isEmpty() && players[1] != null && pointsPlayer2.isEmpty()) {
-            Game.sendFirstQuestion(questions[0], player);
+            Game.sendFirstQuestion(questions[0], player2);
         }
     }
     public void sendQuestion() {
         if((pointsPlayer1.size() == pointsPlayer2.size()) && !completedMatch()){
-            Game.sendQuestion(questions[numberOfSentQuestions], players);
+            Game.sendQuestion(questions[numberOfSentQuestions], getPlayerList(), this);
             numberOfSentQuestions += 1;
         }
     }
@@ -100,8 +107,16 @@ public class Match {
         } else {
             winner = null;
         }
-        Game.sendMatchScore(players, matchID);
+        Game.sendMatchScore(playerList, matchID);
     }
+    public List<User> getPlayerList(){
+        List <User> playerList = new ArrayList<>();
+        for (User p : players){
+            playerList.add(p);
+        }
+        return playerList;
+    }
+
 
     public boolean completedMatch() {
         return pointsPlayer1.size() == numberOfQuestions  && pointsPlayer2.size() == numberOfQuestions;

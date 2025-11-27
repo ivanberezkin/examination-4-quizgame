@@ -1,6 +1,11 @@
 package Quizgame.shared;
 
+import GameComponents.Game;
+import GameComponents.Match;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class User implements Serializable {
@@ -21,6 +26,7 @@ public class User implements Serializable {
     private int correctAnswers;
     private int incorrectAnswers;
     private boolean connected;
+    private List<Game>games = new ArrayList<>();
 
     public User(String username,String password){
         this.username = username;
@@ -64,5 +70,11 @@ public class User implements Serializable {
         this.incorrectAnswers++;
     }
 
+    public List<Game>getGames(){
+        return games;
+    }
+    public void addGame(Game game){
+        games.add(game);
+    }
 
 }

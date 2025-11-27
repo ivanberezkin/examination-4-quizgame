@@ -9,7 +9,7 @@ public class Set {
     static int numberOfPlayers = 0;
     private static int maxNumberOfQuestions;
     private final int maxNumberOfMatches;
-    private final User player1;
+    private User player1;
     private User player2;
     private int setScorePlayer1 = 0;
     private static int setScorePlayer2 = 0;
@@ -17,23 +17,32 @@ public class Set {
     private static List<int[]> setScores = new ArrayList<>();
     private List<Match> matches = new ArrayList<>();
     private static Match match;
-    Question.Category[] category;
+    Question.Category category;
     private static List<Question> allSetQuestions = new ArrayList<>();
     static Database db = new Database();
 
-    public Set(User player, Question.Category[] category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
-        this.player1 = player;
+    public Set(List <User> players, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
         this.category = category;
         this.maxPlayers = maxPlayers;
         this.maxNumberOfMatches = maxNumberOfMatches;
         this.maxNumberOfQuestions = maxNumberOfQuestions;
-        startMatch(player);
+        startMatch(players);
     }
 
-    public void startMatch(User player) {
+    public void startMatch(List<User> players) {
         if (matches.size() < maxNumberOfMatches) {
-            match = new Match(player, category[matches.size()], maxNumberOfQuestions, maxPlayers);
-            matches.add(match);
+        if (players.size() == 2) {
+            match = new Match(players, category, maxNumberOfQuestions, maxPlayers);
+        } else {
+
+                match = new Match(players, category, maxNumberOfQuestions, maxPlayers);
+                matches.add(match);
+            }
+        }
+        else {
+            if (checkIfCompleted()){
+                Game.sendMatchScore(players, match.getMatchID());
+            }
         }
     }
 
@@ -41,7 +50,9 @@ public class Set {
         if (numberOfPlayers < 2) {
             this.player2 = player;
             numberOfPlayers += 1;
-            match.addPlayer(player);
+            List<User>players = new ArrayList<>();
+            players.add(player);
+            match.addPlayer(players);
         }
     }
 
