@@ -71,7 +71,6 @@ public class Game implements Serializable {
         List <Connections> onePlayer = new ArrayList<>();
         onePlayer.add(connection);
         send(onePlayer, new Message(MessageType.QUESTION, question));
-
     }
 
     public static void sendMatchScore(Match match){

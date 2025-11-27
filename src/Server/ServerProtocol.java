@@ -14,10 +14,10 @@ public class ServerProtocol {
     private static Database db = new Database();
 
     public static Message processInput(Message message) {
-        System.out.println("In ServerProtocol, processInput was reached, message type is:" + message.getType());
+        System.out.println("SERVERPROTOCOL: processInput was reached, message type is:" + message.getType());
 
         if(message == null || message.getType() == null) {
-            return new Message(MessageType.ERROR, "Invalid message");
+            return new Message(MessageType.ERROR, "SERVERPROTOCOL: Invalid message");
         }
         MessageType type = message.getType();
 
@@ -46,7 +46,7 @@ public class ServerProtocol {
             }
 
             case GAME_START -> {
-                System.out.println("In ServerProtocol, GAME_START was reached");
+                System.out.println("SERVERPROTOCOL: GAME_START was reached");
                 List<Connections> players = new ArrayList<>();
                 List<User> users = new ArrayList<>();
                 if (message.getData() instanceof User){
@@ -80,7 +80,7 @@ public class ServerProtocol {
 
             }
             case MATCHMAKING -> {
-                System.out.println("In ServerProtocol, GAME_START was reached, message type is:" + message.getType() + " Class is: " + message.getData().getClass());
+                System.out.println("SERVERPROTOCOL: GAME_START was reached, message type is:" + message.getType() + " Class is: " + message.getData().getClass());
                 List<Connections> players = new ArrayList<>();
                 List<User> users = new ArrayList<>();
                 if (message.getData() instanceof User){
@@ -140,10 +140,10 @@ public class ServerProtocol {
             }
 
             default -> {
-                return new Message(MessageType.ERROR, "Invalid message");
+                return new Message(MessageType.ERROR, "SERVERPROTOCOL: Invalid message");
             }
         }
-        return new Message(MessageType.ERROR, "Unhandled messagetype");
+        return new Message(MessageType.ERROR, "SERVERPROTOCOL: Unhandled messagetype");
     }
 
     private static void sendQuestionsToClients(Connections opponentA, Connections opponentB) {
