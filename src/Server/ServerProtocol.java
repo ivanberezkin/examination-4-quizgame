@@ -1,6 +1,5 @@
 package Server;
 
-import Client.ClientProtocol;
 import Database.*;
 import GameComponents.Game;
 import GameComponents.Match;
@@ -17,18 +16,14 @@ public class ServerProtocol {
     private static Database db = new Database();
 
     public static Message processInput(Message message) {
-        System.out.println("In ServerProtocol, processInput was reached, message type is:" + message.getType());
-
-        if(message == null || message.getType() == null) {
+        if (message == null || message.getType() == null) {
             return new Message(MessageType.ERROR, "Invalid message");
         }
         MessageType type = message.getType();
-
         switch (type) {
             case LOGIN_REQUEST -> {
                 User loginUser = (User) message.getData();
                 User existingUser = AuthenticationDatabase.getUserByUsername(loginUser.getUsername());
-
                 if (existingUser == null) {
                     return new Message(MessageType.LOGIN_USER_NOT_FOUND, null);
                 }
@@ -43,12 +38,10 @@ public class ServerProtocol {
                 if (AuthenticationDatabase.userExists(newUser.getUsername())) {
                     return new Message(MessageType.LOGIN_CREATE_FAIL, newUser);
                 }
-
                 AuthenticationDatabase.createUser(newUser.getUsername(), newUser.getPassword());
                 return new Message(MessageType.LOGIN_CREATE_OK, newUser);
             }
             case QUESTION -> {
-                System.out.println("---In ServerProtocol, case QUESTION was reached, message is: " + message.getData().getClass());
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
                     for (User u : matchQuestion.getUsers()) {
                         Connections c = ServerListener.findConnectionsByUser(u.getUsername());
@@ -58,7 +51,6 @@ public class ServerProtocol {
             }
 
             case GAME_START -> {
-                System.out.println("In ServerProtocol, GAME_START was reached, message is: " + message.getData().getClass());
                 List<Connections> players = new ArrayList<>();
                 List<User> users = new ArrayList<>();
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
@@ -71,7 +63,6 @@ public class ServerProtocol {
                             players.add(player);
                             player.send(new Message(MessageType.DUMMY, users.getFirst()));
                         }
-
                     }
                 }
                 else if (message.getData() instanceof User user) {
@@ -85,7 +76,6 @@ public class ServerProtocol {
                 }
             }
             case MATCHMAKING -> {
-                System.out.println("In ServerProtocol, GAME_START was reached, message type is:" + message.getType() + " Class is: " + message.getData().getClass());
                 List<Connections> players = new ArrayList<>();
                 List<User> users = new ArrayList<>();
                 if (message.getData() instanceof User){
@@ -107,7 +97,6 @@ public class ServerProtocol {
                    //     player.send(new Message(MessageType.DUMMY, users.getFirst()));
                     }
                     game.startGame(users.getFirst(), Question.Category.ANIMALS);//Category will be chosen by user later on
-
                     return new Message(MessageType.GAME_START, users.getFirst());
                 }
             }
@@ -131,7 +120,6 @@ public class ServerProtocol {
 
 //            }
             case ANSWER -> {
-                System.out.println("--- case Answer was reached, message type is: " + message.getData().getClass());
                 if (message.getData() instanceof Answer) {
                     Answer answer = (Answer) message.getData();
                     Game.continueGame(answer);
@@ -139,7 +127,13 @@ public class ServerProtocol {
                 }
             }
             case RESULT_ROUND -> {
-                //TODO: logik för rundresultatet
+                if (message.getData() instanceof Match match) {
+                    for (User u : match.getPlayersList()) {
+                        Connections c = ServerListener.findConnectionsByUser(u.getUsername());
+                        c.send(new Message(MessageType.RESULT_ROUND, match));
+                    }
+                }
+                return null;
             }
             case GAME_FINISHED -> {
                 return new Message(MessageType.GAME_FINISHED, null);

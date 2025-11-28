@@ -2,7 +2,6 @@ package GameComponents;
 
 import Database.Question;
 import Quizgame.shared.User;
-
 import java.io.Serializable;
 import java.util.List;
 

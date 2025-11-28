@@ -1,15 +1,14 @@
 package GameComponents;
+
 import Database.*;
 import Quizgame.shared.Answer;
 import Quizgame.shared.User;
-import Server.Connections;
-
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class Match {
+public class Match implements Serializable {
     Random random = new Random();
     private final int matchID;
     private final int numberOfQuestions;
@@ -17,7 +16,6 @@ public class Match {
     private User player1;
     private User player2;
     private Question.Category category;
-    private List<Connections>playerList = new ArrayList<>();
     private List<User> playersList = new ArrayList<>();
     private final List<Integer> pointsPlayer1 = new ArrayList<>();
     private final List<Integer> pointsPlayer2 = new ArrayList<>();
@@ -43,7 +41,6 @@ public class Match {
     }
 
     public void addPlayer(User player) {
-        System.out.println("In match, addPlayer was reached");
         if (player != null) {
             if (players[0] == null) {
                 player1 = player;
@@ -55,7 +52,6 @@ public class Match {
             playersList.add(player);
             sendFirstQuestion();
         }
-
     }
 
     private int getPlayerIndex(Score score) {
@@ -85,21 +81,14 @@ public class Match {
             //Adjust method in DataBase, to get specific category?
             if (playersList.size() ==1 && pointsPlayer1.isEmpty()) {
                 Game.sendQuestion(playersList, firstQuestion);
-                System.out.println(" . . . For Match sendFirstQuestion, player is player1");
-
             } else if (!pointsPlayer1.isEmpty() && playersList.size() == 2 && pointsPlayer2.isEmpty()) {
                 Game.sendQuestion(playersList, firstQuestion);
                 numberOfSentQuestions += 1;
-                    System.out.println(" . . . For Match sendFirstQuestion, player is: player2 ");
-            } else if (playerList.size() == 2 && pointsPlayer1.isEmpty() && pointsPlayer2.isEmpty()) {
+            } else if (playersList.size() == 2 && pointsPlayer1.isEmpty() && pointsPlayer2.isEmpty()) {
                 sendQuestion();
             }
     }
     public void sendQuestion() {
-        System.out.println("       sendQuestion in Match was reached. question is: "+ numberOfSentQuestions);
-        for (User u : playersList){
-            System.out.println("in sendQuestion, player is: " + u.getUsername());
-        }
         if(pointsPlayer1.size() == pointsPlayer2.size() && !completedMatch()){
             Game.sendQuestion(playersList, questions[numberOfSentQuestions]);
             if (pointsPlayer1.size() == numberOfSentQuestions && pointsPlayer2.size() == numberOfSentQuestions) {
@@ -126,9 +115,6 @@ public class Match {
     }
     public List<User> getPlayersList(){
         return playersList;
-    }
-    public List<Connections> getPlayerList(){
-        return playerList;
     }
 
     public boolean completedMatch() {

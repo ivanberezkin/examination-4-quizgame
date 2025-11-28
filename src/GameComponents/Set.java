@@ -1,11 +1,11 @@
 package GameComponents;
 import Database.*;
 import Quizgame.shared.User;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Set {
+public class Set implements Serializable {
     int maxPlayers;
     int numberOfPlayers;
     private int maxNumberOfQuestions;
@@ -30,7 +30,6 @@ public class Set {
         this.maxNumberOfQuestions = maxNumberOfQuestions;
         players.add(user);
         this.numberOfPlayers = players.size();
-        startMatch(user);
     }
 
     public void startMatch(User user) {
@@ -46,15 +45,15 @@ public class Set {
     }
 
     public void addPlayer(User player) {
-        System.out.println("addPlayer in Set was reached");
         if (numberOfPlayers == 0){
             this.player1 = player;
+            match.addPlayer(player1);
         }
        else if (numberOfPlayers == 1) {
             this.player2 = player;
+            match.addPlayer(player2);
         }
             numberOfPlayers += 1;
-            match.addPlayer(player);
         }
 
     public void continuePlaying() {

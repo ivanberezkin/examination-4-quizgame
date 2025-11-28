@@ -1,15 +1,13 @@
 package Client;
 
 import Database.*;
+import GUI.ResultPanel;
 import GameComponents.*;
 import GUI.GamePanel;
 import GUI.MatchmakingPanel;
 import GUI.MenuPanel;
-import GameComponents.MatchQuestion;
 import Quizgame.shared.*;
-
 import javax.swing.*;
-
 
 public class ClientProtocol {
 
@@ -94,11 +92,9 @@ public class ClientProtocol {
                 frame.repaint();
             }
             case GAME_START -> {
-                System.out.println("Message is: " + message.getData().getClass());
                 User user = (User) message.getData();
                 if (user != null) {
                     MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
-                        System.out.println("Awaiting question");
                     });
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(matchmakingPanel);
@@ -109,15 +105,12 @@ public class ClientProtocol {
             }
 
             case MATCHMAKING -> {
-                System.out.println("Message in Matchmaking is: is: " + message.getData().getClass());
                 User user = (User) message.getData();
-                System.out.println("Message type is:" + message.getData().getClass());
                 IO.println("Questions Received by User");
 //                TestGame testGame = (TestGame) message.getData();
 //                ArrayList<Question> questionsForRound = testGame.getQuestionsForRound();
                 if (user != null) {
                     MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
-                        System.out.println("Awaiting question");
                     });
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(matchmakingPanel);
@@ -127,7 +120,6 @@ public class ClientProtocol {
                 }
             }
             case QUESTION -> {
-                System.out.println("Message type is:" + message.getData().getClass());
                 IO.println("Questions Received");
                 if (message.getData() instanceof Question question) {
                     System.out.println("Question is: " + question);
@@ -141,7 +133,14 @@ public class ClientProtocol {
             }
 
             case RESULT_ROUND -> {
-                // Add game logic here
+                if (message.getData() instanceof Match match){
+                    ResultPanel resultPanel = new ResultPanel(match);
+                    SwingUtilities.invokeLater(() -> {
+                        frame.setContentPane(resultPanel);
+                        frame.revalidate();
+                        frame.repaint();
+                    });
+                }
             }
 
             case GAME_FINISHED -> {
