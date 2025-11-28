@@ -1,15 +1,14 @@
 package GUI;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class SettingsPanel extends JPanel {
     private JFrame frame;
     private JPanel previousPanel;
+
+    private JPanel buttonPanel;
     private JButton backButton;
     private JButton saveButton;
 
@@ -30,21 +29,36 @@ public class SettingsPanel extends JPanel {
         this.previousPanel = previousPanel;
 
         setLayout(new BorderLayout());
+        setBackground(new Color(30, 144, 255));
         JPanel avatarPanel = new JPanel();
 
         createAvatarButtons(avatarPanel);
         avatarPanel.setLayout(new GridLayout(2,5));
+        avatarPanel.setOpaque(false);
         add(avatarPanel, BorderLayout.CENTER);
 
 
+        buttonPanel = new JPanel();
         backButton = new JButton("Back");
+        saveButton = new JButton("Save");
+
+        buttonPanel.setOpaque(false);
+        buttonPanel.setLayout(new GridLayout(1,2,10,0));
+        buttonPanel.setBorder(new EmptyBorder(5, 30, 5, 30));
+        buttonPanel.add(saveButton);
+        buttonPanel.add(backButton);
+
+
         backButton.addActionListener(e -> {
             goBackToMenu(previousPanel);
         });
 
 
+        saveButton.addActionListener(e -> {
 
-        add(backButton);
+        });
+
+        add(buttonPanel, BorderLayout.SOUTH);
 
     }
 
