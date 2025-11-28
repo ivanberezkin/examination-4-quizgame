@@ -70,7 +70,7 @@ public class MenuPanel extends JPanel {
 
 //            ClientStart cs = new ClientStart(frame);
 //            ClientBase client = cs.getClient();
-            client.sendMessage(new Message(MessageType.MATCHMAKING, user));
+            client.sendMessage(new Message(MessageType.GAME_START, user));
             //TODO move to MatchMaking Panel
             IO.println(user.getUsername() + " moved to Matchmaking");
         });

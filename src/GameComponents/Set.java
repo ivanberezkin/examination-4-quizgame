@@ -1,7 +1,6 @@
 package GameComponents;
 import Database.*;
 import Quizgame.shared.User;
-import Server.Connections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +11,11 @@ public class Set {
     private int maxNumberOfQuestions;
     private final int maxNumberOfMatches;
     private List<User>players = new ArrayList<>();
-    private Connections player1;
-    private Connections player2;
+    private User player1;
+    private User player2;
     private int setScorePlayer1 = 0;
     private int setScorePlayer2 = 0;
-    private Connections setWinner;
+    private User setWinner;
     private List<int[]> setScores = new ArrayList<>();
     private List<Match> matches = new ArrayList<>();
     private Match match;
@@ -24,19 +23,19 @@ public class Set {
     private final List<Question> allSetQuestions = new ArrayList<>();
     static Database db = new Database();
 
-    public Set(Connections player, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
+    public Set(User user, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
         this.category = category;
         this.maxPlayers = maxPlayers;
         this.maxNumberOfMatches = maxNumberOfMatches;
         this.maxNumberOfQuestions = maxNumberOfQuestions;
-        players.add(player.getUser());
+        players.add(user);
         this.numberOfPlayers = players.size();
-        startMatch(player);
+        startMatch(user);
     }
 
-    public void startMatch(Connections player) {
+    public void startMatch(User user) {
         if (matches.size() < maxNumberOfMatches) {
-            match = new Match(this, player, category, maxNumberOfQuestions, maxPlayers);
+            match = new Match(this, user, category, maxNumberOfQuestions, maxPlayers);
             matches.add(match);
         }
         else {
@@ -46,7 +45,7 @@ public class Set {
         }
     }
 
-    public void addPlayer(Connections player) {
+    public void addPlayer(User player) {
         System.out.println("addPlayer in Set was reached");
         if (numberOfPlayers == 0){
             this.player1 = player;
