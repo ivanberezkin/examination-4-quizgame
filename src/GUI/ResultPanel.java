@@ -76,7 +76,7 @@ public class ResultPanel extends JPanel {
         JLabel roundLabel = new JLabel(roundText, SwingConstants.CENTER);
         roundLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
         roundLabel.setForeground(Color.WHITE);
-//        setAlignmentX(CENTER_ALIGNMENT);
+        roundLabel.setAlignmentX(CENTER_ALIGNMENT);
         bottomPanel.add(roundLabel);
 
         add(bottomPanel, BorderLayout.SOUTH);
