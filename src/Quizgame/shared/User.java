@@ -30,8 +30,7 @@ public class User implements Serializable {
     private int incorrectAnswers;
     private boolean connected;
     private List<Game>games = new ArrayList<>();
-    private final String defaultAvatarFilename = "resources/Avatars/default_avatar.png";
-    private final int defaultAvatarSize = 75;
+
     private Icon avatar;
 
 
@@ -43,11 +42,7 @@ public class User implements Serializable {
         this.connected = true;
     }
 
-    private ImageIcon createDefaultAvatar(){
-        ImageIcon avatar = new ImageIcon(defaultAvatarFilename);
-        Image scaledAvatar = avatar.getImage().getScaledInstance(defaultAvatarSize, defaultAvatarSize, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaledAvatar);
-    }
+
 
     public Icon getAvatar() {
         return avatar;

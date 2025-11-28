@@ -46,6 +46,15 @@ public class AuthenticationDatabase {
         }
     }
 
+    protected void updateAvatarForUser(User user) {
+        for(User u: users){
+            if(u.getUsername().equals(user.getUsername())){
+                u.setAvatar(user.getAvatar());
+                System.out.println("AD: Avatar updated for user " + user.getUsername());
+            }
+        }
+    }
+
     protected void printUsers(){
         for(User u : users){
             System.out.println("AD: " + u.getUsername() + " Avatar: "+u.getAvatar());

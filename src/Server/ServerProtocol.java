@@ -50,6 +50,10 @@ public class ServerProtocol {
                 return new Message(MessageType.LOGIN_CREATE_OK, newUser);
             }
 
+            case SETTINGS_AVATAR_CHANGED -> {
+                ad.updateAvatarForUser(user);
+            }
+
             case GAME_START -> {
                 System.out.println("SERVERPROTOCOL: GAME_START was reached");
                 List<Connections> players = new ArrayList<>();

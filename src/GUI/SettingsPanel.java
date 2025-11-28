@@ -1,5 +1,8 @@
 package GUI;
 
+import Client.ClientBase;
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
 
 import javax.swing.*;
@@ -31,11 +34,13 @@ public class SettingsPanel extends JPanel {
     private JButton avatar10Button;
 
     private User user;
+    private ClientBase client;
 
-    public SettingsPanel(JFrame frame, MenuPanel previousPanel, User user) {
+    public SettingsPanel(JFrame frame, MenuPanel previousPanel, User user, ClientBase client) {
         this.frame = frame;
         this.previousPanel = previousPanel;
         this.user = user;
+        this.client = client;
 
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
@@ -85,6 +90,7 @@ public class SettingsPanel extends JPanel {
             Icon icon = currentAvatarPreview.getIcon();
             user.setAvatar(icon);
             previousPanel.updateAvatarLabel(icon);
+            client.sendMessage(new Message(MessageType.SETTINGS_AVATAR_CHANGED,user));
         });
 
     }

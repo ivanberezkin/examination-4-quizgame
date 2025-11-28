@@ -15,6 +15,8 @@ public class MenuPanel extends JPanel {
     private ClientBase client;
     private User user;
     JLabel avatarLabel;
+    private final String defaultAvatarFilename = "resources/Avatars/default_avatar.png";
+    private final int defaultAvatarSize = 75;
 
     public MenuPanel(User user, JFrame frame, ClientBase client) {
         this.frame = frame;
@@ -43,8 +45,12 @@ public class MenuPanel extends JPanel {
 //        JLabel welcomeLabel = new JLabel("Välkommen " + user.getUsername(), SwingConstants.CENTER);
 //        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
 //        welcomeLabel.setForeground(Color.WHITE);
-        avatarLabel = new JLabel(user.getAvatar());
 
+        if(user.getAvatar() == null) {
+            avatarLabel = new JLabel(createDefaultAvatar());
+        }else{
+            avatarLabel = new JLabel(user.getAvatar());
+        }
         middlePanel.add(avatarLabel, BorderLayout.NORTH);
 
 
@@ -94,7 +100,7 @@ public class MenuPanel extends JPanel {
         settingsButton.setPreferredSize(new Dimension(200, 50));
 
         settingsButton.addActionListener(e -> {
-            SettingsPanel settingsPanel = new SettingsPanel(frame, this, user);
+            SettingsPanel settingsPanel = new SettingsPanel(frame, this, user, client);
             frame.setContentPane(settingsPanel);
             frame.revalidate();
             frame.repaint();
@@ -126,6 +132,12 @@ public class MenuPanel extends JPanel {
         avatarLabel.setIcon(icon);
         avatarLabel.updateUI();
         IO.println(user.getUsername() + " changed avatar to "+ user.getAvatar());
+    }
+
+    private ImageIcon createDefaultAvatar(){
+        ImageIcon avatar = new ImageIcon(defaultAvatarFilename);
+        Image scaledAvatar = avatar.getImage().getScaledInstance(defaultAvatarSize, defaultAvatarSize, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledAvatar);
     }
 
 

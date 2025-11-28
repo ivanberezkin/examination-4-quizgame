@@ -18,6 +18,7 @@ public class ServerListener {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("SERVERLISTENER: listening on port " + port);
 
+            //Closes the program with executing shutdown program before close.
             Runtime.getRuntime().addShutdownHook(new Thread((this::shutdown)));
 
             while (running) {
