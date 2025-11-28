@@ -10,14 +10,17 @@ import java.util.List;
 
 public class ServerListener {
     private static final List<Connections> allConnectedClientsList = new ArrayList<>();
-
     private int port = 12345;
+    private boolean running = true;
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("SERVERLISTENER: listening on port " + port);
 
-            while (true) {
+            //Closes the program with executing shutdown program before close.
+            Runtime.getRuntime().addShutdownHook(new Thread((this::shutdown)));
+
+            while (running) {
                 Socket socket = serverSocket.accept();
                 System.out.println("SERVERLISTENER: Client connected!");
 
@@ -25,8 +28,14 @@ public class ServerListener {
                 handler.start();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+                e.printStackTrace();
         }
+    }
+
+    private void shutdown() {
+        IO.println("SERVERLISTENER: Server stopped!");
+        running = false;
+        ServerProtocol.serializeAuthenticationDatabase();
     }
 
     public static void addNewConnection(Connections conn) {

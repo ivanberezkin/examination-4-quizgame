@@ -29,22 +29,29 @@ public class ClientHandler extends Thread {
     public void run() {
         try {
             while (true) {
+                Message response = null;
                 Message message = (Message) in.readObject();
-                Message response = ServerProtocol.processInput(message);
+                    response = ServerProtocol.processInput(message);
+                if (message.getData() != null && response != null) {
+                    System.out.println("Response is: " + response.getType());
 
-                //If Login OK then we are assigning a User to the connection.
-                if (response.getType() == MessageType.LOGIN_OK
-                        || response.getType() == MessageType.LOGIN_CREATE_OK) {
-                    newConnection.setUser((User) response.getData());
-                    IO.println("CLIENTHANDLER: " + newConnection.getUser().getUsername() + " added to connectionList");
-                    IO.println("CLIENTHANDLER: " + ServerListener.numberOfConnectionsInAllConnectedClientsList() + " connected users total.");
+                    //If Login OK then we are assigning a User to the connection.
+                    if (response.getType() == MessageType.LOGIN_OK
+                            || response.getType() == MessageType.LOGIN_CREATE_OK) {
+                        newConnection.setUser((User) response.getData());
+                        IO.println("CLIENTHANDLER: " + newConnection.getUser().getUsername() + " added to connectionList");
+                        IO.println("CLIENTHANDLER: " + ServerListener.numberOfConnectionsInAllConnectedClientsList() + " connected users total.");
+                    }
+                    out.writeObject(response);
+                    out.flush();
                 }
-
-                out.writeObject(response);
-                out.flush();
             }
+
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("CLIENTHANDLER: Client disconnected");
         }
     }
 }
+
+
+

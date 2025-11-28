@@ -1,22 +1,21 @@
 package GameComponents;
 import Database.*;
 import Quizgame.shared.User;
-import Server.Connections;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Set {
+public class Set implements Serializable {
     int maxPlayers;
     int numberOfPlayers;
     private int maxNumberOfQuestions;
     private final int maxNumberOfMatches;
     private List<User>players = new ArrayList<>();
-    private Connections player1;
-    private Connections player2;
+    private User player1;
+    private User player2;
     private int setScorePlayer1 = 0;
     private int setScorePlayer2 = 0;
-    private Connections setWinner;
+    private User setWinner;
     private List<int[]> setScores = new ArrayList<>();
     private List<Match> matches = new ArrayList<>();
     private Match match;
@@ -24,17 +23,18 @@ public class Set {
     private final List<Question> allSetQuestions = new ArrayList<>();
     static Database db = new Database();
 
-    public Set(Connections player, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
+    public Set(User player, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
         this.category = category;
         this.maxPlayers = maxPlayers;
         this.maxNumberOfMatches = maxNumberOfMatches;
         this.maxNumberOfQuestions = maxNumberOfQuestions;
-        players.add(player.getUser());
+        this.player1 = player;
+        players.add(player);
         this.numberOfPlayers = players.size();
         startMatch(player);
     }
 
-    public void startMatch(Connections player) {
+    public void startMatch(User player) {
         if (matches.size() < maxNumberOfMatches) {
             match = new Match(this, player, category, maxNumberOfQuestions, maxPlayers);
             matches.add(match);
@@ -46,17 +46,20 @@ public class Set {
         }
     }
 
-    public void addPlayer(Connections player) {
-        System.out.println("addPlayer in Set was reached");
+    public void addPlayer(User player) {
         if (numberOfPlayers == 0){
             this.player1 = player;
-        }
-       else if (numberOfPlayers == 1) {
-            this.player2 = player;
-        }
+            players.add(player1);
             numberOfPlayers += 1;
-            match.addPlayer(player);
+            match.addPlayer(player1);
         }
+        else if (numberOfPlayers == 1) {
+            this.player2 = player;
+            players.add(player2);
+            numberOfPlayers += 1;
+            match.addPlayer(player2);
+        }
+    }
 
     public void continuePlaying() {
         if (numberOfPlayers == 2 && matches.size() < maxNumberOfMatches && (!match.completedMatch()) && (match.getPointsPlayer1().size() == match.getPointsPlayer2().size())) {
@@ -83,10 +86,29 @@ public class Set {
 
     public Question[] getQuestions() {
         Question[] questions = new Question[maxNumberOfQuestions];
-        ArrayList<Question> questionList = db.getQuestionsForRound(maxNumberOfQuestions);
+        ArrayList<Question> questionList = db.getQuestionsForRound(maxNumberOfQuestions * 2); //Prevents issues if some questions would be dupes.
+        int count = 0;
 
-        for (int i = 0; i < maxNumberOfQuestions; i++) {
-            Question question;
+        for (Question q : questionList) {
+            boolean dupe = false;
+            for (int i = 0; i < count; i++) {
+                if (questions[i].getPrompt().equals(q.getPrompt())) {
+                    dupe = true;
+                    break;
+                }
+            }
+            if (!dupe) {
+                questions[count++] = q;
+            }
+            if(count == maxNumberOfQuestions){
+            break;}
+        }
+        if(count < maxNumberOfQuestions){
+            System.out.println("WARNING: not enough with unique questions");
+        }
+        return questions;
+    }
+            /*Question question;
             do {
 
                 question = questionList.get(i);
@@ -103,8 +125,8 @@ public class Set {
                 return true;
             }
         }
-        return false;
-    }
+        return false;*/
+
 
     public boolean checkIfCompleted(){
         return setScores.size() == maxNumberOfMatches - 1;

@@ -14,6 +14,9 @@ public class MenuPanel extends JPanel {
     private JFrame frame;
     private ClientBase client;
     private User user;
+    JLabel avatarLabel;
+    private final String defaultAvatarFilename = "resources/Avatars/default_avatar.png";
+    private final int defaultAvatarSize = 75;
 
     public MenuPanel(User user, JFrame frame, ClientBase client) {
         this.frame = frame;
@@ -39,11 +42,16 @@ public class MenuPanel extends JPanel {
         middlePanel.setBackground(new Color(30, 144, 255));
         middlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-        JLabel welcomeLabel = new JLabel("Välkommen " + user.getUsername(), SwingConstants.CENTER);
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        welcomeLabel.setForeground(Color.WHITE);
+//        JLabel welcomeLabel = new JLabel("Välkommen " + user.getUsername(), SwingConstants.CENTER);
+//        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+//        welcomeLabel.setForeground(Color.WHITE);
 
-        middlePanel.add(welcomeLabel, BorderLayout.NORTH);
+        if(user.getAvatar() == null) {
+            avatarLabel = new JLabel(createDefaultAvatar());
+        }else{
+            avatarLabel = new JLabel(user.getAvatar());
+        }
+        middlePanel.add(avatarLabel, BorderLayout.NORTH);
 
 
         JPanel cardWrapper = new JPanel(new GridLayout());
@@ -92,7 +100,7 @@ public class MenuPanel extends JPanel {
         settingsButton.setPreferredSize(new Dimension(200, 50));
 
         settingsButton.addActionListener(e -> {
-            SettingsPanel settingsPanel = new SettingsPanel(frame, this);
+            SettingsPanel settingsPanel = new SettingsPanel(frame, this, user, client);
             frame.setContentPane(settingsPanel);
             frame.revalidate();
             frame.repaint();
@@ -118,6 +126,18 @@ public class MenuPanel extends JPanel {
         card.add(buttonPanel, BorderLayout.CENTER);
 
         return card;
+    }
+
+    protected void updateAvatarLabel(Icon icon) {
+        avatarLabel.setIcon(icon);
+        avatarLabel.updateUI();
+        IO.println(user.getUsername() + " changed avatar to "+ user.getAvatar());
+    }
+
+    private ImageIcon createDefaultAvatar(){
+        ImageIcon avatar = new ImageIcon(defaultAvatarFilename);
+        Image scaledAvatar = avatar.getImage().getScaledInstance(defaultAvatarSize, defaultAvatarSize, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledAvatar);
     }
 
 
