@@ -54,29 +54,6 @@ public class MenuPanel extends JPanel {
         middlePanel.add(cardWrapper, BorderLayout.CENTER);
         add(middlePanel, BorderLayout.CENTER);
 
-        //  BOTTOM PANEL
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        bottomPanel.setBackground(new Color(30, 144, 255));
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
-
-        JButton startGameButton = new JButton("Starta nytt spel");
-        startGameButton.setBackground(new Color(34, 139, 34));
-        startGameButton.setForeground(Color.WHITE);
-        startGameButton.setFont(new Font("Arial", Font.BOLD, 16));
-        startGameButton.setFocusPainted(false);
-        startGameButton.setPreferredSize(new Dimension(200, 50));
-        startGameButton.addActionListener(e -> {
-
-
-//            ClientStart cs = new ClientStart(frame);
-//            ClientBase client = cs.getClient();
-            client.sendMessage(new Message(MessageType.MATCHMAKING, user));
-            //TODO move to MatchMaking Panel
-            IO.println(user.getUsername() + " moved to Matchmaking");
-        });
-
-        bottomPanel.add(startGameButton);
-        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private JPanel createCard(String title) {
@@ -93,11 +70,26 @@ public class MenuPanel extends JPanel {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
         buttonPanel.setOpaque(false);
 
-        JButton playButton =  new JButton("Play");
+        JButton startGameButton =  new JButton("Play");
+        startGameButton.setBackground(new Color(34, 139, 34));
+        startGameButton.setForeground(Color.WHITE);
+        startGameButton.setFont(new Font("Arial", Font.BOLD, 16));
+        startGameButton.setFocusPainted(false);
+        startGameButton.setPreferredSize(new Dimension(200, 50));
+        startGameButton.addActionListener(e -> {
+
+
+//            ClientStart cs = new ClientStart(frame);
+//            ClientBase client = cs.getClient();
+            client.sendMessage(new Message(MessageType.MATCHMAKING, user));
+            //TODO move to MatchMaking Panel
+            IO.println(user.getUsername() + " moved to Matchmaking");
+        });
+
         JButton settingsButton =  new JButton("Settings");
         JButton exitButton =  new JButton("Exit");
 
-        buttonPanel.add(playButton);
+        buttonPanel.add(startGameButton);
         buttonPanel.add(settingsButton);
         buttonPanel.add(exitButton);
         card.add(buttonPanel,BorderLayout.CENTER);
