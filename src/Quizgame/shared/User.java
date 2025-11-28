@@ -32,7 +32,7 @@ public class User implements Serializable {
     private List<Game>games = new ArrayList<>();
     private final String defaultAvatarFilename = "resources/Avatars/default_avatar.png";
     private final int defaultAvatarSize = 75;
-    private ImageIcon avatar;
+    private Icon avatar;
 
 
     public User(String username,String password){
@@ -50,11 +50,11 @@ public class User implements Serializable {
         return new ImageIcon(scaledAvatar);
     }
 
-    public ImageIcon getAvatar() {
+    public Icon getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(ImageIcon avatar) {
+    public void setAvatar(Icon avatar) {
         this.avatar = avatar;
     }
 

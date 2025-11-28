@@ -14,6 +14,7 @@ public class MenuPanel extends JPanel {
     private JFrame frame;
     private ClientBase client;
     private User user;
+    JLabel avatarLabel;
 
     public MenuPanel(User user, JFrame frame, ClientBase client) {
         this.frame = frame;
@@ -42,7 +43,7 @@ public class MenuPanel extends JPanel {
 //        JLabel welcomeLabel = new JLabel("Välkommen " + user.getUsername(), SwingConstants.CENTER);
 //        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
 //        welcomeLabel.setForeground(Color.WHITE);
-        JLabel avatarLabel = new JLabel(user.getAvatar());
+        avatarLabel = new JLabel(user.getAvatar());
 
         middlePanel.add(avatarLabel, BorderLayout.NORTH);
 
@@ -119,6 +120,11 @@ public class MenuPanel extends JPanel {
         card.add(buttonPanel, BorderLayout.CENTER);
 
         return card;
+    }
+
+    protected void updateAvatarLabel(Icon icon) {
+        avatarLabel.setIcon(icon);
+        avatarLabel.updateUI();
     }
 
 

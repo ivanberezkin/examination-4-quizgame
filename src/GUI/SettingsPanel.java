@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 
 public class SettingsPanel extends JPanel {
     private JFrame frame;
-    private JPanel previousPanel;
+    private MenuPanel previousPanel;
 
     private JPanel topPanel;
 
@@ -32,7 +32,7 @@ public class SettingsPanel extends JPanel {
 
     private User user;
 
-    public SettingsPanel(JFrame frame, JPanel previousPanel, User user) {
+    public SettingsPanel(JFrame frame, MenuPanel previousPanel, User user) {
         this.frame = frame;
         this.previousPanel = previousPanel;
         this.user = user;
@@ -82,10 +82,10 @@ public class SettingsPanel extends JPanel {
         });
 
         saveButton.addActionListener(e -> {
-            //TODO add logic to save Button.
+            Icon icon = currentAvatarPreview.getIcon();
+            user.setAvatar(icon);
+            previousPanel.updateAvatarLabel(icon);
         });
-
-
 
     }
 
