@@ -72,12 +72,24 @@ public class ResultPanel extends JPanel {
         bottomPanel.add(buttonRow2);
 
 //        Runda
-        JPanel roundPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JLabel roundLabel = new JLabel(roundText, SwingConstants.CENTER);
+        roundLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
+        roundLabel.setForeground(Color.WHITE);
+//      setAlignmentX(CENTER_ALIGNMENT);
+        bottomPanel.add(roundLabel);
+
+        add(bottomPanel, BorderLayout.SOUTH);
 
     }
 
     private static JLabel playerLabel(String text) {
-
+        JLabel label = new JLabel(text, SwingConstants.CENTER);
+        label.setPreferredSize(new Dimension(90, 90));
+        label.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        label.setForeground(Color.BLACK);
+        label.setBackground(Color.WHITE);
+        label.setOpaque(true);
+        label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true);
         return label;
     }
 
