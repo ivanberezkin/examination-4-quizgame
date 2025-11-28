@@ -26,8 +26,8 @@ public class ResultPanel extends JPanel {
         scoreLabel.setForeground(Color.WHITE);
 
         topPanel.add(playerOneLabel);
-        topPanel.add(playerTwoLabel);
         topPanel.add(scoreLabel);
+        topPanel.add(playerTwoLabel);
         add(topPanel, BorderLayout.NORTH);
 
         // Namn
