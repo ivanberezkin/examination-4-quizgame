@@ -33,7 +33,6 @@ public class ServerProtocol {
                 ad.printUsers();
                 User existingUser = ad.getUserByUsername(loginUser.getUsername());
 
-                User existingUser = AuthenticationDatabase.getUserByUsername(loginUser.getUsername());
                 if (existingUser == null) {
                     return new Message(MessageType.LOGIN_USER_NOT_FOUND, null);
                 }
@@ -47,14 +46,10 @@ public class ServerProtocol {
                 User newUser = (User) message.getData();
                 if (ad.userExists(newUser.getUsername())) {
                     return new Message(MessageType.LOGIN_CREATE_FAIL, null);
-                if (AuthenticationDatabase.userExists(newUser.getUsername())) {
-                    return new Message(MessageType.LOGIN_CREATE_FAIL, newUser);
+                    }
+                    ad.createUser(newUser.getUsername(), newUser.getPassword());
+                    return new Message(MessageType.LOGIN_CREATE_OK, newUser);
                 }
-
-                ad.createUser(newUser.getUsername(), newUser.getPassword());
-                AuthenticationDatabase.createUser(newUser.getUsername(), newUser.getPassword());
-                return new Message(MessageType.LOGIN_CREATE_OK, newUser);
-            }
             case QUESTION -> {
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
                     for (User u : matchQuestion.getUsers()) {
@@ -72,6 +67,7 @@ public class ServerProtocol {
                 System.out.println("SERVERPROTOCOL: GAME_START was reached");
                 List<Connections> players = new ArrayList<>();
                 List<User> users = new ArrayList<>();
+                System.out.println("message Type is: " + message.getType());
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
                     if (!matchQuestion.getUsers().isEmpty()) {
                         Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
@@ -102,6 +98,10 @@ public class ServerProtocol {
 
             case MATCHMAKING -> {
                 System.out.println("SERVERPROTOCOL: GAME_START was reached");
+                System.out.println("messageType for GameStart is: " + message.getType());
+                if (message.getData()!= null){
+                    System.out.println("message for GameStart is: " + message.getData().getClass());
+                }
                 List<Connections> players = new ArrayList<>();
                 List<User> users = new ArrayList<>();
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
