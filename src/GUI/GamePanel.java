@@ -45,12 +45,14 @@ public class GamePanel extends JPanel {
     private ClientBase clientBase;
     private Question question;
     private User user;
+    private JFrame frame;
 
-    public GamePanel(ClientBase client, Question question, User user) {
+    public GamePanel(ClientBase client, Question question, User user, JFrame frame) {
         this.clientBase = client;
         this.question = question;
         this.questionsForRound = questionsForRound;
         this.user = user;
+        this.frame = frame;
 
         setBackground(Color.CYAN);
         setLayout(new BorderLayout());
@@ -73,6 +75,7 @@ public class GamePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 IO.println("GAMEPANEL:" + user.getUsername() + " pressed give up button.");
+
                 client.sendMessage(new Message(MessageType.GIVE_UP, user));
             }
         });

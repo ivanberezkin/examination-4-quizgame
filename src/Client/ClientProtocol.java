@@ -109,7 +109,7 @@ public class ClientProtocol {
 //                ArrayList<Question> questionsForRound = testGame.getQuestionsForRound();
                 Question question = (Question) message.getData();
                 if (question != null) {
-                    GamePanel gamePanel = new GamePanel(client, question, loggedInUser);
+                    GamePanel gamePanel = new GamePanel(client, question, loggedInUser, frame);
                     frame.setContentPane(gamePanel);
                     frame.revalidate();
                     frame.repaint();
