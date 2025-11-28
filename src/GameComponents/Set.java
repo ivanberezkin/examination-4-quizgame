@@ -23,18 +23,20 @@ public class Set implements Serializable {
     private final List<Question> allSetQuestions = new ArrayList<>();
     static Database db = new Database();
 
-    public Set(User user, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
+    public Set(User player, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
         this.category = category;
         this.maxPlayers = maxPlayers;
         this.maxNumberOfMatches = maxNumberOfMatches;
         this.maxNumberOfQuestions = maxNumberOfQuestions;
-        players.add(user);
+        this.player1 = player;
+        players.add(player);
         this.numberOfPlayers = players.size();
+        startMatch(player);
     }
 
-    public void startMatch(User user) {
+    public void startMatch(User player) {
         if (matches.size() < maxNumberOfMatches) {
-            match = new Match(this, user, category, maxNumberOfQuestions, maxPlayers);
+            match = new Match(this, player, category, maxNumberOfQuestions, maxPlayers);
             matches.add(match);
         }
         else {
@@ -47,14 +49,17 @@ public class Set implements Serializable {
     public void addPlayer(User player) {
         if (numberOfPlayers == 0){
             this.player1 = player;
+            players.add(player1);
+            numberOfPlayers += 1;
             match.addPlayer(player1);
         }
-       else if (numberOfPlayers == 1) {
+        else if (numberOfPlayers == 1) {
             this.player2 = player;
+            players.add(player2);
+            numberOfPlayers += 1;
             match.addPlayer(player2);
         }
-            numberOfPlayers += 1;
-        }
+    }
 
     public void continuePlaying() {
         if (numberOfPlayers == 2 && matches.size() < maxNumberOfMatches && (!match.completedMatch()) && (match.getPointsPlayer1().size() == match.getPointsPlayer2().size())) {

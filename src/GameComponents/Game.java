@@ -16,8 +16,7 @@ public class Game implements Serializable {
     private int maxPlayers = 2;
 
     private Question.Category category;
-    private static final List<Set> activeSets = new ArrayList<>();
-    private Set set;
+    private static List<Set> activeSets = new ArrayList<>();
 
     public Game(){
 
@@ -39,7 +38,6 @@ public class Game implements Serializable {
     private void startNewSet(User player) {
         Set set = new Set(player, category, maxPlayers, maxNumberOfQuestions, maxNumberOfMatches);
         activeSets.add(set);
-        set.startMatch(player);
     }
     public static void continueGame(Answer answer){
         for (Set s : getActiveSets()) {

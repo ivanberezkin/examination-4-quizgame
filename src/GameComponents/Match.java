@@ -45,12 +45,14 @@ public class Match implements Serializable {
             if (players[0] == null) {
                 player1 = player;
                 players[0] = player1;
+                playersList.add(player1);
+                sendFirstQuestion();
             } else if (players[1] == null) {
                 player2 = player;
                 players[1] = player2;
+                playersList.add(player2);
+                sendFirstQuestion();
             }
-            playersList.add(player);
-            sendFirstQuestion();
         }
     }
 

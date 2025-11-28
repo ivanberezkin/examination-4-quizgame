@@ -89,32 +89,67 @@ public class ServerProtocol {
             }
 
             case MATCHMAKING -> {
-                System.out.println("SERVERPROTOCOL: GAME_START was reached, message type is:" + message.getType() + " Class is: " + message.getData().getClass());
+                System.out.println("SERVERPROTOCOL: GAME_START was reached");
                 List<Connections> players = new ArrayList<>();
                 List<User> users = new ArrayList<>();
-                if (message.getData() instanceof User){
-                    User user = (User) message.getData();
-                    users.add(user);
-                }
-                else if (message.getData() instanceof List list){
-                    if (!list.isEmpty() && list.getFirst() instanceof User){
-                        users = list;
+                if (message.getData() instanceof MatchQuestion matchQuestion) {
+                    if (!matchQuestion.getUsers().isEmpty()) {
+                        Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
+                                message.getData().toString().trim()));
+                        for (User u : users) {
+                            Connections player = matchmaking.getFirstConnectionFromMatchMakingList();
+                            player.setUser(u);
+                            players.add(player);
+                            player.send(new Message(MessageType.DUMMY, users.getFirst()));
+                        }
                     }
-                }
-                if (!users.isEmpty()){
-                    Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
-                            users.getFirst().getUsername()));
-                    for (User u : users) {
-                        Connections player = matchmaking.getFirstConnectionFromMatchMakingList();
-                        player.setUser(u);
-                        players.add(player);
-                        //     player.send(new Message(MessageType.DUMMY, users.getFirst()));
-                    }
-                    game.startGame(users.getFirst(), Question.Category.ANIMALS);//Category will be chosen by user later on
-                    return new Message(MessageType.GAME_START, users.getFirst());
+                } else if (message.getData() instanceof User user) {
+                    game.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
+                    return null;
                 }
             }
-//
+            case ANSWER -> {
+                if (message.getData() instanceof Answer) {
+                    Answer answer = (Answer) message.getData();
+                    Game.continueGame(answer);
+                    return null;
+                }
+            }
+            case RESULT_ROUND -> {
+                if (message.getData() instanceof Match match) {
+                    for (User u : match.getPlayersList()) {
+                        Connections c = ServerListener.findConnectionsByUser(u.getUsername());
+                        c.send(new Message(MessageType.RESULT_ROUND, match));
+                    }
+                }
+                return null;
+            }
+//                System.out.println("SERVERPROTOCOL: GAME_START was reached, message type is:" + message.getType() + " Class is: " + message.getData().getClass());
+//                List<Connections> players = new ArrayList<>();
+//                List<User> users = new ArrayList<>();
+//                if (message.getData() instanceof User){
+//                    User user = (User) message.getData();
+//                    users.add(user);
+//                }
+//                else if (message.getData() instanceof List list){
+//                    if (!list.isEmpty() && list.getFirst() instanceof User){
+//                        users = list;
+//                    }
+//                }
+//                if (!users.isEmpty()){
+//                    Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
+//                            users.getFirst().getUsername()));
+//                    for (User u : users) {
+//                        Connections player = matchmaking.getFirstConnectionFromMatchMakingList();
+//                        player.setUser(u);
+//                        players.add(player);
+//                        //     player.send(new Message(MessageType.DUMMY, users.getFirst()));
+//                    }
+//                    game.startGame(users.getFirst(), Question.Category.ANIMALS);//Category will be chosen by user later on
+//                    return new Message(MessageType.GAME_START, users.getFirst());
+//                }
+//            }
+////
 //                Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
 //                        message.getData().toString().trim()));
 //                IO.println("MATCHMAKING:" + message.getData().toString() + " added to matchmaking List!");
@@ -133,22 +168,7 @@ public class ServerProtocol {
 ////                    return new Message(MessageType.QUESTION, questionsForUserList);
 
 //            }
-            case ANSWER -> {
-                if (message.getData() instanceof Answer) {
-                    Answer answer = (Answer) message.getData();
-                    Game.continueGame(answer);
-                    return null;
-                }
-            }
-            case RESULT_ROUND -> {
-                if (message.getData() instanceof Match match) {
-                    for (User u : match.getPlayersList()) {
-                        Connections c = ServerListener.findConnectionsByUser(u.getUsername());
-                        c.send(new Message(MessageType.RESULT_ROUND, match));
-                    }
-                }
-                return null;
-            }
+
             case GAME_FINISHED -> {
                 return new Message(MessageType.GAME_FINISHED, null);
             }
