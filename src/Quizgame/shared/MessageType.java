@@ -18,6 +18,7 @@ public enum MessageType implements Serializable {
     WAITING,
     DUMMY,
     GIVE_UP,
+    MOVE_TO_MENU,
 
 
     //for authentication

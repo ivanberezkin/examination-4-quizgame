@@ -102,6 +102,10 @@ public class ClientProtocol {
                 //Server skickar frågor i en Message_type question
             }
 
+            case MOVE_TO_MENU -> {
+                moveUserToMenuPanel();
+            }
+
             case QUESTION -> {
                 System.out.println("Message type is:" + message.getData().getClass());
                 IO.println("Questions Received by User");
@@ -128,7 +132,7 @@ public class ClientProtocol {
         }
     }
 
-    private void moveUserToMenuPanel() {
+    public void moveUserToMenuPanel() {
         MenuPanel menuPanel = new MenuPanel(loggedInUser, frame, client);
         frame.setContentPane(menuPanel);
         frame.revalidate();

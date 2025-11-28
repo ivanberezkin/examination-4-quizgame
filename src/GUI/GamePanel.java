@@ -1,6 +1,7 @@
 package GUI;
 
 import Client.ClientBase;
+import Client.ClientProtocol;
 import Database.*;
 import Quizgame.shared.Answer;
 import Quizgame.shared.Message;
@@ -71,13 +72,9 @@ public class GamePanel extends JPanel {
         northPanel.setLayout(new BorderLayout());
         northPanel.add(giveUpButton, BorderLayout.WEST);
 
-        giveUpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                IO.println("GAMEPANEL:" + user.getUsername() + " pressed give up button.");
-
-                client.sendMessage(new Message(MessageType.GIVE_UP, user));
-            }
+        giveUpButton.addActionListener(e -> {
+            IO.println("GAMEPANEL:" + user.getUsername() + " pressed give up button.");
+            client.sendMessage(new Message(MessageType.GIVE_UP, user));
         });
 
 //        welcomeLabel.setHorizontalAlignment(JLabel.CENTER);

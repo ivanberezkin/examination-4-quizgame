@@ -83,6 +83,7 @@ public class ServerProtocol {
             }
             case GIVE_UP -> {
                 IO.println("CLIENTPROTOCOL: " + "Received " + message.getType() + " from " + user.getUsername());
+                return new Message(MessageType.MOVE_TO_MENU, null);
                 //TODO lägga till logik för vad som händer när användare ger upp.
             }
 
