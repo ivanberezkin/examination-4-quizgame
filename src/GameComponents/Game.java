@@ -6,6 +6,7 @@ import Quizgame.shared.Answer;
 import Quizgame.shared.Message;
 import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
+import Server.ConfigLoader;
 import Server.Connections;
 import Server.ServerListener;
 import Server.ServerProtocol;
@@ -15,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game implements Serializable {
-    private int maxNumberOfQuestions = 3;
-    private int maxNumberOfMatches = 2;
-    private int maxPlayers = 2;
+    private int maxNumberOfQuestions = ConfigLoader.getQuestionsPerRound();
+    private int maxNumberOfMatches = ConfigLoader.getRoundsPerGame();
+    private int maxPlayers = ConfigLoader.getMaxPlayers();
 
     private Question.Category category;
     private static List<Set> activeSets = new ArrayList<>();

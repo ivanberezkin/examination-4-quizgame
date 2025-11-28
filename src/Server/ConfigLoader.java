@@ -14,7 +14,7 @@ public class ConfigLoader {
             System.out.println("Error loading properties");
         }
     }
-    public static int getRoundPerGame(){
+    public static int getRoundsPerGame(){
         return Integer.parseInt(prop.getProperty("rounds", "3"));
     }
     public static int getQuestionsPerRound(){
