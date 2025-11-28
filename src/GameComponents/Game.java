@@ -1,14 +1,12 @@
 package GameComponents;
 
 import Database.*;
-import GUI.LoginPanel;
 import Quizgame.shared.Answer;
 import Quizgame.shared.Message;
 import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
-import Server.ConfigLoader;
+import Server.SettingsLoader;
 import Server.Connections;
-import Server.ServerListener;
 import Server.ServerProtocol;
 
 import java.io.Serializable;
@@ -16,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game implements Serializable {
-    private int maxNumberOfQuestions = ConfigLoader.getQuestionsPerRound();
-    private int maxNumberOfMatches = ConfigLoader.getRoundsPerGame();
-    private int maxPlayers = ConfigLoader.getMaxPlayers();
+    private int maxNumberOfQuestions = SettingsLoader.getQuestionsPerRound();
+    private int maxNumberOfMatches = SettingsLoader.getRoundsPerGame();
+    private int maxPlayers = SettingsLoader.getMaxPlayers();
 
     private Question.Category category;
     private static List<Set> activeSets = new ArrayList<>();

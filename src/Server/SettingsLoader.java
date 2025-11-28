@@ -3,7 +3,7 @@ package Server;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-public class ConfigLoader {
+public class SettingsLoader {
 
     private static Properties prop = new Properties();
 
