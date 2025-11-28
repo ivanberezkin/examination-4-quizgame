@@ -69,6 +69,7 @@ public class Game implements Serializable {
         ServerProtocol.processInput(new Message(MessageType.QUESTION, matchQuestion));
     }
     public static void sendMatchScore(Match match){
+        System.out.println("In Game, sendMatchScore was reached");
         ServerProtocol.processInput(new Message(MessageType.RESULT_ROUND, match));
         checkSets();
     }

@@ -97,10 +97,17 @@ public class Match {
     }
     public void sendQuestion() {
         System.out.println("       sendQuestion in Match was reached. question is: "+ numberOfSentQuestions);
-        if((pointsPlayer1.size() == pointsPlayer2.size()) && !completedMatch()){
+        for (User u : playersList){
+            System.out.println("in sendQuestion, player is: " + u.getUsername());
+        }
+        if(pointsPlayer1.size() == pointsPlayer2.size() && !completedMatch()){
             Game.sendQuestion(playersList, questions[numberOfSentQuestions]);
-            if (pointsPlayer1.size() == numberOfSentQuestions && pointsPlayer2.size() == numberOfSentQuestions)
-                numberOfSentQuestions+= 1;
+            if (pointsPlayer1.size() == numberOfSentQuestions && pointsPlayer2.size() == numberOfSentQuestions) {
+                numberOfSentQuestions += 1;
+            }
+        }
+        else if (completedMatch()){
+            Game.sendMatchScore(this);
         }
     }
 
