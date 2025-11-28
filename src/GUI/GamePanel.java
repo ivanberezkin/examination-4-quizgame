@@ -20,7 +20,15 @@ public class GamePanel extends JPanel {
 
 
     //Temporary label, byts mot något annat ev hur många frågor är kvar och ifall dom är rätt/fel.
-    JLabel temporaryLabel = new JLabel("Welcome to the game");
+    
+    JPanel northPanel = new JPanel();
+//    JLabel welcomeLabel = new JLabel("Welcome to the game");
+    ImageIcon giveUpFlagIcon = new ImageIcon("resources/giveUpFlag.jpg");
+    Image scaledImageFlag = giveUpFlagIcon.getImage().getScaledInstance(100,75,Image.SCALE_SMOOTH);
+    ImageIcon scaledGiveUpFlagIcon = new ImageIcon(scaledImageFlag);
+
+    JButton giveUpButton = new JButton(scaledGiveUpFlagIcon);
+
     JPanel questionPanel = new JPanel();
     JLabel questionCategoryLabel = new JLabel("Test Category");
     JLabel questionArea = new JLabel("");
@@ -47,9 +55,23 @@ public class GamePanel extends JPanel {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 
-        temporaryLabel.setHorizontalAlignment(JLabel.CENTER);
-        add(temporaryLabel, BorderLayout.NORTH);
+        //NORTH
+        northPanel.setBackground(Color.CYAN);
+        giveUpButton.setBorderPainted(false);
+        giveUpButton.setContentAreaFilled(false);
+        giveUpButton.setFocusPainted(false);
+        giveUpButton.setOpaque(false);
+        giveUpButton.setBorder(null);
+        giveUpButton.setMargin(new Insets(0,0,0,0));
 
+
+        northPanel.setLayout(new BorderLayout());
+        northPanel.add(giveUpButton, BorderLayout.WEST);
+//        welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
+//        northPanel.add(welcomeLabel);
+        add(northPanel, BorderLayout.NORTH);
+
+        //CENTER
         add(questionPanel, BorderLayout.CENTER);
         questionPanel.setBackground(Color.CYAN);
         questionPanel.add(questionArea);
@@ -140,6 +162,5 @@ public class GamePanel extends JPanel {
         }
         return false;
     }
-
-
 }
+
