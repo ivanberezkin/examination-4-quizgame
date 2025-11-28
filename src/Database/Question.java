@@ -38,9 +38,20 @@ public class Question implements Serializable {
         return answerOptions;
     }
 
+    public String getCorrect(){
+        String answer = "";
+        for (AnswerOption option : answerOptions){
+            if (option.getCorrect() == true ){
+                answer = option.getText();
+            }
+        }
+        return answer;
+    }
+
     public String getCategory() {
         return qCat;
     }
+
 
     @Override
     public String toString() {

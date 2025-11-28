@@ -3,7 +3,6 @@ package Server;
 import Quizgame.shared.*;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -12,15 +11,15 @@ import java.util.List;
 public class ServerListener {
     private static final List<Connections> allConnectedClientsList = new ArrayList<>();
 
-    private int port = 12344;
+    private int port = 12345;
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Server listening on port " + port);
+            System.out.println("SERVERLISTENER: listening on port " + port);
 
             while (true) {
                 Socket socket = serverSocket.accept();
-                System.out.println("Client connected!");
+                System.out.println("SERVERLISTENER: Client connected!");
 
                 ClientHandler handler = new ClientHandler(socket);
                 handler.start();

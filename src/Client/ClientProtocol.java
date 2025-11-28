@@ -2,6 +2,7 @@ package Client;
 
 import Database.Question;
 import GUI.GamePanel;
+import GUI.MatchmakingPanel;
 import GUI.MenuPanel;
 import GameComponents.TestGame;
 import Quizgame.shared.*;
@@ -23,7 +24,7 @@ public class ClientProtocol {
     }
 
     public void handleMessage(Message message) {
-        IO.println("Message type to process " + message.getType());
+        IO.println("CLIENTPROTOCOL: Message type to process " + message.getType());
 
         switch (message.getType()) {
 
@@ -31,6 +32,7 @@ public class ClientProtocol {
                 loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(frame, "Welcome " + loggedInUser.getUsername());
                 //Continue with matchmaking or game
+
                 moveUserToMenuPanel();
             }
 
@@ -80,24 +82,42 @@ public class ClientProtocol {
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
+            case DUMMY -> {
+
+
+            }
 
             case WAITING -> {
+
                 IO.println("MATCHMAKING:" + loggedInUser.getUsername() + " waiting for opponent.");
+                MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
+                    System.out.println("Matchmaking canceled!");
+                });
+                frame.setContentPane(matchmakingPanel);
+                frame.revalidate();
+                frame.repaint();
             }
 
             case MATCHMAKING -> {
                 //Server skickar frågor i en Message_type question
             }
 
-            case QUESTION -> {
-                IO.println("Questions Received by User");
-                TestGame testGame = (TestGame) message.getData();
-                ArrayList<Question> questionsForRound = testGame.getQuestionsForRound();
-                GamePanel gamePanel = new GamePanel(questionsForRound);
-                frame.setContentPane(gamePanel);
-                frame.revalidate();
-                frame.repaint();
+            case MOVE_TO_MENU -> {
+                moveUserToMenuPanel();
+            }
 
+            case QUESTION -> {
+                System.out.println("Message type is:" + message.getData().getClass());
+                IO.println("Questions Received by User");
+//                TestGame testGame = (TestGame) message.getData();
+//                ArrayList<Question> questionsForRound = testGame.getQuestionsForRound();
+                Question question = (Question) message.getData();
+                if (question != null) {
+                    GamePanel gamePanel = new GamePanel(client, question, loggedInUser, frame);
+                    frame.setContentPane(gamePanel);
+                    frame.revalidate();
+                    frame.repaint();
+                }
             }
 
             case RESULT_ROUND -> {
@@ -112,8 +132,8 @@ public class ClientProtocol {
         }
     }
 
-    private void moveUserToMenuPanel() {
-        MenuPanel menuPanel = new MenuPanel(loggedInUser.getUsername(), frame, client);
+    public void moveUserToMenuPanel() {
+        MenuPanel menuPanel = new MenuPanel(loggedInUser, frame, client);
         frame.setContentPane(menuPanel);
         frame.revalidate();
         frame.repaint();

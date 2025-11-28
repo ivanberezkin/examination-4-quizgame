@@ -1,49 +1,62 @@
 package GameComponents;
 import Database.*;
 import Quizgame.shared.User;
+import Server.Connections;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Set {
-    static int maxPlayers;
-    static int numberOfPlayers = 0;
-    private static int maxNumberOfQuestions;
+    int maxPlayers;
+    int numberOfPlayers;
+    private int maxNumberOfQuestions;
     private final int maxNumberOfMatches;
-    private final User player1;
-    private User player2;
+    private List<User>players = new ArrayList<>();
+    private Connections player1;
+    private Connections player2;
     private int setScorePlayer1 = 0;
-    private static int setScorePlayer2 = 0;
-    private User setWinner;
-    private static List<int[]> setScores = new ArrayList<>();
+    private int setScorePlayer2 = 0;
+    private Connections setWinner;
+    private List<int[]> setScores = new ArrayList<>();
     private List<Match> matches = new ArrayList<>();
-    private static Match match;
-    Question.Category[] category;
-    private static List<Question> allSetQuestions = new ArrayList<>();
+    private Match match;
+    Question.Category category;
+    private final List<Question> allSetQuestions = new ArrayList<>();
     static Database db = new Database();
 
-    public Set(User player, Question.Category[] category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
-        this.player1 = player;
+    public Set(Connections player, Question.Category category, int maxPlayers, int maxNumberOfQuestions, int maxNumberOfMatches) {
         this.category = category;
         this.maxPlayers = maxPlayers;
         this.maxNumberOfMatches = maxNumberOfMatches;
         this.maxNumberOfQuestions = maxNumberOfQuestions;
+        players.add(player.getUser());
+        this.numberOfPlayers = players.size();
         startMatch(player);
     }
 
-    public void startMatch(User player) {
+    public void startMatch(Connections player) {
         if (matches.size() < maxNumberOfMatches) {
-            match = new Match(player, category[matches.size()], maxNumberOfQuestions, maxPlayers);
+            match = new Match(this, player, category, maxNumberOfQuestions, maxPlayers);
             matches.add(match);
+        }
+        else {
+            if (checkIfCompleted()){
+                Game.sendMatchScore(match);
+            }
         }
     }
 
-    public void addPlayer(User player) {
-        if (numberOfPlayers < 2) {
+    public void addPlayer(Connections player) {
+        System.out.println("addPlayer in Set was reached");
+        if (numberOfPlayers == 0){
+            this.player1 = player;
+        }
+       else if (numberOfPlayers == 1) {
             this.player2 = player;
+        }
             numberOfPlayers += 1;
             match.addPlayer(player);
         }
-    }
 
     public void continuePlaying() {
         if (numberOfPlayers == 2 && matches.size() < maxNumberOfMatches && (!match.completedMatch()) && (match.getPointsPlayer1().size() == match.getPointsPlayer2().size())) {
@@ -68,7 +81,7 @@ public class Set {
         }
     }
 
-    public static Question[] getQuestions() {
+    public Question[] getQuestions() {
         Question[] questions = new Question[maxNumberOfQuestions];
         ArrayList<Question> questionList = db.getQuestionsForRound(maxNumberOfQuestions);
 
@@ -84,7 +97,7 @@ public class Set {
         }
         return questions;
     }
-    private static boolean ensureNewQuestion(Question question){
+    private boolean ensureNewQuestion(Question question){
         for (Question q : allSetQuestions){
             if (q.getPrompt().equals(question.getPrompt())){
                 return true;

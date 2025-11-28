@@ -1,7 +1,11 @@
 package GameComponents;
 import Database.*;
+import Quizgame.shared.Answer;
 import Quizgame.shared.User;
+import Server.Connections;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -10,81 +14,92 @@ public class Match {
     private final int matchID;
     private final int numberOfQuestions;
     private final int maxPlayers;
-    private User[] players;
+    private Connections[] players;
+    private Connections player1;
+    private Connections player2;
     private Question.Category category;
+    private List<Connections>playerList = new ArrayList<>();
+    private List<User> playersList = new ArrayList<>();
     private final List<Integer> pointsPlayer1 = new ArrayList<>();
     private final List<Integer> pointsPlayer2 = new ArrayList<>();
     private Question[] questions;
     private int numberOfCompletedQuestion = 0;
     private int numberOfSentQuestions = 0;
-    private User winner;
-    private Question firstQuestion;
+    private Connections winner;
+    private final Question firstQuestion;
+    private Set set;
 
-    public Match(User player, Question.Category category, int numberOfQuestions, int maxPlayers) {
-
+    public Match(Set set, Connections player, Question.Category category, int numberOfQuestions, int maxPlayers) {
+        this.set = set;
         this.category = category;
         this.numberOfQuestions = numberOfQuestions;
         this.maxPlayers = maxPlayers;
         this.matchID = random.nextInt(500) + random.nextInt(500);
-        players = new User[maxPlayers];
+        questions = set.getQuestions();
+        firstQuestion = questions[0];
+        players = new Connections[maxPlayers];
         addPlayer(player);
         loadMatchQuestions();
     }
 
-    public void addPlayer(User user) {
+    public void addPlayer(Connections player) {
+        System.out.println("addPlayer in Match was reached");
+        if (player != null) {
             if (players[0] == null) {
-                players[0] = user;
-            } else if (players[1] == null){
-                players[1] = user;
+                player1 = player;
+                players[0] = player1;
+            } else if (players[1] == null) {
+                player2 = player;
+                players[1] = player2;
+            }
+            playersList.add(player.getUser());
+            sendFirstQuestion();
         }
-        sendFirstQuestion(user);
+
     }
 
     private int getPlayerIndex(Score score) {
         for (int i = 0; i < players.length; i++) {
-            if (players[i].getUsername().equals(score.getPlayer().getUsername())) {
+            if (players[i].getUser().getUsername().equals(score.getPlayer().getUsername())) {
                 return i;
             }
         }
         return -1;
     }
 
-    public void assignPoints(Score score) {
-        int points = score.getPoints();
-        int index = getPlayerIndex(score);
-        User player = score.getPlayer();
-        if (index != -1) {
-            if (points == 0) {
-                player.addIncorrectAnswers();
-            } else {
-                player.addCorrectAnswers(points);
+    public void addPointsToList(Answer answer) {
+        System.out.println("addPointsToList in Match was reached");
+        int score = 0;
+        if (answer.getIsAnswerCorrect()){
+            score = 1;
+        }
+        if (answer.getUser() == player1.getUser()){
+            pointsPlayer1.add(score);
+        }
+        else if (answer.getUser() == player2.getUser()) {
+            pointsPlayer2.add(score);
+        }
+        numberOfCompletedQuestion += 1;
+    }
+
+    public void sendFirstQuestion() {
+            //Adjust method in DataBase, to get specific category?
+            if (playersList != null && pointsPlayer1.isEmpty()) {
+                Game.sendFirstQuestion(player1, firstQuestion);
+                System.out.println(" . . . For Match sendFirstQuestion, player is player1");
+
+            } else if (!pointsPlayer1.isEmpty() && playersList.size() == 2 && pointsPlayer2.isEmpty()) {
+                Game.sendFirstQuestion(player2, firstQuestion);
+                numberOfSentQuestions += 1;
+                    System.out.println(" . . . For Match sendFirstQuestion, player is: player2 ");
+            } else if (playerList.size() == 2 && pointsPlayer1.isEmpty() && pointsPlayer2.isEmpty()) {
+                sendQuestion();
             }
-            addPointsToList(index, score);
-            numberOfCompletedQuestion += 1;
-            Game.sendScore(score, players);
-        }
-    }
-
-    private void addPointsToList(int index, Score score) {
-        if (index == 0) {
-            pointsPlayer1.add(score.getPoints());
-        } else if (index == 1) {
-            pointsPlayer2.add(score.getPoints());
-        }
-    }
-
-    public void sendFirstQuestion(User player) {
-        //Adjust method in DataBase, to get specific category?
-        if (players[0] != null && pointsPlayer1.isEmpty()){
-            Game.sendFirstQuestion(questions[0], player);
-        }
-        else if (!pointsPlayer1.isEmpty() && players[1] != null && pointsPlayer2.isEmpty()) {
-            Game.sendFirstQuestion(questions[0], player);
-        }
     }
     public void sendQuestion() {
+        System.out.println("sendQuestion in Match was reached");
         if((pointsPlayer1.size() == pointsPlayer2.size()) && !completedMatch()){
-            Game.sendQuestion(questions[numberOfSentQuestions], players);
+            Game.sendQuestion(playerList, questions[numberOfSentQuestions]);
             numberOfSentQuestions += 1;
         }
     }
@@ -94,13 +109,19 @@ public class Match {
             int points1 = pointsPlayer1.get(numberOfQuestions - 1);
             int points2 = pointsPlayer2.get(numberOfQuestions - 1);
             if (points1 > points2) {
-                winner = players[0];
+                winner = player1;
             } else if (points1 < points2)
-                winner = players[1];
+                winner = player2;
         } else {
             winner = null;
         }
-        Game.sendMatchScore(players, matchID);
+        Game.sendMatchScore(this);
+    }
+    public List<User> getPlayersList(){
+        return playersList;
+    }
+    public List<Connections> getPlayerList(){
+        return playerList;
     }
 
     public boolean completedMatch() {
@@ -108,10 +129,10 @@ public class Match {
     }
 
     public void loadMatchQuestions() {
-        this.questions = Set.getQuestions();
+        this.questions = set.getQuestions();
     }
 
-    public User getWinner() {
+    public Connections getWinner() {
         return winner;
     }
 
