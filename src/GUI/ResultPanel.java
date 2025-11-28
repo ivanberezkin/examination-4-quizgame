@@ -18,8 +18,55 @@ public class ResultPanel extends JPanel {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         topPanel.setOpaque(false);
 
-        JLabel scoreLabel = new JLabel(scoreOne + " - " + scoreTwo);
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        JLabel playerOneLabel = playerLabel(playerOne);
+        JLabel playerTwoLabel = playerLabel(playerTwo);
+
+        JLabel scoreLabel = new JLabel(scoreOne + "-" +  scoreTwo);
+        scoreLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
         scoreLabel.setForeground(Color.WHITE);
+
+        topPanel.add(playerOneLabel);
+        topPanel.add(playerTwoLabel);
+        topPanel.add(scoreLabel);
+        add(topPanel, BorderLayout.NORTH);
+
+
+        // Namn
+
+
+        // Knapp
+
+
+//        Runda
+
+    }
+
+    private static JLabel playerLabel(String text) {
+
+        return label;
+    }
+
+    //    Markera knappar
+    public void markPlayerOneButton(int temp, boolean correct) {
+
+    }
+
+    public void markPlayerTwoButton(int temp, boolean correct) {
+
+    }
+
+    public void resetButtons() {
+
+    }
+
+    public void setPlayerOneRoundWin(int roundIndex) {
+    }
+
+    public void setPlayerTwoRoundWin(int roundIndex) {
+    }
+
+
+    // TEST
+    public static void main(String[] args) {
     }
 }
