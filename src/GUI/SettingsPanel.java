@@ -1,12 +1,18 @@
 package GUI;
 
+import Quizgame.shared.User;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SettingsPanel extends JPanel {
     private JFrame frame;
     private JPanel previousPanel;
+
+    private JPanel topPanel;
 
     private JPanel buttonPanel;
     private JButton backButton;
@@ -24,46 +30,67 @@ public class SettingsPanel extends JPanel {
     private JButton avatar9Button;
     private JButton avatar10Button;
 
-    public SettingsPanel(JFrame frame, JPanel previousPanel) {
+    private User user;
+
+    public SettingsPanel(JFrame frame, JPanel previousPanel, User user) {
         this.frame = frame;
         this.previousPanel = previousPanel;
+        this.user = user;
 
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
-        JPanel avatarPanel = new JPanel();
 
-        createAvatarButtons(avatarPanel);
+        topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(new EmptyBorder(20, 5, 10, 5));
+        JLabel currentAvatarLabel =  new JLabel("Current Avatar");
+        currentAvatarLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel currentAvatarPreview = new JLabel(user.getAvatar());
+        currentAvatarPreview.setHorizontalAlignment(SwingConstants.CENTER);
+
+        topPanel.add(currentAvatarLabel, BorderLayout.NORTH);
+        topPanel.add(currentAvatarPreview, BorderLayout.CENTER);
+        add(topPanel, BorderLayout.NORTH);
+
+        ActionListener changePreviewPicture = e -> {
+            JButton clickedButton =  (JButton) e.getSource();
+            currentAvatarPreview.setIcon(clickedButton.getIcon());
+            currentAvatarPreview.updateUI();
+        };
+
+        JPanel avatarPanel = new JPanel();
+        createAvatarButtons(avatarPanel, changePreviewPicture);
         avatarPanel.setLayout(new GridLayout(2, 5));
         avatarPanel.setOpaque(false);
         add(avatarPanel, BorderLayout.CENTER);
 
 
+
         buttonPanel = new JPanel();
         backButton = new JButton("Back");
         saveButton = new JButton("Save");
-
         buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new GridLayout(1, 2, 10, 0));
         buttonPanel.setBorder(new EmptyBorder(5, 30, 5, 30));
         buttonPanel.add(saveButton);
         buttonPanel.add(backButton);
-
+        add(buttonPanel, BorderLayout.SOUTH);
 
         backButton.addActionListener(e -> {
             goBackToMenu(previousPanel);
         });
 
-
         saveButton.addActionListener(e -> {
-
+            //TODO add logic to save Button.
         });
 
-        add(buttonPanel, BorderLayout.SOUTH);
+
 
     }
 
 
-    private JButton createAvatarButton(String filename) {
+    private JButton createAvatarButton(String filename, ActionListener changePreviewPicture ) {
         JButton avatarButton = new JButton();
         ImageIcon tempAvatar = new ImageIcon(filename);
         Image scaledTempAvatar = tempAvatar.getImage().getScaledInstance(sizeOfAvatar, sizeOfAvatar, Image.SCALE_SMOOTH);
@@ -74,20 +101,21 @@ public class SettingsPanel extends JPanel {
         avatarButton.setBorder(null);
         avatarButton.setMargin(new Insets(0, 0, 0, 0));
         avatarButton.setIcon(new ImageIcon(scaledTempAvatar));
+        avatarButton.addActionListener(changePreviewPicture);
         return avatarButton;
     }
 
-    private void createAvatarButtons(JPanel avatarPanel) {
-        avatar1Button = createAvatarButton("resources/Avatars/avatar1.png");
-        avatar2Button = createAvatarButton("resources/Avatars/avatar2.jpg");
-        avatar3Button = createAvatarButton("resources/Avatars/avatar3.png");
-        avatar4Button = createAvatarButton("resources/Avatars/avatar4.png");
-        avatar5Button = createAvatarButton("resources/Avatars/avatar5.png");
-        avatar6Button = createAvatarButton("resources/Avatars/avatar6.png");
-        avatar7Button = createAvatarButton("resources/Avatars/avatar7.png");
-        avatar8Button = createAvatarButton("resources/Avatars/avatar8.png");
-        avatar9Button = createAvatarButton("resources/Avatars/avatar9.png");
-        avatar10Button = createAvatarButton("resources/Avatars/avatar10.png");
+    private void createAvatarButtons(JPanel avatarPanel, ActionListener changePreviewPicture) {
+        avatar1Button = createAvatarButton("resources/Avatars/avatar1.png", changePreviewPicture);
+        avatar2Button = createAvatarButton("resources/Avatars/avatar2.jpg",changePreviewPicture);
+        avatar3Button = createAvatarButton("resources/Avatars/avatar3.png",changePreviewPicture);
+        avatar4Button = createAvatarButton("resources/Avatars/avatar4.png", changePreviewPicture);
+        avatar5Button = createAvatarButton("resources/Avatars/avatar5.png", changePreviewPicture);
+        avatar6Button = createAvatarButton("resources/Avatars/avatar6.png", changePreviewPicture);
+        avatar7Button = createAvatarButton("resources/Avatars/avatar7.png", changePreviewPicture);
+        avatar8Button = createAvatarButton("resources/Avatars/avatar8.png", changePreviewPicture);
+        avatar9Button = createAvatarButton("resources/Avatars/avatar9.png", changePreviewPicture);
+        avatar10Button = createAvatarButton("resources/Avatars/avatar10.png", changePreviewPicture);
         avatarPanel.add(avatar1Button);
         avatarPanel.add(avatar2Button);
         avatarPanel.add(avatar3Button);

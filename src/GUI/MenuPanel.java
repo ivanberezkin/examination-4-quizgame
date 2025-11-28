@@ -93,7 +93,7 @@ public class MenuPanel extends JPanel {
         settingsButton.setPreferredSize(new Dimension(200, 50));
 
         settingsButton.addActionListener(e -> {
-            SettingsPanel settingsPanel = new SettingsPanel(frame, this);
+            SettingsPanel settingsPanel = new SettingsPanel(frame, this, user);
             frame.setContentPane(settingsPanel);
             frame.revalidate();
             frame.repaint();
