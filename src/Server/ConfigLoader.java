@@ -14,5 +14,14 @@ public class ConfigLoader {
             System.out.println("Error loading properties");
         }
     }
+    public static int getRoundPerGame(){
+        return Integer.parseInt(prop.getProperty("rounds", "3"));
+    }
+    public static int getQuestionsPerRound(){
+        return Integer.parseInt(prop.getProperty("questions", "5"));
+    }
+    public static int getMaxPlayers() {
+        return Integer.parseInt(prop.getProperty("players", "2"));
+    }
 
 }
