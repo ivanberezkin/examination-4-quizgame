@@ -29,15 +29,50 @@ public class ResultPanel extends JPanel {
         topPanel.add(playerTwoLabel);
         topPanel.add(scoreLabel);
         add(topPanel, BorderLayout.NORTH);
-
-
         // Namn
+        JPanel namesPanel = new JPanel(new GridLayout(2, 1));
+        namesPanel.setOpaque(false);
 
+        JLabel leftName = new JLabel(playerOne, SwingConstants.CENTER);
+        JLabel rightName = new JLabel(playerTwo, SwingConstants.CENTER);
+        leftName.setOpaque(true);
+        leftName.setForeground(Color.WHITE);
+        rightName.setOpaque(true);
+        rightName.setForeground(Color.WHITE);
+
+        namesPanel.add(leftName);
+        namesPanel.add(rightName);
+        add(namesPanel, BorderLayout.CENTER);
 
         // Knapp
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottomPanel.setOpaque(false);
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
 
+        JPanel buttonRow1 = new JPanel(new FlowLayout(FlowLayout.CENTER, 10 ,10));
+        buttonRow1.setOpaque(false);
+        JPanel buttonRow2 = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        buttonRow2.setOpaque(false);
+
+        for (int i = 0; i < 3; i++) { /* antal knappar */
+            JButton b1 = new JButton();
+            b1.setPreferredSize(new Dimension(50, 50));
+            b1.setBackground(Color.LIGHT_GRAY);
+            playerOneButtons.add(b1);
+            buttonRow1.add(b1);
+
+            JButton b2 = new JButton();
+            b2.setPreferredSize(new Dimension(50, 50));
+            b2.setBackground(Color.LIGHT_GRAY);
+            playerTwoButtons.add(b2);
+            buttonRow2.add(b2);
+
+        }
+        bottomPanel.add(buttonRow1);
+        bottomPanel.add(buttonRow2);
 
 //        Runda
+        JPanel roundPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
     }
 
