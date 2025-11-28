@@ -30,7 +30,7 @@ public class ClientBase extends Thread {
             out.flush();
             in = new ObjectInputStream(socket.getInputStream());
 
-            System.out.println("Connected to server");
+            System.out.println("CLIENTBASE: Connected to server succesfully.");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -40,9 +40,7 @@ public class ClientBase extends Thread {
         while (running){
             try  {
                     Object obj = in.readObject();
-                    IO.println("Message received from server");
                     if (obj instanceof Message msg){
-                        IO.println("Message valid moving to handleMessage (protocol)");
                         protocol.handleMessage(msg);
                     }
             } catch (IOException | ClassNotFoundException e) {
@@ -53,7 +51,7 @@ public class ClientBase extends Thread {
     }
 
     public void sendMessage(Message message) {
-        System.out.println("sendMessage in ClientBase was reached. MessageType is: " + message.getType());
+        System.out.println("CLIENTBASE: sendMessage was reached. MessageType is: " + message.getType());
         try {
             out.writeObject(message);
             out.flush();
