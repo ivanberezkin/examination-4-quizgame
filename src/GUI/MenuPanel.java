@@ -66,36 +66,46 @@ public class MenuPanel extends JPanel {
         card.setPreferredSize(new Dimension(300, 400));
 
 
-        JPanel buttonPanel = new JPanel(new GridLayout(3,1, 0,20));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 0, 20));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         buttonPanel.setOpaque(false);
 
-        JButton startGameButton =  new JButton("Play");
+        JButton startGameButton = new JButton("Play");
         startGameButton.setBackground(new Color(34, 139, 34));
         startGameButton.setForeground(Color.WHITE);
         startGameButton.setFont(new Font("Arial", Font.BOLD, 16));
         startGameButton.setFocusPainted(false);
         startGameButton.setPreferredSize(new Dimension(200, 50));
+
         startGameButton.addActionListener(e -> {
-
-
-//            ClientStart cs = new ClientStart(frame);
-//            ClientBase client = cs.getClient();
             client.sendMessage(new Message(MessageType.MATCHMAKING, user));
             //TODO move to MatchMaking Panel
             IO.println(user.getUsername() + " moved to Matchmaking");
         });
 
-        JButton settingsButton =  new JButton("Settings");
-        JButton exitButton =  new JButton("Exit");
+        JButton settingsButton = new JButton("Settings");
+        settingsButton.setBackground(new Color(34, 139, 34));
+        settingsButton.setForeground(Color.WHITE);
+        settingsButton.setFont(new Font("Arial", Font.BOLD, 16));
+        settingsButton.setFocusPainted(false);
+        settingsButton.setPreferredSize(new Dimension(200, 50));
+
+        settingsButton.addActionListener(e -> {
+
+        });
+
+
+
+        JButton exitButton = new JButton("Exit");
 
         buttonPanel.add(startGameButton);
         buttonPanel.add(settingsButton);
         buttonPanel.add(exitButton);
-        card.add(buttonPanel,BorderLayout.CENTER);
+        card.add(buttonPanel, BorderLayout.CENTER);
 
         return card;
     }
+
 
 //    private void showMode() {
 //        JFrame modeFrame = new JFrame("Klassiskt läge");
