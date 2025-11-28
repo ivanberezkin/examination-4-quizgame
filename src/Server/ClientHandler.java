@@ -36,15 +36,15 @@ public class ClientHandler extends Thread {
                 if (response.getType() == MessageType.LOGIN_OK
                         || response.getType() == MessageType.LOGIN_CREATE_OK) {
                     newConnection.setUser((User) response.getData());
-                    IO.println(newConnection.getUser().getUsername() + " added to connectionList");
-                    IO.println(ServerListener.numberOfConnectionsInAllConnectedClientsList() + " connected users total.");
+                    IO.println("CLIENTHANDLER: " + newConnection.getUser().getUsername() + " added to connectionList");
+                    IO.println("CLIENTHANDLER: " + ServerListener.numberOfConnectionsInAllConnectedClientsList() + " connected users total.");
                 }
 
                 out.writeObject(response);
                 out.flush();
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Client disconnected");
+            System.out.println("CLIENTHANDLER: Client disconnected");
         }
     }
 }

@@ -1,9 +1,16 @@
 package GUI;
 
+import Client.ClientBase;
+import Client.ClientProtocol;
 import Database.*;
+import Quizgame.shared.Answer;
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
+import Quizgame.shared.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 //import java.io.IO;
 import java.util.ArrayList;
@@ -15,7 +22,15 @@ public class GamePanel extends JPanel {
 
 
     //Temporary label, byts mot något annat ev hur många frågor är kvar och ifall dom är rätt/fel.
-    JLabel temporaryLabel = new JLabel("Welcome to the game");
+    
+    JPanel northPanel = new JPanel();
+//    JLabel welcomeLabel = new JLabel("Welcome to the game");
+    ImageIcon giveUpFlagIcon = new ImageIcon("resources/giveUpFlag.jpg");
+    Image scaledImageFlag = giveUpFlagIcon.getImage().getScaledInstance(100,75,Image.SCALE_SMOOTH);
+    ImageIcon scaledGiveUpFlagIcon = new ImageIcon(scaledImageFlag);
+
+    JButton giveUpButton = new JButton(scaledGiveUpFlagIcon);
+
     JPanel questionPanel = new JPanel();
     JLabel questionCategoryLabel = new JLabel("Test Category");
     JLabel questionArea = new JLabel("");
@@ -28,17 +43,45 @@ public class GamePanel extends JPanel {
     JButton answerD = new JButton("D");
     String correctAnswer;
     ArrayList<Question> questionsForRound;
+    private ClientBase clientBase;
+    private Question question;
+    private User user;
+    private JFrame frame;
 
-    public GamePanel(ArrayList<Question> questionsForRound) {
+    public GamePanel(ClientBase client, Question question, User user, JFrame frame) {
+        this.clientBase = client;
+        this.question = question;
         this.questionsForRound = questionsForRound;
+        this.user = user;
+        this.frame = frame;
 
         setBackground(Color.CYAN);
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 
-        temporaryLabel.setHorizontalAlignment(JLabel.CENTER);
-        add(temporaryLabel, BorderLayout.NORTH);
+        //NORTH
+        northPanel.setBackground(Color.CYAN);
+        giveUpButton.setBorderPainted(false);
+        giveUpButton.setContentAreaFilled(false);
+        giveUpButton.setFocusPainted(false);
+        giveUpButton.setOpaque(false);
+        giveUpButton.setBorder(null);
+        giveUpButton.setMargin(new Insets(0,0,0,0));
 
+
+        northPanel.setLayout(new BorderLayout());
+        northPanel.add(giveUpButton, BorderLayout.WEST);
+
+        giveUpButton.addActionListener(e -> {
+            IO.println("GAMEPANEL:" + user.getUsername() + " pressed give up button.");
+            client.sendMessage(new Message(MessageType.GIVE_UP, user));
+        });
+
+//        welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
+//        northPanel.add(welcomeLabel);
+        add(northPanel, BorderLayout.NORTH);
+
+        //CENTER
         add(questionPanel, BorderLayout.CENTER);
         questionPanel.setBackground(Color.CYAN);
         questionPanel.add(questionArea);
@@ -57,9 +100,7 @@ public class GamePanel extends JPanel {
         answerB.setFocusable(false);
         answerC.setFocusable(false);
         answerD.setFocusable(false);
-
-
-        nextQuestion();
+        newQuestion(question);
 
         ActionListener answerButtonListener = e -> {
             JButton clickedButton = (JButton) e.getSource();
@@ -68,14 +109,17 @@ public class GamePanel extends JPanel {
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the correct answer.");
                 clickedButton.setBackground(Color.LIGHT_GRAY);
                 //TODO lägga till logik för antal rundor och sedan starta ny fråga
-                nextQuestion();
+
+                client.sendMessage(new Message(MessageType.ANSWER, new Answer(user, question, nextQuestion())));
+                answerButtonsPanel.removeAll();
 
             } else {
                 clickedButton.setBackground(Color.RED);
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the incorrect answer" +
                         "\n Correct Answer is: " + correctAnswer);
                 clickedButton.setBackground(Color.LIGHT_GRAY);
-                nextQuestion();
+                client.sendMessage(new Message(MessageType.ANSWER, new Answer(user, question, nextQuestion())));
+                answerButtonsPanel.removeAll();
             }
         };
 
@@ -98,17 +142,17 @@ public class GamePanel extends JPanel {
         questionArea.updateUI();
     }
 
-    private void nextQuestion() {
-        if (questionsForRound.size() == 0) {
-            IO.println("There are no questions to play.");
-        } else {
-            Question temp = questionsForRound.getFirst();
-            questionsForRound.removeFirst();
-            correctAnswer = newQuestion(temp);
-        }
+    private boolean nextQuestion() {
+//        if (questionsForRound.size() == 0) {
+//            IO.println("There are no questions to play.");
+//        } else {
+            Question temp = question;
+
+            return newQuestion(temp);
+//        }
     }
 
-    private String newQuestion(Question newQuestion) {
+    private boolean newQuestion(Question newQuestion) {
 //        Question newQuestion = db.getNewQuestion();
         List<AnswerOption> answerOptions = newQuestion.getAnswerOptions();
         Collections.shuffle(answerOptions);
@@ -120,13 +164,13 @@ public class GamePanel extends JPanel {
         answerC.setText(answerOptions.get(1).getText());
         answerD.setText(answerOptions.get(2).getText());
 
-
         for (AnswerOption option : answerOptions) {
-            if (option.getCorrect())
-                return option.getText();
+            if (option.getCorrect()) {
+                correctAnswer = option.getText();
+                return true;
+            }
         }
-        return null;
+        return false;
     }
-
-
 }
+
