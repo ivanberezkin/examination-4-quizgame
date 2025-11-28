@@ -30,6 +30,7 @@ public class ClientProtocol {
                 loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(frame, "Welcome " + loggedInUser.getUsername());
                 //Continue with matchmaking or game
+                IO.println(loggedInUser.getAvatar());
 
                 moveUserToMenuPanel();
             }

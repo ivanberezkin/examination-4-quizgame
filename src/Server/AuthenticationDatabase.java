@@ -9,10 +9,15 @@ import java.util.List;
 public class AuthenticationDatabase {
 
     private static final String FILE_NAME = "user.dat";
-    private static List<User> users = loadUsers();
+    private List<User> users;
 
 
-    public static User getUserByUsername(String username) {
+    public AuthenticationDatabase() {
+        this.users = loadUsers();
+        IO.println("AD: Created succesfully");
+    }
+
+    public User getUserByUsername(String username) {
         for (User u : users) {
             if (u.getUsername().equals(username)) {
                 return u;
@@ -21,19 +26,19 @@ public class AuthenticationDatabase {
         return null;
     }
 
-    public static boolean userExists(String username) {
+    public  boolean userExists(String username) {
         return getUserByUsername(username) != null;
     }
 
-    public static void createUser(String username, String password) {
+    public void createUser(String username, String password) {
         User newUser = new User(username, password);
         users.add(newUser);
-        saveUsers();
+//        saveUsers();
     }
 
     //Intern lagring
     @SuppressWarnings("unchecked") //Används för att slippa kompilatorvarning vid filläsningen.
-    private static List<User> loadUsers() {
+    protected List<User> loadUsers() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
             return (List<User>) ois.readObject();
         } catch (Exception e) {
@@ -41,8 +46,22 @@ public class AuthenticationDatabase {
         }
     }
 
+    protected void updateAvatarForUser(User user) {
+        for(User u: users){
+            if(u.getUsername().equals(user.getUsername())){
+                u.setAvatar(user.getAvatar());
+                System.out.println("AD: Avatar updated for user " + user.getUsername());
+            }
+        }
+    }
 
-    private static void saveUsers() {
+    protected void printUsers(){
+        for(User u : users){
+            System.out.println("AD: " + u.getUsername() + " Avatar: "+u.getAvatar());
+        }
+    }
+
+    protected void saveUsers() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
             oos.writeObject(users);
         } catch (IOException e) {

@@ -19,6 +19,7 @@ public enum MessageType implements Serializable {
     DUMMY,
     GIVE_UP,
     MOVE_TO_MENU,
+    SETTINGS_AVATAR_CHANGED,
 
 
     //for authentication

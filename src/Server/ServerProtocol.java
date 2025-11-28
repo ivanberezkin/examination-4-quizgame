@@ -14,6 +14,7 @@ public class ServerProtocol {
     static Game game = new Game();
     private static User user;
     private static Database db = new Database();
+    private static AuthenticationDatabase ad = new AuthenticationDatabase();
 
     public static Message processInput(Message message) {
         System.out.println("SERVERPROTOCOL: processInput was reached, message type is:" + message.getType());
@@ -29,6 +30,9 @@ public class ServerProtocol {
         switch (type) {
             case LOGIN_REQUEST -> {
                 User loginUser = (User) message.getData();
+                ad.printUsers();
+                User existingUser = ad.getUserByUsername(loginUser.getUsername());
+
                 User existingUser = AuthenticationDatabase.getUserByUsername(loginUser.getUsername());
                 if (existingUser == null) {
                     return new Message(MessageType.LOGIN_USER_NOT_FOUND, null);
@@ -41,9 +45,13 @@ public class ServerProtocol {
 
             case LOGIN_CREATE_REQUEST -> {
                 User newUser = (User) message.getData();
+                if (ad.userExists(newUser.getUsername())) {
+                    return new Message(MessageType.LOGIN_CREATE_FAIL, null);
                 if (AuthenticationDatabase.userExists(newUser.getUsername())) {
                     return new Message(MessageType.LOGIN_CREATE_FAIL, newUser);
                 }
+
+                ad.createUser(newUser.getUsername(), newUser.getPassword());
                 AuthenticationDatabase.createUser(newUser.getUsername(), newUser.getPassword());
                 return new Message(MessageType.LOGIN_CREATE_OK, newUser);
             }
@@ -54,6 +62,10 @@ public class ServerProtocol {
                         c.send(new Message(MessageType.QUESTION, matchQuestion.getQuestion()));
                     }
                 }
+            }
+
+            case SETTINGS_AVATAR_CHANGED -> {
+                ad.updateAvatarForUser(user);
             }
 
             case GAME_START -> {
@@ -178,6 +190,20 @@ public class ServerProtocol {
             }
         }
         return new Message(MessageType.ERROR, "SERVERPROTOCOL: Unhandled messagetype");
+    }
+
+    protected static void serializeAuthenticationDatabase(){
+        ad.saveUsers();
+        IO.println("SERVERPROTOCOL: User serialized successfully");
+    }
+
+    private static void sendQuestionsToClients(Connections opponentA, Connections opponentB) {
+        IO.println("MATCHMAKING:" + opponentA.getUser().getUsername() + " entered game against " + opponentB.getUser().getUsername());
+        TestGame testGame = new TestGame(opponentA.getUser().getUsername(),
+                opponentB.getUser().getUsername());
+
+        opponentA.send(new Message(MessageType.QUESTION,testGame));
+        opponentB.send(new Message(MessageType.QUESTION,testGame));
     }
 }
 //
