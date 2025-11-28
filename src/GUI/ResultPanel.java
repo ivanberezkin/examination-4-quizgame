@@ -141,6 +141,7 @@ public class ResultPanel extends JPanel {
 
 
     // TEST
+    /*
     public static void main(String[] args) {
         JFrame frame = new JFrame("Test ResultPanel");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -157,4 +158,5 @@ public class ResultPanel extends JPanel {
         new Timer(4000, e -> panel.markPlayerTwoButton(2, false)).start();
         new Timer(1000, e -> panel.setPlayerOneRightA(0)).start();
     }
+     */
 }
