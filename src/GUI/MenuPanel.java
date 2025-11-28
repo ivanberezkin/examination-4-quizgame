@@ -39,11 +39,12 @@ public class MenuPanel extends JPanel {
         middlePanel.setBackground(new Color(30, 144, 255));
         middlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-        JLabel welcomeLabel = new JLabel("Välkommen " + user.getUsername(), SwingConstants.CENTER);
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        welcomeLabel.setForeground(Color.WHITE);
+//        JLabel welcomeLabel = new JLabel("Välkommen " + user.getUsername(), SwingConstants.CENTER);
+//        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+//        welcomeLabel.setForeground(Color.WHITE);
+        JLabel avatarLabel = new JLabel(user.getAvatar());
 
-        middlePanel.add(welcomeLabel, BorderLayout.NORTH);
+        middlePanel.add(avatarLabel, BorderLayout.NORTH);
 
 
         JPanel cardWrapper = new JPanel(new GridLayout());
