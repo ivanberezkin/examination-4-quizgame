@@ -29,23 +29,24 @@ public class ResultPanel extends JPanel {
         topPanel.add(playerTwoLabel);
         topPanel.add(scoreLabel);
         add(topPanel, BorderLayout.NORTH);
+
         // Namn
-        JPanel namesPanel = new JPanel(new GridLayout(2, 1));
+        JPanel namesPanel = new JPanel(new GridLayout(1, 2));
         namesPanel.setOpaque(false);
 
         JLabel leftName = new JLabel(playerOne, SwingConstants.CENTER);
         JLabel rightName = new JLabel(playerTwo, SwingConstants.CENTER);
         leftName.setOpaque(true);
-        leftName.setForeground(Color.WHITE);
+        leftName.setBackground(Color.WHITE);
         rightName.setOpaque(true);
-        rightName.setForeground(Color.WHITE);
+        rightName.setBackground(Color.WHITE);
 
         namesPanel.add(leftName);
         namesPanel.add(rightName);
         add(namesPanel, BorderLayout.CENTER);
 
         // Knapp
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
 
@@ -75,7 +76,7 @@ public class ResultPanel extends JPanel {
         JLabel roundLabel = new JLabel(roundText, SwingConstants.CENTER);
         roundLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
         roundLabel.setForeground(Color.WHITE);
-        setAlignmentX(CENTER_ALIGNMENT);
+//        setAlignmentX(CENTER_ALIGNMENT);
         bottomPanel.add(roundLabel);
 
         add(bottomPanel, BorderLayout.SOUTH);
@@ -85,11 +86,11 @@ public class ResultPanel extends JPanel {
     private static JLabel playerLabel(String text) {
         JLabel label = new JLabel(text, SwingConstants.CENTER);
         label.setPreferredSize(new Dimension(90, 90));
-        label.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        label.setFont(new Font("Times New Roman", Font.BOLD, 30));
         label.setForeground(Color.BLACK);
         label.setBackground(Color.WHITE);
         label.setOpaque(true);
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true));
+        label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         return label;
     }
 
