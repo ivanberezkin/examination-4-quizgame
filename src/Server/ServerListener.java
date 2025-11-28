@@ -10,7 +10,6 @@ import java.util.List;
 
 public class ServerListener {
     private static final List<Connections> allConnectedClientsList = new ArrayList<>();
-
     private int port = 12345;
     private boolean running = true;
 

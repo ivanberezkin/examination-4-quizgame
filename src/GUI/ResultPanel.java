@@ -1,11 +1,19 @@
 package GUI;
 
+import GameComponents.Match;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class ResultPanel extends JPanel {
-    public ResultPanel(String playerOne, String playerTwo,
-                       int scoreOne, int scoreTwo, String roundText) {
+    public ResultPanel(Match match) {
+        String playerOne = match.getPlayersList().getFirst().getUsername();
+        String playerTwo = match.getPlayersList().get(1).getUsername();
+
+//        int scoreOne = match.getPointsPlayer1(); Lista, poäng per fråga
+//        int scoreTwo = match.getPointsPlayer2();
+        String roundText;
+
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
 
@@ -15,14 +23,14 @@ public class ResultPanel extends JPanel {
 
         JLabel playerOneText = playerLabel("1", Color.BLACK);
         JLabel playerTwoText = playerLabel("2", Color.BLACK);
-
-        JLabel scoreLabel = new JLabel(scoreOne + " - " + scoreTwo);
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        scoreLabel.setForeground(Color.WHITE);
-
-        topPanel.add(playerOneText);
-        topPanel.add(scoreLabel);
-        topPanel.add(playerTwoText);
+//
+//        JLabel scoreLabel = new JLabel(scoreOne + " - " + scoreTwo);
+//        scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
+//        scoreLabel.setForeground(Color.WHITE);
+//
+//        topPanel.add(playerOneText);
+//        topPanel.add(scoreLabel);
+//        topPanel.add(playerTwoText);
 
 
 

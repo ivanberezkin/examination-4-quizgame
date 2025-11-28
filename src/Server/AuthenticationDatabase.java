@@ -18,8 +18,10 @@ public class AuthenticationDatabase {
     }
 
     public User getUserByUsername(String username) {
+        System.out.println("getUserByUserName in A D was reached");
         for (User u : users) {
             if (u.getUsername().equals(username)) {
+                System.out.println("User name in LOGIN_REQUEST is: " + u.getUsername());
                 return u;
             }
         }
@@ -33,7 +35,7 @@ public class AuthenticationDatabase {
     public void createUser(String username, String password) {
         User newUser = new User(username, password);
         users.add(newUser);
-//        saveUsers();
+       saveUsers();
     }
 
     //Intern lagring

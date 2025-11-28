@@ -1,20 +1,18 @@
 package Client;
 
-import Database.Question;
+import Database.*;
+import GUI.ResultPanel;
+import GameComponents.*;
 import GUI.GamePanel;
 import GUI.MatchmakingPanel;
 import GUI.MenuPanel;
-import GameComponents.TestGame;
 import Quizgame.shared.*;
-
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class ClientProtocol {
 
     private final ClientBase client;
-    private JFrame frame;
+    private final JFrame frame;
     private User loggedInUser;
 
 
@@ -84,10 +82,7 @@ public class ClientProtocol {
                         JOptionPane.ERROR_MESSAGE);
             }
             case DUMMY -> {
-
-
             }
-
             case WAITING -> {
 
                 IO.println("MATCHMAKING:" + loggedInUser.getUsername() + " waiting for opponent.");
@@ -98,38 +93,50 @@ public class ClientProtocol {
                 frame.revalidate();
                 frame.repaint();
             }
+            case GAME_START -> {
+                User user = (User) message.getData();
+                if (user != null) {
+                    MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
+                    });
+                    SwingUtilities.invokeLater(() -> {
+                        frame.setContentPane(matchmakingPanel);
+                        frame.revalidate();
+                        frame.repaint();
+                    });
+                }
+            }
 
             case MATCHMAKING -> {
                 //Server skickar frågor i en Message_type question
             }
 
-            case MOVE_TO_MENU -> {
-                moveUserToMenuPanel();
-            }
-
             case QUESTION -> {
-                System.out.println("Message type is:" + message.getData().getClass());
-                IO.println("Questions Received by User");
-//                TestGame testGame = (TestGame) message.getData();
-//                ArrayList<Question> questionsForRound = testGame.getQuestionsForRound();
-                Question question = (Question) message.getData();
-                if (question != null) {
+                IO.println("Questions Received");
+                if (message.getData() instanceof Question question) {
+                    System.out.println("Question is: " + question);
                     GamePanel gamePanel = new GamePanel(client, question, loggedInUser, frame);
-                    frame.setContentPane(gamePanel);
-                    frame.revalidate();
-                    frame.repaint();
+                    SwingUtilities.invokeLater(() -> {
+                        frame.setContentPane(gamePanel);
+                        frame.revalidate();
+                        frame.repaint();
+                    });
                 }
             }
 
             case RESULT_ROUND -> {
-                // Add game logic here
+                if (message.getData() instanceof Match match){
+                    ResultPanel resultPanel = new ResultPanel(match);
+                    SwingUtilities.invokeLater(() -> {
+                        frame.setContentPane(resultPanel);
+                        frame.revalidate();
+                        frame.repaint();
+                    });
+                }
             }
 
             case GAME_FINISHED -> {
                 //add game logic here
             }
-
-
         }
     }
 
