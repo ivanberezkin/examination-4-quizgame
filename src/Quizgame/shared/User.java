@@ -3,6 +3,8 @@ package Quizgame.shared;
 import GameComponents.Game;
 import GameComponents.Match;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,9 @@ public class User implements Serializable {
     private boolean connected;
     private List<Game>games = new ArrayList<>();
 
+    private Icon avatar;
+
+
     public User(String username,String password){
         this.username = username;
         this.password = password;
@@ -37,6 +42,15 @@ public class User implements Serializable {
         this.connected = true;
     }
 
+
+
+    public Icon getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Icon avatar) {
+        this.avatar = avatar;
+    }
 
     public String getUsername() {return username;}
     public String getPassword() {return password;}
