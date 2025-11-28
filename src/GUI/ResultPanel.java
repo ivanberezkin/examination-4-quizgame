@@ -75,7 +75,7 @@ public class ResultPanel extends JPanel {
         JLabel roundLabel = new JLabel(roundText, SwingConstants.CENTER);
         roundLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
         roundLabel.setForeground(Color.WHITE);
-//      setAlignmentX(CENTER_ALIGNMENT);
+        setAlignmentX(CENTER_ALIGNMENT);
         bottomPanel.add(roundLabel);
 
         add(bottomPanel, BorderLayout.SOUTH);
@@ -89,31 +89,71 @@ public class ResultPanel extends JPanel {
         label.setForeground(Color.BLACK);
         label.setBackground(Color.WHITE);
         label.setOpaque(true);
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true);
+        label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true));
         return label;
     }
 
     //    Markera knappar
     public void markPlayerOneButton(int temp, boolean correct) {
+        if(temp < 0 || temp >= playerOneButtons.size()) return;
+        Color color;
+        if(correct) {
+            color = Color.GREEN;
+        } else {
+            color = Color.RED;
+        }
+        playerOneButtons.get(temp).setBackground(color);
 
     }
 
     public void markPlayerTwoButton(int temp, boolean correct) {
+        if(temp < 0 || temp >= playerTwoButtons.size()) return;
+        Color color;
+        if(correct) {
+            color = Color.GREEN;
+        } else {
+            color = Color.RED;
+        }
+        playerTwoButtons.get(temp).setBackground(color);
 
     }
 
     public void resetButtons() {
+        for (JButton b : playerOneButtons) b.setBackground(Color.LIGHT_GRAY);
+        for (JButton b : playerTwoButtons) b.setBackground(Color.LIGHT_GRAY);
+    }
+
+    public void setPlayerOneRightA(int roundIndex) {
+        if(roundIndex < 0 || roundIndex >= playerOneButtons.size()) return;
+        JButton b1 = playerOneButtons.get(roundIndex);
+        b1.setText("1");
+        b1.setBackground(Color.GREEN);
 
     }
 
-    public void setPlayerOneRoundWin(int roundIndex) {
-    }
-
-    public void setPlayerTwoRoundWin(int roundIndex) {
+    public void setPlayerTwoRightA(int roundIndex) {
+        if(roundIndex < 0 || roundIndex >= playerTwoButtons.size()) return;
+        JButton b2 = playerTwoButtons.get(roundIndex);
+        b2.setText("2");
+        b2.setBackground(Color.RED);
     }
 
 
     // TEST
     public static void main(String[] args) {
+        JFrame frame = new JFrame("Test ResultPanel");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        ResultPanel panel = new ResultPanel("KÖPA", "CHIPS", 0, 0, "Round 1");
+        frame.add(panel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        new Timer(1000, e -> panel.markPlayerOneButton(0, true)).start();
+        new Timer(2000, e -> panel.markPlayerOneButton(1, false)).start();
+        new Timer(3000, e -> panel.markPlayerTwoButton(0, true)).start();
+        new Timer(4000, e -> panel.markPlayerTwoButton(2, false)).start();
+        new Timer(1000, e -> panel.setPlayerOneRightA(0)).start();
     }
 }
