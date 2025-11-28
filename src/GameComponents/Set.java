@@ -86,10 +86,29 @@ public class Set implements Serializable {
 
     public Question[] getQuestions() {
         Question[] questions = new Question[maxNumberOfQuestions];
-        ArrayList<Question> questionList = db.getQuestionsForRound(maxNumberOfQuestions);
+        ArrayList<Question> questionList = db.getQuestionsForRound(maxNumberOfQuestions * 2); //Prevents issues if some questions would be dupes.
+        int count = 0;
 
-        for (int i = 0; i < maxNumberOfQuestions; i++) {
-            Question question;
+        for (Question q : questionList) {
+            boolean dupe = false;
+            for (int i = 0; i < count; i++) {
+                if (questions[i].getPrompt().equals(q.getPrompt())) {
+                    dupe = true;
+                    break;
+                }
+            }
+            if (!dupe) {
+                questions[count++] = q;
+            }
+            if(count == maxNumberOfQuestions){
+            break;}
+        }
+        if(count < maxNumberOfQuestions){
+            System.out.println("WARNING: not enough with unique questions");
+        }
+        return questions;
+    }
+            /*Question question;
             do {
 
                 question = questionList.get(i);
@@ -106,8 +125,8 @@ public class Set implements Serializable {
                 return true;
             }
         }
-        return false;
-    }
+        return false;*/
+
 
     public boolean checkIfCompleted(){
         return setScores.size() == maxNumberOfMatches - 1;
