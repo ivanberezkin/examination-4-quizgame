@@ -41,6 +41,12 @@ public class AuthenticationDatabase {
         }
     }
 
+    private static void printUsers(){
+        for(User u : users){
+            System.out.println(u.getUsername());
+            System.out.println(u.getAvatar());
+        }
+    }
 
     private static void saveUsers() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {

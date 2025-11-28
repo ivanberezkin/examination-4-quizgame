@@ -41,7 +41,6 @@ public class User implements Serializable {
         resetMatchStats();
         this.state = UserState.WAITING;
         this.connected = true;
-        avatar = createDefaultAvatar();
     }
 
     private ImageIcon createDefaultAvatar(){

@@ -125,6 +125,7 @@ public class MenuPanel extends JPanel {
     protected void updateAvatarLabel(Icon icon) {
         avatarLabel.setIcon(icon);
         avatarLabel.updateUI();
+        IO.println(user.getUsername() + " changed avatar to "+ user.getAvatar());
     }
 
 
