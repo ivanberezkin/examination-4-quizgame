@@ -18,6 +18,7 @@ public class MenuPanel extends JPanel {
     public MenuPanel(User user, JFrame frame, ClientBase client) {
         this.frame = frame;
         this.user = user;
+        this.client = client;
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
@@ -84,19 +85,32 @@ public class MenuPanel extends JPanel {
         });
 
         JButton settingsButton = new JButton("Settings");
-        settingsButton.setBackground(new Color(34, 139, 34));
+        settingsButton.setBackground(Color.PINK);
         settingsButton.setForeground(Color.WHITE);
         settingsButton.setFont(new Font("Arial", Font.BOLD, 16));
         settingsButton.setFocusPainted(false);
         settingsButton.setPreferredSize(new Dimension(200, 50));
 
         settingsButton.addActionListener(e -> {
-
+            SettingsPanel settingsPanel = new SettingsPanel(frame, this);
+            frame.setContentPane(settingsPanel);
+            frame.revalidate();
+            frame.repaint();
         });
 
 
 
         JButton exitButton = new JButton("Exit");
+        exitButton.setBackground(Color.RED);
+        exitButton.setForeground(Color.WHITE);
+        exitButton.setFont(new Font("Arial", Font.BOLD, 16));
+        exitButton.setFocusPainted(false);
+        exitButton.setPreferredSize(new Dimension(200, 50));
+
+        exitButton.addActionListener(e -> {
+           client.stopClient();
+           System.exit(0);
+        });
 
         buttonPanel.add(startGameButton);
         buttonPanel.add(settingsButton);
