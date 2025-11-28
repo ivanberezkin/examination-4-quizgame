@@ -45,11 +45,11 @@ public class MenuPanel extends JPanel {
         middlePanel.add(welcomeLabel, BorderLayout.NORTH);
 
 
-        JPanel cardWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        JPanel cardWrapper = new JPanel(new GridLayout());
         cardWrapper.setBackground(new Color(30, 144, 255));
         cardWrapper.add(createCard("Klassiskt läge"));
-        cardWrapper.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
-
+        cardWrapper.setBorder(BorderFactory.createEmptyBorder(0, 150, 0, 150));
+        cardWrapper.setOpaque(false);
 
         middlePanel.add(cardWrapper, BorderLayout.CENTER);
         add(middlePanel, BorderLayout.CENTER);
@@ -81,16 +81,27 @@ public class MenuPanel extends JPanel {
 
     private JPanel createCard(String title) {
         JPanel card = new JPanel(new BorderLayout());
-        card.setBackground(new Color(245, 245, 245));
-        card.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
-
+        card.setBackground(new Color(30, 144, 255));
+        card.setBorder(null);
         JLabel label = new JLabel(title, SwingConstants.CENTER);
         label.setFont(new Font("Serif", Font.BOLD, 20));
 
         card.setPreferredSize(new Dimension(300, 400));
 
 
-        card.add(label, BorderLayout.CENTER);
+        JPanel buttonPanel = new JPanel(new GridLayout(3,1, 0,20));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        buttonPanel.setOpaque(false);
+
+        JButton playButton =  new JButton("Play");
+        JButton settingsButton =  new JButton("Settings");
+        JButton exitButton =  new JButton("Exit");
+
+        buttonPanel.add(playButton);
+        buttonPanel.add(settingsButton);
+        buttonPanel.add(exitButton);
+        card.add(buttonPanel,BorderLayout.CENTER);
+
         return card;
     }
 
