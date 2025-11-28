@@ -17,6 +17,8 @@ public enum MessageType implements Serializable {
     MATCHMAKING_WAITING_FOR_OPPONENT,
     WAITING,
     DUMMY,
+    GIVE_UP,
+    MOVE_TO_MENU,
 
 
     //for authentication

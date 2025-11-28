@@ -22,7 +22,7 @@ public class ClientProtocol {
     }
 
     public void handleMessage(Message message) {
-        IO.println("Message type to process " + message.getType());
+        IO.println("CLIENTPROTOCOL: Message type to process " + message.getType());
 
         switch (message.getType()) {
 
@@ -30,6 +30,7 @@ public class ClientProtocol {
                 loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(frame, "Welcome " + loggedInUser.getUsername());
                 //Continue with matchmaking or game
+
                 moveUserToMenuPanel();
             }
 
@@ -105,25 +106,14 @@ public class ClientProtocol {
             }
 
             case MATCHMAKING -> {
-                User user = (User) message.getData();
-                IO.println("Questions Received by User");
-//                TestGame testGame = (TestGame) message.getData();
-//                ArrayList<Question> questionsForRound = testGame.getQuestionsForRound();
-                if (user != null) {
-                    MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
-                    });
-                    SwingUtilities.invokeLater(() -> {
-                        frame.setContentPane(matchmakingPanel);
-                        frame.revalidate();
-                        frame.repaint();
-                    });
-                }
+                //Server skickar frågor i en Message_type question
             }
+
             case QUESTION -> {
                 IO.println("Questions Received");
                 if (message.getData() instanceof Question question) {
                     System.out.println("Question is: " + question);
-                    GamePanel gamePanel = new GamePanel(client, question, loggedInUser);
+                    GamePanel gamePanel = new GamePanel(client, question, loggedInUser, frame);
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(gamePanel);
                         frame.revalidate();
@@ -149,7 +139,7 @@ public class ClientProtocol {
         }
     }
 
-    private void moveUserToMenuPanel() {
+    public void moveUserToMenuPanel() {
         MenuPanel menuPanel = new MenuPanel(loggedInUser, frame, client);
         frame.setContentPane(menuPanel);
         frame.revalidate();

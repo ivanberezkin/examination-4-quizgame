@@ -12,14 +12,20 @@ import java.util.List;
 
 public class ServerProtocol {
     static Game game = new Game();
-
+    private static User user;
     private static Database db = new Database();
 
     public static Message processInput(Message message) {
+        System.out.println("SERVERPROTOCOL: processInput was reached, message type is:" + message.getType());
+
         if (message == null || message.getType() == null) {
-            return new Message(MessageType.ERROR, "Invalid message");
+            return new Message(MessageType.ERROR, "SERVERPROTOCOL: Invalid message");
         }
         MessageType type = message.getType();
+        if (message.getData() instanceof User){
+            user = (User) message.getData();
+        }
+
         switch (type) {
             case LOGIN_REQUEST -> {
                 User loginUser = (User) message.getData();
@@ -51,6 +57,7 @@ public class ServerProtocol {
             }
 
             case GAME_START -> {
+                System.out.println("SERVERPROTOCOL: GAME_START was reached");
                 List<Connections> players = new ArrayList<>();
                 List<User> users = new ArrayList<>();
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
@@ -67,7 +74,7 @@ public class ServerProtocol {
                 }
                 else if (message.getData() instanceof User user) {
                     game.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
-                return null;
+                    return null;
                 }
             }
             case MATCHMAKING_WAITING_FOR_OPPONENT -> {
@@ -75,7 +82,14 @@ public class ServerProtocol {
 
                 }
             }
+            case GIVE_UP -> {
+                IO.println("CLIENTPROTOCOL: " + "Received " + message.getType() + " from " + user.getUsername());
+                return new Message(MessageType.MOVE_TO_MENU, null);
+                //TODO lägga till logik för vad som händer när användare ger upp.
+            }
+
             case MATCHMAKING -> {
+                System.out.println("SERVERPROTOCOL: GAME_START was reached, message type is:" + message.getType() + " Class is: " + message.getData().getClass());
                 List<Connections> players = new ArrayList<>();
                 List<User> users = new ArrayList<>();
                 if (message.getData() instanceof User){
@@ -89,12 +103,12 @@ public class ServerProtocol {
                 }
                 if (!users.isEmpty()){
                     Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
-                           users.getFirst().getUsername()));
+                            users.getFirst().getUsername()));
                     for (User u : users) {
                         Connections player = matchmaking.getFirstConnectionFromMatchMakingList();
                         player.setUser(u);
                         players.add(player);
-                   //     player.send(new Message(MessageType.DUMMY, users.getFirst()));
+                        //     player.send(new Message(MessageType.DUMMY, users.getFirst()));
                     }
                     game.startGame(users.getFirst(), Question.Category.ANIMALS);//Category will be chosen by user later on
                     return new Message(MessageType.GAME_START, users.getFirst());
@@ -140,20 +154,20 @@ public class ServerProtocol {
             }
 
             default -> {
-                return new Message(MessageType.ERROR, "Invalid message");
+                return new Message(MessageType.ERROR, "SERVERPROTOCOL: Invalid message");
             }
         }
-        return new Message(MessageType.ERROR, "Unhandled messagetype");
+        return new Message(MessageType.ERROR, "SERVERPROTOCOL: Unhandled messagetype");
     }
-
-    private static void sendQuestionsToClients(Connections opponentA, Connections opponentB) {
-        IO.println("MATCHMAKING:" + opponentA.getUser().getUsername() + " entered game against " + opponentB.getUser().getUsername());
-        TestGame testGame = new TestGame(opponentA.getUser().getUsername(),
-                opponentB.getUser().getUsername());
-
-        opponentA.send(new Message(MessageType.QUESTION,testGame));
-        opponentB.send(new Message(MessageType.QUESTION,testGame));
-    }
-
 }
+//
+//    private static void sendQuestionsToClients(Connections opponentA, Connections opponentB) {
+//        IO.println("MATCHMAKING:" + opponentA.getUser().getUsername() + " entered game against " + opponentB.getUser().getUsername());
+//        TestGame testGame = new TestGame(opponentA.getUser().getUsername(),
+//                opponentB.getUser().getUsername());
+//
+//        opponentA.send(new Message(MessageType.QUESTION,testGame));
+//        opponentB.send(new Message(MessageType.QUESTION,testGame));
+//    }
+
 
