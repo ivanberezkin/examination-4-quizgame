@@ -33,7 +33,7 @@ public class SettingsPanel extends JPanel {
         JPanel avatarPanel = new JPanel();
 
         createAvatarButtons(avatarPanel);
-        avatarPanel.setLayout(new GridLayout(2,5));
+        avatarPanel.setLayout(new GridLayout(2, 5));
         avatarPanel.setOpaque(false);
         add(avatarPanel, BorderLayout.CENTER);
 
@@ -43,7 +43,7 @@ public class SettingsPanel extends JPanel {
         saveButton = new JButton("Save");
 
         buttonPanel.setOpaque(false);
-        buttonPanel.setLayout(new GridLayout(1,2,10,0));
+        buttonPanel.setLayout(new GridLayout(1, 2, 10, 0));
         buttonPanel.setBorder(new EmptyBorder(5, 30, 5, 30));
         buttonPanel.add(saveButton);
         buttonPanel.add(backButton);
@@ -63,31 +63,31 @@ public class SettingsPanel extends JPanel {
     }
 
 
-
-    private JButton createAvatarButton(int size, String filename){
+    private JButton createAvatarButton(String filename) {
         JButton avatarButton = new JButton();
         ImageIcon tempAvatar = new ImageIcon(filename);
-        Image scaledTempAvatar = tempAvatar.getImage().getScaledInstance(size,size,Image.SCALE_SMOOTH);
+        Image scaledTempAvatar = tempAvatar.getImage().getScaledInstance(sizeOfAvatar, sizeOfAvatar, Image.SCALE_SMOOTH);
         avatarButton.setBorderPainted(false);
         avatarButton.setContentAreaFilled(false);
         avatarButton.setFocusPainted(false);
         avatarButton.setOpaque(false);
         avatarButton.setBorder(null);
-        avatarButton.setMargin(new Insets(0,0,0,0));
+        avatarButton.setMargin(new Insets(0, 0, 0, 0));
         avatarButton.setIcon(new ImageIcon(scaledTempAvatar));
         return avatarButton;
     }
-    private void createAvatarButtons(JPanel avatarPanel){
-        avatar1Button = createAvatarButton(sizeOfAvatar, "resources/Avatars/avatar1.png");
-        avatar2Button = createAvatarButton(sizeOfAvatar, "resources/Avatars/avatar2.jpg");
-        avatar3Button = createAvatarButton(sizeOfAvatar, "resources/Avatars/avatar3.png");
-        avatar4Button = createAvatarButton(sizeOfAvatar, "resources/Avatars/avatar4.png");
-        avatar5Button = createAvatarButton(sizeOfAvatar, "resources/Avatars/avatar5.png");
-        avatar6Button = createAvatarButton(sizeOfAvatar, "resources/Avatars/avatar6.png");
-        avatar7Button = createAvatarButton(sizeOfAvatar, "resources/Avatars/avatar7.png");
-        avatar8Button = createAvatarButton(sizeOfAvatar, "resources/Avatars/avatar8.png");
-        avatar9Button = createAvatarButton(sizeOfAvatar, "resources/Avatars/avatar9.png");
-        avatar10Button = createAvatarButton(sizeOfAvatar, "resources/Avatars/avatar10.png");
+
+    private void createAvatarButtons(JPanel avatarPanel) {
+        avatar1Button = createAvatarButton("resources/Avatars/avatar1.png");
+        avatar2Button = createAvatarButton("resources/Avatars/avatar2.jpg");
+        avatar3Button = createAvatarButton("resources/Avatars/avatar3.png");
+        avatar4Button = createAvatarButton("resources/Avatars/avatar4.png");
+        avatar5Button = createAvatarButton("resources/Avatars/avatar5.png");
+        avatar6Button = createAvatarButton("resources/Avatars/avatar6.png");
+        avatar7Button = createAvatarButton("resources/Avatars/avatar7.png");
+        avatar8Button = createAvatarButton("resources/Avatars/avatar8.png");
+        avatar9Button = createAvatarButton("resources/Avatars/avatar9.png");
+        avatar10Button = createAvatarButton("resources/Avatars/avatar10.png");
         avatarPanel.add(avatar1Button);
         avatarPanel.add(avatar2Button);
         avatarPanel.add(avatar3Button);

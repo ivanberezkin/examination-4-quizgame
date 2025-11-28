@@ -3,6 +3,8 @@ package Quizgame.shared;
 import GameComponents.Game;
 import GameComponents.Match;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,10 @@ public class User implements Serializable {
     private int incorrectAnswers;
     private boolean connected;
     private List<Game>games = new ArrayList<>();
+    private final String defaultAvatarFilename = "resources/Avatars/default_avatar.png";
+    private final int defaultAvatarSize = 75;
+    private ImageIcon avatar;
+
 
     public User(String username,String password){
         this.username = username;
@@ -35,8 +41,22 @@ public class User implements Serializable {
         resetMatchStats();
         this.state = UserState.WAITING;
         this.connected = true;
+        avatar = createDefaultAvatar();
     }
 
+    private ImageIcon createDefaultAvatar(){
+        ImageIcon avatar = new ImageIcon(defaultAvatarFilename);
+        Image scaledAvatar = avatar.getImage().getScaledInstance(defaultAvatarSize, defaultAvatarSize, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledAvatar);
+    }
+
+    public ImageIcon getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(ImageIcon avatar) {
+        this.avatar = avatar;
+    }
 
     public String getUsername() {return username;}
     public String getPassword() {return password;}
