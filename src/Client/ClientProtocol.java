@@ -32,6 +32,7 @@ public class ClientProtocol {
                 loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(frame, "Welcome " + loggedInUser.getUsername());
                 //Continue with matchmaking or game
+
                 moveUserToMenuPanel();
             }
 
@@ -101,6 +102,10 @@ public class ClientProtocol {
                 //Server skickar frågor i en Message_type question
             }
 
+            case MOVE_TO_MENU -> {
+                moveUserToMenuPanel();
+            }
+
             case QUESTION -> {
                 System.out.println("Message type is:" + message.getData().getClass());
                 IO.println("Questions Received by User");
@@ -108,7 +113,7 @@ public class ClientProtocol {
 //                ArrayList<Question> questionsForRound = testGame.getQuestionsForRound();
                 Question question = (Question) message.getData();
                 if (question != null) {
-                    GamePanel gamePanel = new GamePanel(client, question, loggedInUser);
+                    GamePanel gamePanel = new GamePanel(client, question, loggedInUser, frame);
                     frame.setContentPane(gamePanel);
                     frame.revalidate();
                     frame.repaint();
@@ -127,7 +132,7 @@ public class ClientProtocol {
         }
     }
 
-    private void moveUserToMenuPanel() {
+    public void moveUserToMenuPanel() {
         MenuPanel menuPanel = new MenuPanel(loggedInUser, frame, client);
         frame.setContentPane(menuPanel);
         frame.revalidate();
