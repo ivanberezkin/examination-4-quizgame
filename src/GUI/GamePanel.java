@@ -9,6 +9,7 @@ import Quizgame.shared.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 //import java.io.IO;
 import java.util.ArrayList;
@@ -67,6 +68,15 @@ public class GamePanel extends JPanel {
 
         northPanel.setLayout(new BorderLayout());
         northPanel.add(giveUpButton, BorderLayout.WEST);
+
+        giveUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IO.println("GAMEPANEL:" + user.getUsername() + " pressed give up button.");
+                client.sendMessage(new Message(MessageType.GIVE_UP, user));
+            }
+        });
+
 //        welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
 //        northPanel.add(welcomeLabel);
         add(northPanel, BorderLayout.NORTH);

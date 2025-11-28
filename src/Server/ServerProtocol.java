@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ServerProtocol {
     static Game game = new Game();
-
+    private static User user;
     private static Database db = new Database();
 
     public static Message processInput(Message message) {
@@ -20,6 +20,9 @@ public class ServerProtocol {
             return new Message(MessageType.ERROR, "Invalid message");
         }
         MessageType type = message.getType();
+        if (message.getData() instanceof User){
+            user = (User) message.getData();
+        }
 
         switch (type) {
             case LOGIN_REQUEST -> {
@@ -77,8 +80,12 @@ public class ServerProtocol {
                 while(Matchmaking.getMatchMakingListSize() < 2) {
 
                 }
-
             }
+            case GIVE_UP -> {
+                IO.println("CLIENTPROTOCOL: " + "Received " + message.getType() + " from " + user.getUsername());
+                //TODO lägga till logik för vad som händer när användare ger upp.
+            }
+
             case MATCHMAKING -> {
                 System.out.println("In ServerProtocol, GAME_START was reached, message type is:" + message.getType() + " Class is: " + message.getData().getClass());
                 List<Connections> players = new ArrayList<>();
