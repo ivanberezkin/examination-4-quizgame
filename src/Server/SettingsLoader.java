@@ -15,10 +15,10 @@ public class SettingsLoader {
         }
     }
     public static int getRoundsPerGame(){
-        return Integer.parseInt(prop.getProperty("rounds", "3"));
+        return Integer.parseInt(prop.getProperty("rounds", "5"));
     }
     public static int getQuestionsPerRound(){
-        return Integer.parseInt(prop.getProperty("questions", "5"));
+        return Integer.parseInt(prop.getProperty("questions", "3"));
     }
     public static int getMaxPlayers() {
         return Integer.parseInt(prop.getProperty("players", "2"));
