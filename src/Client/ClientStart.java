@@ -23,25 +23,9 @@ public class ClientStart {
         mainFrame.setContentPane(loginPanel);
         mainFrame.revalidate();
         mainFrame.repaint();
-//        SwingUtilities.invokeLater(() -> {
-//            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor();
-//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//
-//            GamePanel gamePanel = new GamePanel();
-//            frame.add(gamePanel);
-//
-//            frame.pack();
-//            frame.setLocationRelativeTo(null);
-//            frame.setVisible(true);});
     }
+
     public ClientBase getClient() {
         return client;
     }
-    public MainFrame getMainFrame() {
-        return mainFrame;
-    }
-
-//    public static void main(String[] args) {
-//        ClientStart client = new ClientStart();
-//    }
 }

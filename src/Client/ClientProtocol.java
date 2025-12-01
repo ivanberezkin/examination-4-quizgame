@@ -12,7 +12,6 @@ public class ClientProtocol {
     private final MainFrame frame;
     private User loggedInUser;
 
-
     public ClientProtocol(ClientBase client, MainFrame frame) {
         this.client = client;
         this.frame = frame;
