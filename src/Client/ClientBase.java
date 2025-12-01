@@ -15,14 +15,14 @@ public class ClientBase extends Thread {
     private ObjectOutputStream out;
     private static ObjectInputStream in;
     private static boolean running = true;
-    private static ClientProtocol protocol;
+    private final ClientProtocol protocol;
     private final static String host = "127.0.0.1";
     private final static int port = 12345;
-    private JFrame frame;
+    private final MainFrame mainframe;
 
-    public ClientBase(String host, int port, JFrame frame) {
-        this.frame = frame;
-        protocol = new ClientProtocol(this, frame);
+    public ClientBase(String host, int port, MainFrame frame) {
+        this.mainframe = frame;
+        this.protocol = new ClientProtocol(this, frame);
 
         try {
             Socket socket = new Socket(host,port);
@@ -58,6 +58,9 @@ public class ClientBase extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public MainFrame getFrame() {
+        return mainframe;
     }
 
     public void stopClient() {

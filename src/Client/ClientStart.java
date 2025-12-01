@@ -1,6 +1,8 @@
 package Client;
 
 import GUI.GamePanel;
+import GUI.LoginPanel;
+import GUI.MainFrame;
 
 import javax.swing.*;
 
@@ -8,15 +10,19 @@ public class ClientStart {
     private final static String host = "127.0.0.1";
     private final static int port = 12345;
 
-    private ClientBase client;
-    private JFrame frame;
+    private final ClientBase client;
+    private final MainFrame mainFrame;
 
-    public ClientBase getClient() {
-        return client;
-    }
 
-    public ClientStart(JFrame frame) {
-        this.frame = frame;
+    public ClientStart(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+        this.client = new ClientBase(host, port, mainFrame);
+        client.start();
+
+        LoginPanel loginPanel = new LoginPanel(client);
+        mainFrame.setContentPane(loginPanel);
+        mainFrame.revalidate();
+        mainFrame.repaint();
 //        SwingUtilities.invokeLater(() -> {
 //            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor();
 //            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,16 +32,13 @@ public class ClientStart {
 //
 //            frame.pack();
 //            frame.setLocationRelativeTo(null);
-//            frame.setVisible(true);
-//
-
-        try {
-            client = new ClientBase(host, port, frame);
-            client.start();
-        } catch (RuntimeException e) {
-            System.out.println("Kunde inte ansluta till servern: " + e.getMessage());
-        }
-//        });
+//            frame.setVisible(true);});
+    }
+    public ClientBase getClient() {
+        return client;
+    }
+    public MainFrame getMainFrame() {
+        return mainFrame;
     }
 
 //    public static void main(String[] args) {

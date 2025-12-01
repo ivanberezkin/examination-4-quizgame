@@ -12,7 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class LoginPanel extends JFrame {
+public class LoginPanel extends JPanel {
     private final ClientBase client;
 
     private JLabel welcomeLabel = new JLabel("Welcome to QuizGame");
@@ -29,7 +29,7 @@ public class LoginPanel extends JFrame {
     private JLabel passwordLabel = new JLabel("Password:");
     private JPasswordField passwordInput = new JPasswordField(20);
 
-    private LoginPanel(ClientBase client) {
+    public LoginPanel(ClientBase client) {
         this.client = client;
         setLayout(new BorderLayout());
 
