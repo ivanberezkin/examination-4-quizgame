@@ -1,5 +1,7 @@
 package GUI;
 
+import GameComponents.Match;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
