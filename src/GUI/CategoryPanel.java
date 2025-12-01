@@ -2,6 +2,8 @@ package GUI;
 
 import Client.ClientBase;
 import Database.Question;
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
 
 import javax.swing.*;
@@ -30,8 +32,6 @@ public class CategoryPanel extends JPanel {
     private JPanel categoriesToChooseFrom;
     private JPanel chosenCategoriesButtons;
 
-
-
     private final ActionListener moveBetweenChosenAndAvailable = e -> {
         JButton clickedButton = (JButton) e.getSource();
         String categoryName = (String) clickedButton.getClientProperty("categoryName");
@@ -57,6 +57,8 @@ public class CategoryPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
 
+
+        //Top Panel
         JPanel topPanel = new JPanel();
         topPanel.setOpaque(false);
         JLabel chooseCategoryLabel = new JLabel("Choose Category");
@@ -64,6 +66,8 @@ public class CategoryPanel extends JPanel {
         topPanel.add(chooseCategoryLabel);
         add(topPanel, BorderLayout.NORTH);
 
+
+        // MID panel
         JPanel middleCategoryPanel = new JPanel();
         middleCategoryPanel.setLayout(new BorderLayout());
 
@@ -75,30 +79,39 @@ public class CategoryPanel extends JPanel {
         chosenCategories.add(chosenCategoriesLabel, BorderLayout.NORTH);
         middleCategoryPanel.add(chosenCategories, BorderLayout.SOUTH);
 
-
-
-
         chosenCategoriesButtons = new JPanel();
         chosenCategoriesButtons.setLayout(new GridLayout(1, 3, 10, 10));
         categoriesToChooseFrom = new JPanel();
         categoriesToChooseFrom.setLayout(new GridLayout(2, 4));
 
-
-
         listOfCategoriesFilename = readFromCategoriesFilenamse("resources/CategoriesPictures/categoriesFilenames");
         listOfAvailableCategories = createCategoryButtons(listOfCategoriesFilename);
 
         printCategoryButtons();
-
         chosenCategories.add(chosenCategoriesButtons, BorderLayout.CENTER);
         middleCategoryPanel.add(categoriesToChooseFrom, BorderLayout.CENTER);
         add(middleCategoryPanel, BorderLayout.CENTER);
 
+        //Bottom Panel
         JPanel buttonPanelBottom = new JPanel();
         buttonPanelBottom.setLayout(new GridLayout(1, 2, 30, 20));
         buttonPanelBottom.setBorder(new EmptyBorder(10, 10, 10, 10));
         JButton playButton = new JButton("Play");
         JButton backButton = new JButton("Back");
+
+        playButton.addActionListener(e -> {
+            ArrayList<String> categoriesToSend = new ArrayList<>();
+            String category;
+            if(!listOfChosenCategories.isEmpty()){
+                for(JButton button : listOfChosenCategories){
+                    category = (String) button.getClientProperty("categoryName");
+                    categoriesToSend.add(category);
+                }
+                client.sendMessage(new Message(MessageType.CHOOSING_CATEGORIES, categoriesToSend));
+            } else{
+                JOptionPane.showMessageDialog(this, "Please choose atleast 1 category.");
+            }
+        });
 
         buttonPanelBottom.add(playButton);
         buttonPanelBottom.add(backButton);

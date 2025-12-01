@@ -18,8 +18,9 @@ public class MenuPanel extends JPanel {
     private final String defaultAvatarFilename = "resources/Avatars/default_avatar.png";
     private final int defaultAvatarSize = 75;
 
-    public MenuPanel(User user, ClientBase client) {
+    public MenuPanel(User user, ClientBase client, JFrame frame) {
         this.user = user;
+        this.frame = frame;
         this.client = client;
 
         setLayout(new BorderLayout());

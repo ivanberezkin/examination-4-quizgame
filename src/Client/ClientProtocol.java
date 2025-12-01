@@ -25,9 +25,7 @@ public class ClientProtocol {
                 loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(frame, "Welcome " + loggedInUser.getUsername());
 
-                IO.println(loggedInUser.getAvatar());
-
-                MenuPanel menuPanel = new MenuPanel(loggedInUser,client);
+                MenuPanel menuPanel = new MenuPanel(loggedInUser,client, frame);
                 frame.setContentPane(menuPanel);
                 frame.revalidate();
                 frame.repaint();

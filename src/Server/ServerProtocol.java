@@ -97,7 +97,7 @@ public class ServerProtocol {
             }
 
             case CHOOSING_CATEGORIES -> {
-
+                IO.println("Categories received");
             }
 
             //Matchmaking från
