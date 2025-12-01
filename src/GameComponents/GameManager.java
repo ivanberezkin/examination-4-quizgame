@@ -40,6 +40,7 @@ public class GameManager implements Serializable {
     }
 
     private void createNewGame(User player, Question.Category category) {
+        System.out.println("createNewGame in GameManager was reached");
         Game game = new Game(player, category, maxPlayers, maxNumberOfQuestions, maxNumberOfRounds);
         activeGames.add(game);
     }
@@ -78,12 +79,15 @@ public class GameManager implements Serializable {
         MatchQuestion matchQuestion = new MatchQuestion(users, question);
         ServerProtocol.processInput(new Message(MessageType.QUESTION, matchQuestion));
     }
-    public static void sendRoundScore(Round round){
-        ServerProtocol.processInput(new Message(MessageType.RESULT_ROUND, round));
+    public static void sendRoundScore(Game game){
+        ServerProtocol.processInput(new Message(MessageType.RESULT_ROUND, game));
     }
     public static void sendGameScore(Game game){
         ServerProtocol.processInput(new Message(MessageType.GAME_FINISHED, game));
         removeCompletedGame(game);
+    }
+    public static void sendWaitingMessage(User user, Round round){
+        ServerProtocol.processInput(new Message(MessageType.WAITING, round));
     }
 
     private static void removeCompletedGame(Game game){

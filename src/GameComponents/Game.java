@@ -45,7 +45,7 @@ public class Game implements Serializable {
         }
         else {
             if (checkIfCompleted()){
-                GameManager.sendRoundScore(round);
+                GameManager.sendGameScore(this);
             }
         }
     }
@@ -78,30 +78,28 @@ public class Game implements Serializable {
 
     public void setRoundScore(Round round) {
         if (round.completedRound()) {
-            setGameScore();
-        }
-        GameManager.sendRoundScore(round);
-    }
-
-    private void setGameScore() {
-        if (round.completedRound()) {
             for (int i = 0; i < maxQuestionsRound; i++) {
                 gameScorePlayer1 = round.getPointsPlayer1().get(i);
                 gameScorePlayer2 = round.getPointsPlayer2().get(i);
                 gameScores.add(new int[]{gameScorePlayer1, gameScorePlayer2});
             }
-            GameManager.sendGameScore(this);
+            if (checkIfCompleted()) {
+                GameManager.sendGameScore(this);
+            } else {
+                GameManager.sendRoundScore(this);
+            }
         }
     }
+
     public Question[] getQuestions(Question.Category category) {
-        allGameQuestions = db.getQuestionsForRound(maxQuestionsRound);
+        System.out.println("in Game, getQuestions is reached");
+        allGameQuestions = db.getQuestionsForRound(maxQuestionsRound, category);
         List<Question> questionsArrayList = new ArrayList<>(allGameQuestions);
-        List<Question> usedQuestions = questionsArrayList.subList(0, maxQuestionsRound);
-        allGameQuestions.removeAll(usedQuestions);
-        return usedQuestions.toArray(new Question[0]);
+        return questionsArrayList.toArray(new Question[0]);
     }
 
     public boolean checkIfCompleted(){
+        System.out.println("in Game, gameScores.size() is " + gameScores.size());
         return gameScores.size() == maxNumberOfRounds - 1;
     }
     public void findGameWinner(){

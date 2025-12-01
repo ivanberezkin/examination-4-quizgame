@@ -17,7 +17,7 @@ public class TestGame implements Serializable {
     public TestGame(String user, String opponent) {
         this.user = user;
         this.opponent = opponent;
-        getQuestionsForRound = db.getQuestionsForRound(3);
+        getQuestionsForRound = db.getQuestionsForRound(3, Question.Category.ANIMALS);
     }
 
     public String getUser() {

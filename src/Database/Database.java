@@ -60,16 +60,21 @@ public class Database {
         }
     }
 
-    public Set<Question> getQuestionsForRound(int questionsPerRound) {
+    public Set<Question> getQuestionsForRound(int questionsPerRound, Question.Category category) {
+        System.out.println("In Database, getQuestionsForRound is reached, Category is: " + category.qCat);
         Set<Question> result = new LinkedHashSet<>();
         Random rand = new Random();
-
-        for(int i = 0; i < questionsPerRound; i++){
+        boolean validBatch = false;
+        while (!validBatch){
             Question q = questionsList.get(rand.nextInt(questionsList.size()));
-            result.add(q);
-        }
+            System.out.println("question is: " + q.getCategory());
+            if (q.getCategory().equalsIgnoreCase(category.qCat)) {
+                result.add(q);
+            }
+            if (result.size() == questionsPerRound){
+                validBatch = true;
+            }
+        }System.out.println("In Database, getQuestionsForRound, results.size() is " + result.size());
         return result;
     }
-
-
 }

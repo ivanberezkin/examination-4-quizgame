@@ -27,19 +27,23 @@ public class Round implements Serializable {
     private Game game;
 
     public Round(Game game, User user, Question.Category category, int numberOfQuestions, int maxPlayers) {
+        System.out.println("Round constructor was reached");
         this.game = game;
         this.numberOfQuestions = numberOfQuestions;
         this.RoundID = random.nextInt(500) + random.nextInt(500);
         roundQuestions = game.getQuestions(category);
         this.category = category;
         players = new User[maxPlayers];
-        roundQuestions = game.getQuestions(category);
         addPlayer(user);
     }
 
     public void addPlayer(User player) {
+        System.out.println("In Round.addPlayer, number of players is: " + playersList.size());
+
         if (player != null) {
+            System.out.println("In Round.addPlayer, User is: " + player.getUsername());
             if (players[0] == null) {
+                System.out.println(". . . . . in Round, addPlayer[0] was reached");
                 player1 = player;
                 players[0] = player1;
                 playersList.add(player1);
@@ -78,7 +82,8 @@ public class Round implements Serializable {
         game.setRoundScore(this);
     }
     public void sendNextQuestion(User player) {
-        if (!completedRound()) {
+        System.out.println("sendNextQuestion in Round was reached");
+        if (!completedRound() && !isUserWaiting(player)) {
             int index = 0;
             List<User> singleUserToList = new ArrayList<>();
             if (player.getUsername().equals(player1.getUsername()) && pointsPlayer1.size() < numberOfQuestions) {
@@ -90,6 +95,19 @@ public class Round implements Serializable {
             }
             Question question = roundQuestions[index];
             GameManager.sendQuestions(singleUserToList, question);
+        }
+    }
+    private boolean isUserWaiting(User player){
+        if (player1.getUsername().equals(player.getUsername()) && pointsPlayer1.size() == numberOfQuestions){
+            GameManager.sendWaitingMessage(player, this);
+            return true;
+        }
+        else if (player2 != null && player2.getUsername().equals(player.getUsername()) && pointsPlayer2.size() == numberOfQuestions){
+            GameManager.sendWaitingMessage(player, this);
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -104,7 +122,7 @@ public class Round implements Serializable {
         } else {
             roundWinner = null;
         }
-        GameManager.sendRoundScore(this);
+        game.setRoundScore(this);
     }
     public List<User> getPlayersList(){
         return playersList;
@@ -117,10 +135,6 @@ public class Round implements Serializable {
         else{
             return false;
         }
-    }
-
-    public void loadRoundQuestions() {
-        this.questions = game.getQuestions(category);
     }
 
     public User getRoundWinner() {

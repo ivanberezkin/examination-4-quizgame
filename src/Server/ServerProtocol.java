@@ -43,10 +43,10 @@ public class ServerProtocol {
                 User newUser = (User) message.getData();
                 if (ad.userExists(newUser.getUsername())) {
                     return new Message(MessageType.LOGIN_CREATE_FAIL, null);
-                    }
-                    ad.createUser(newUser.getUsername(), newUser.getPassword());
-                    return new Message(MessageType.LOGIN_CREATE_OK, newUser);
                 }
+                ad.createUser(newUser.getUsername(), newUser.getPassword());
+                return new Message(MessageType.LOGIN_CREATE_OK, newUser);
+            }
             case QUESTION -> {
                 System.out.println("message is instance of: " + message.getData().getClass());
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
@@ -134,9 +134,25 @@ public class ServerProtocol {
                     return null;
                 }
             }
+            case WAITING -> {
+                if (message.getData()instanceof Round round){
+                    if (!round.getPlayersList().isEmpty())
+                        if (round.getPointsPlayer1().size() > round.getPointsPlayer2().size()){
+                            user = round.getPlayersList().getFirst();
+                        }
+                        else if (round.getPointsPlayer1().size() < round.getPointsPlayer2().size()){
+                            user = round.getPlayersList().get(1);
+                        }
+                    Connections c = ServerListener.findConnectionsByUser(user.getUsername());
+                        c.send(new Message(MessageType.WAITING, round));
+                }
+            }
             case RESULT_ROUND -> {
-                if (message.getData() instanceof Round round) {
-
+                if (message.getData() instanceof Game game) {
+                    for (User u : game.getPlayers()) {
+                        Connections c = ServerListener.findConnectionsByUser(u.getUsername());
+                        c.send(new Message(MessageType.RESULT_ROUND, game));
+                    }
                 }
                 return null;
             }
