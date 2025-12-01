@@ -1,18 +1,27 @@
 package GUI;
 
-import GameComponents.Match;
+import GameComponents.Game;
+import GameComponents.Round;
+import Quizgame.shared.User;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ResultPanel extends JPanel {
 
     private java.util.List<JButton> playerOneButtons = new ArrayList<>();
     private java.util.List<JButton> playerTwoButtons = new ArrayList<>();
 
-    public ResultPanel(String playerOne, String playerTwo,
-                       int scoreOne, int scoreTwo, String roundText) {
+    public ResultPanel(Game game){
+        String playerOne = game.getPlayer1().getUsername();
+        String playerTwo = game.getPlayer1().getUsername();
+        List<int[]> scoreRows = game.getGameScores();
+
+        List <String> roundTexts = game.getCategories();
+        String roundText = roundTexts.getFirst();
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
 
@@ -22,8 +31,11 @@ public class ResultPanel extends JPanel {
 
         JLabel playerOneLabel = playerLabel(playerOne);
         JLabel playerTwoLabel = playerLabel(playerTwo);
-
-        JLabel scoreLabel = new JLabel(scoreOne + "-" +  scoreTwo);
+        String text = "";
+        if (scoreRows != null && !scoreRows.isEmpty()){
+            text = Arrays.toString(scoreRows.getFirst());
+        }
+        JLabel scoreLabel = new JLabel(text);
         scoreLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
         scoreLabel.setForeground(Color.WHITE);
 

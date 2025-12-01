@@ -49,6 +49,7 @@ public class GamePanel extends JPanel {
     private JFrame frame;
 
     public GamePanel(ClientBase client, Question question, User user, JFrame frame) {
+        System.out.println("GamePanel Constructor was reached");
         this.clientBase = client;
         this.question = question;
         this.questionsForRound = questionsForRound;

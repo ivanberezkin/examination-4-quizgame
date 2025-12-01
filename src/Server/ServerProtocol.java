@@ -1,17 +1,14 @@
 package Server;
 
 import Database.*;
-import GameComponents.Game;
-import GameComponents.Match;
-import GameComponents.MatchQuestion;
-import GameComponents.TestGame;
+import GameComponents.*;
 import Quizgame.shared.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServerProtocol {
-    static Game game = new Game();
+    static GameManager gameManager = new GameManager();
     private static User user;
     private static Database db = new Database();
     private static AuthenticationDatabase ad = new AuthenticationDatabase();
@@ -46,16 +43,22 @@ public class ServerProtocol {
                 User newUser = (User) message.getData();
                 if (ad.userExists(newUser.getUsername())) {
                     return new Message(MessageType.LOGIN_CREATE_FAIL, null);
-                    }
-                    ad.createUser(newUser.getUsername(), newUser.getPassword());
-                    return new Message(MessageType.LOGIN_CREATE_OK, newUser);
                 }
+                ad.createUser(newUser.getUsername(), newUser.getPassword());
+                return new Message(MessageType.LOGIN_CREATE_OK, newUser);
+            }
             case QUESTION -> {
+                System.out.println("message is instance of: " + message.getData().getClass());
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
                     for (User u : matchQuestion.getUsers()) {
                         Connections c = ServerListener.findConnectionsByUser(u.getUsername());
-                        c.send(new Message(MessageType.QUESTION, matchQuestion.getQuestion()));
+                        c.send(new Message(MessageType.QUESTION, matchQuestion.getQuestions()));
                     }
+                }
+            }
+            case START_NEXT_ROUND -> {
+                if (message.getData() instanceof User player) {
+                    gameManager.startNextRound(player, Question.Category.GEOGRAPHY);
                 }
             }
 
@@ -64,6 +67,8 @@ public class ServerProtocol {
             }
 
             case GAME_START -> {
+
+                //Städa
                 System.out.println("SERVERPROTOCOL: GAME_START was reached");
                 List<Connections> players = new ArrayList<>();
                 List<User> users = new ArrayList<>();
@@ -81,7 +86,7 @@ public class ServerProtocol {
                     }
                 }
                 else if (message.getData() instanceof User user) {
-                    game.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
+                    gameManager.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
                     return null;
                 }
             }
@@ -97,9 +102,11 @@ public class ServerProtocol {
             }
 
             case CHOOSING_CATEGORIES -> {
-                IO.println("Categories received");
-                //TODO fortsätter med att starta ett spel.
+                if (message.getData() instanceof Question.Category category) {
+                    //Här måste någon metod in
+                }
             }
+
 
             //Matchmaking från
             case MATCHMAKING -> {
@@ -122,22 +129,44 @@ public class ServerProtocol {
                         }
                     }
                 } else if (message.getData() instanceof User user) {
-                    game.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
+                    gameManager.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
                     return null;
                 }
             }
             case ANSWER -> {
                 if (message.getData() instanceof Answer) {
                     Answer answer = (Answer) message.getData();
-                    Game.continueGame(answer);
+                    GameManager.registerAnswer(answer);
                     return null;
                 }
             }
+            case WAITING -> {
+                if (message.getData()instanceof Round round){
+                    if (!round.getPlayersList().isEmpty())
+                        if (round.getPointsPlayer1().size() > round.getPointsPlayer2().size()){
+                            user = round.getPlayersList().getFirst();
+                        }
+                        else if (round.getPointsPlayer1().size() < round.getPointsPlayer2().size()){
+                            user = round.getPlayersList().get(1);
+                        }
+                    Connections c = ServerListener.findConnectionsByUser(user.getUsername());
+                        c.send(new Message(MessageType.WAITING, round));
+                }
+            }
             case RESULT_ROUND -> {
-                if (message.getData() instanceof Match match) {
-                    for (User u : match.getPlayersList()) {
+                if (message.getData() instanceof Game game) {
+                    for (User u : game.getPlayers()) {
                         Connections c = ServerListener.findConnectionsByUser(u.getUsername());
-                        c.send(new Message(MessageType.RESULT_ROUND, match));
+                        c.send(new Message(MessageType.RESULT_ROUND, game));
+                    }
+                }
+                return null;
+            }
+            case GAME_FINISHED -> {
+                if (message.getData() instanceof Game game) {
+                    for (User u : game.getPlayers()) {
+                        Connections c = ServerListener.findConnectionsByUser(u.getUsername());
+                        c.send(new Message(MessageType.GAME_FINISHED, game));
                     }
                 }
                 return null;
@@ -186,10 +215,6 @@ public class ServerProtocol {
 ////                    return new Message(MessageType.QUESTION, questionsForUserList);
 
 //            }
-
-            case GAME_FINISHED -> {
-                return new Message(MessageType.GAME_FINISHED, null);
-            }
 
             default -> {
                 return new Message(MessageType.ERROR, "SERVERPROTOCOL: Invalid message");

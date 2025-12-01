@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Database {
 
@@ -61,16 +59,21 @@ public class Database {
         }
     }
 
-    public ArrayList<Question> getQuestionsForRound(int questionsPerRound) {
-        ArrayList<Question> result = new ArrayList<>();
+    public Set<Question> getQuestionsForRound(int questionsPerRound, Question.Category category) {
+        System.out.println("In Database, getQuestionsForRound is reached, Category is: " + category.qCat);
+        Set<Question> result = new LinkedHashSet<>();
         Random rand = new Random();
-
-        for(int i = 0; i < questionsPerRound; i++){
+        boolean validBatch = false;
+        while (!validBatch){
             Question q = questionsList.get(rand.nextInt(questionsList.size()));
-            result.add(q);
-        }
+            System.out.println("question is: " + q.getCategory());
+            if (q.getCategory().equalsIgnoreCase(category.qCat)) {
+                result.add(q);
+            }
+            if (result.size() == questionsPerRound){
+                validBatch = true;
+            }
+        }System.out.println("In Database, getQuestionsForRound, results.size() is " + result.size());
         return result;
     }
-
-
 }

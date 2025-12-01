@@ -120,10 +120,8 @@ public class ClientProtocol {
             }
                 //TODO Se till att rätt input tas för ResultPanel.
             case RESULT_ROUND -> {
-                if (message.getData() instanceof Match match){
-                    ResultPanel resultPanel = new ResultPanel(match.getPlayersList().getFirst().getUsername(),
-                            match.getPlayersList().getLast().getUsername(),
-                             match.getPointsPlayer1().getFirst(), match.getPointsPlayer2().getLast(),"test");
+                if (message.getData() instanceof Game game){
+                    ResultPanel resultPanel = new ResultPanel(game);
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(resultPanel);
                         frame.revalidate();

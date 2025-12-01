@@ -16,7 +16,7 @@ public class MatchQuestion implements Serializable {
     public List <User> getUsers(){
         return users;
     }
-    public Question getQuestion(){
+    public Question getQuestions(){
         return question;
     }
 }

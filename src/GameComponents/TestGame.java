@@ -4,19 +4,20 @@ import Database.Question;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Set;
 
-import static GameComponents.Set.db;
+import static GameComponents.Game.db;
 
 public class TestGame implements Serializable {
 
     private String user;
     private String opponent;
-    ArrayList<Question> getQuestionsForRound;
+    Set<Question> getQuestionsForRound;
 
     public TestGame(String user, String opponent) {
         this.user = user;
         this.opponent = opponent;
-        getQuestionsForRound = db.getQuestionsForRound(3);
+        getQuestionsForRound = db.getQuestionsForRound(3, Question.Category.ANIMALS);
     }
 
     public String getUser() {
@@ -27,7 +28,7 @@ public class TestGame implements Serializable {
         return opponent;
     }
 
-    public ArrayList<Question> getQuestionsForRound() {
+    public Set<Question> getQuestionsForRound() {
         return getQuestionsForRound;
     }
 }

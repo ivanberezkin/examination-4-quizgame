@@ -1,14 +1,11 @@
 package Quizgame.shared;
 
-import GameComponents.Game;
-import GameComponents.Match;
+import GameComponents.GameManager;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class User implements Serializable {
 
@@ -29,7 +26,7 @@ public class User implements Serializable {
     private int correctAnswers;
     private int incorrectAnswers;
     private boolean connected;
-    private List<Game>games = new ArrayList<>();
+    private List<GameManager> gameManagers = new ArrayList<>();
 
     private Icon avatar;
 
@@ -85,11 +82,11 @@ public class User implements Serializable {
         this.incorrectAnswers++;
     }
 
-    public List<Game>getGames(){
-        return games;
+    public List<GameManager>getGames(){
+        return gameManagers;
     }
-    public void addGame(Game game){
-        games.add(game);
+    public void addGame(GameManager gameManager){
+        gameManagers.add(gameManager);
     }
 
 }
