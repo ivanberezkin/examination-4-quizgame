@@ -75,6 +75,7 @@ public class Round implements Serializable {
         else if (answer.getUser().getUsername().equals(player2.getUsername())) {
             pointsPlayer2.add(score);
         }
+        game.setRoundScore(this);
     }
     public void sendNextQuestion(User player) {
         if (!completedRound()) {
