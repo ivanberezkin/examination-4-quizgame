@@ -66,7 +66,7 @@ public class LoginPanel extends JFrame {
             } else {
                 User user = new User(inputUsername, inputPassword);
                 ClientStart cs = new ClientStart(this);
-                ClientBase client = cs.getClient();
+                ClientBase client = cs.getClient();  //HÄR LIGGER PROBLEMET
                 client.sendMessage(new Message(MessageType.LOGIN_REQUEST, user));
             }
         });
