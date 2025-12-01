@@ -84,6 +84,9 @@ public class Set implements Serializable {
         }
     }
 
+
+    //TODO questions är null, behöver populeras med frågor.
+    // Questions ska hämta alla frågor som tillhör kategori som anges
     public Question[] getQuestions() {
         Question[] questions = new Question[maxNumberOfQuestions];
         ArrayList<Question> questionList = db.getQuestionsForRound(maxNumberOfQuestions * 2); //Prevents issues if some questions would be dupes.
@@ -91,6 +94,7 @@ public class Set implements Serializable {
 
         for (Question q : questionList) {
             boolean dupe = false;
+            //TODO denna verkar inte köras
             for (int i = 0; i < count; i++) {
                 if (questions[i].getPrompt().equals(q.getPrompt())) {
                     dupe = true;

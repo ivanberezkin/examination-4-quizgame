@@ -23,6 +23,8 @@ public class Game implements Serializable {
     public Game(){
 
     }
+
+    //Här startas ett nytt spel och den kollar ifall det är en eller två spelare.
     public void startGame(User player, Question.Category category) {
         this.category = category;
         if (!activeSets.isEmpty()) {
@@ -66,6 +68,8 @@ public class Game implements Serializable {
     private static void removeCompletedSet(Set set){
         activeSets.remove(set);
     }
+
+    //TODO vi behöver spara historik av rundor någonstans
     private static void checkSets(){
         for (Set s : activeSets){
             if(s.checkIfCompleted()){
