@@ -51,7 +51,6 @@ public class GameManager implements Serializable {
             Round r = game.getRounds().getLast();
             if (!r.completedRound()) {
                 r.addPointsToList(answer);
-                r.sendNextQuestion(user);
             }
         }
     }

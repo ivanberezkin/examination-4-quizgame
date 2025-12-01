@@ -69,19 +69,17 @@ public class Game implements Serializable {
         if (rounds.size() < maxNumberOfRounds) {
             int numberOfPlayersInRound = rounds.getLast().getPlayersList().size();
             if (numberOfPlayersInRound == 0){
-            startRound(player, category);
+                startRound(player, category);
             }
             else if (numberOfPlayersInRound == 1)
-            round.addPlayer(player);
+                round.addPlayer(player);
         }
     }
 
     public void setRoundScore(Round round) {
         if (round.completedRound()) {
             for (int i = 0; i < maxQuestionsRound; i++) {
-                gameScorePlayer1 = round.getPointsPlayer1().get(i);
-                gameScorePlayer2 = round.getPointsPlayer2().get(i);
-                gameScores.add(new int[]{gameScorePlayer1, gameScorePlayer2});
+                gameScores.add(new int[]{round.getPointsPlayer1().get(i), round.getPointsPlayer2().get(i)});
             }
             if (checkIfCompleted()) {
                 GameManager.sendGameScore(this);

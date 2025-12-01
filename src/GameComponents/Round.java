@@ -25,6 +25,8 @@ public class Round implements Serializable {
     private User roundWinner;
     private Question [] roundQuestions;
     private Game game;
+    boolean player1IsWaiting = false;
+    boolean player2IsWaiting = false;
 
     public Round(Game game, User user, Question.Category category, int numberOfQuestions, int maxPlayers) {
         System.out.println("Round constructor was reached");
@@ -75,11 +77,18 @@ public class Round implements Serializable {
         }
         if (answer.getUser().getUsername().equals(player1.getUsername())){
             pointsPlayer1.add(score);
+            if (pointsPlayer1.size() == numberOfQuestions){
+            }
         }
         else if (answer.getUser().getUsername().equals(player2.getUsername())) {
             pointsPlayer2.add(score);
+            if (pointsPlayer2.size() == numberOfQuestions){
+            }
         }
-        game.setRoundScore(this);
+        if (pointsPlayer1.size() == numberOfQuestions && pointsPlayer2.size() == numberOfQuestions){
+            game.setRoundScore(this);
+        }
+        else sendNextQuestion(answer.getUser());
     }
     public void sendNextQuestion(User player) {
         System.out.println("sendNextQuestion in Round was reached");
@@ -100,10 +109,12 @@ public class Round implements Serializable {
     private boolean isUserWaiting(User player){
         if (player1.getUsername().equals(player.getUsername()) && pointsPlayer1.size() == numberOfQuestions){
             GameManager.sendWaitingMessage(player, this);
+            player1IsWaiting = true;
             return true;
         }
         else if (player2 != null && player2.getUsername().equals(player.getUsername()) && pointsPlayer2.size() == numberOfQuestions){
             GameManager.sendWaitingMessage(player, this);
+            player2IsWaiting = true;
             return true;
         }
         else {
@@ -112,17 +123,15 @@ public class Round implements Serializable {
     }
 
     public void findRoundWinner() {
-        if (completedRound()) {
             int points1 = pointsPlayer1.get(numberOfQuestions - 1);
             int points2 = pointsPlayer2.get(numberOfQuestions - 1);
             if (points1 > points2) {
                 roundWinner = player1;
-            } else if (points1 < points2)
+            } else if (points1 < points2) {
                 roundWinner = player2;
         } else {
             roundWinner = null;
         }
-        game.setRoundScore(this);
     }
     public List<User> getPlayersList(){
         return playersList;
@@ -130,6 +139,7 @@ public class Round implements Serializable {
 
     public boolean completedRound() {
         if(pointsPlayer1.size() == numberOfQuestions  && pointsPlayer2.size() == numberOfQuestions) {
+            findRoundWinner();
             return true;
         }
         else{

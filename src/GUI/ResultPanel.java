@@ -30,8 +30,11 @@ public class ResultPanel extends JPanel {
 
         JLabel playerOneLabel = playerLabel(playerOne);
         JLabel playerTwoLabel = playerLabel(playerTwo);
-
-        JLabel scoreLabel = new JLabel(scoreRows.getFirst().toString());
+        String text = "";
+        if (scoreRows.getFirst() != null){
+            text = String.valueOf(scoreRows.getFirst()[0]);
+        }
+        JLabel scoreLabel = new JLabel(text);
         scoreLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
         scoreLabel.setForeground(Color.WHITE);
 
