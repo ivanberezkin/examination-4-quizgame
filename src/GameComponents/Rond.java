@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Match implements Serializable {
+public class Rond implements Serializable {
     Random random = new Random();
     private final int matchID;
     private final int numberOfQuestions;
@@ -25,15 +25,15 @@ public class Match implements Serializable {
     private int numberOfSentQuestions = 0;
     private User winner;
     private final Question firstQuestion;
-    private Set set;
+    private Game game;
 
-    public Match(Set set, User user, Question.Category category, int numberOfQuestions, int maxPlayers) {
-        this.set = set;
+    public Rond(Game game, User user, Question.Category category, int numberOfQuestions, int maxPlayers) {
+        this.game = game;
         this.category = category;
         this.numberOfQuestions = numberOfQuestions;
         this.maxPlayers = maxPlayers;
         this.matchID = random.nextInt(500) + random.nextInt(500);
-        questions = set.getQuestions();
+        questions = game.getQuestions();
         firstQuestion = questions[0];
         players = new User[maxPlayers];
         addPlayer(user);
@@ -82,9 +82,9 @@ public class Match implements Serializable {
     public void sendFirstQuestion() {
             //Adjust method in DataBase, to get specific category?
             if (playersList.size() ==1 && pointsPlayer1.isEmpty()) {
-                Game.sendQuestion(playersList, firstQuestion);
+                GameManager.sendQuestion(playersList, firstQuestion);
             } else if (!pointsPlayer1.isEmpty() && playersList.size() == 2 && pointsPlayer2.isEmpty()) {
-                Game.sendQuestion(playersList, firstQuestion);
+                GameManager.sendQuestion(playersList, firstQuestion);
                 numberOfSentQuestions += 1;
             } else if (playersList.size() == 2 && pointsPlayer1.isEmpty() && pointsPlayer2.isEmpty()) {
                 sendQuestion();
@@ -92,13 +92,13 @@ public class Match implements Serializable {
     }
     public void sendQuestion() {
         if(pointsPlayer1.size() == pointsPlayer2.size() && !completedMatch()){
-            Game.sendQuestion(playersList, questions[numberOfSentQuestions]);
+            GameManager.sendQuestion(playersList, questions[numberOfSentQuestions]);
             if (pointsPlayer1.size() == numberOfSentQuestions && pointsPlayer2.size() == numberOfSentQuestions) {
                 numberOfSentQuestions += 1;
             }
         }
         else if (completedMatch()){
-            Game.sendMatchScore(this);
+            GameManager.sendMatchScore(this);
         }
     }
 
@@ -113,7 +113,7 @@ public class Match implements Serializable {
         } else {
             winner = null;
         }
-        Game.sendMatchScore(this);
+        GameManager.sendMatchScore(this);
     }
     public List<User> getPlayersList(){
         return playersList;
@@ -124,7 +124,7 @@ public class Match implements Serializable {
     }
 
     public void loadMatchQuestions() {
-        this.questions = set.getQuestions();
+        this.questions = game.getQuestions();
     }
 
     public User getWinner() {

@@ -5,7 +5,7 @@ import Database.Question;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import static GameComponents.Set.db;
+import static GameComponents.Game.db;
 
 public class TestGame implements Serializable {
 

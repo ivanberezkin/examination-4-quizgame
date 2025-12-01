@@ -1,8 +1,8 @@
 package Server;
 
 import Database.*;
-import GameComponents.Game;
-import GameComponents.Match;
+import GameComponents.GameManager;
+import GameComponents.Rond;
 import GameComponents.MatchQuestion;
 import GameComponents.TestGame;
 import Quizgame.shared.*;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerProtocol {
-    static Game game = new Game();
+    static GameManager gameManager = new GameManager();
     private static User user;
     private static Database db = new Database();
     private static AuthenticationDatabase ad = new AuthenticationDatabase();
@@ -81,7 +81,7 @@ public class ServerProtocol {
                     }
                 }
                 else if (message.getData() instanceof User user) {
-                    game.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
+                    gameManager.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
                     return null;
                 }
             }
@@ -116,22 +116,22 @@ public class ServerProtocol {
                         }
                     }
                 } else if (message.getData() instanceof User user) {
-                    game.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
+                    gameManager.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
                     return null;
                 }
             }
             case ANSWER -> {
                 if (message.getData() instanceof Answer) {
                     Answer answer = (Answer) message.getData();
-                    Game.continueGame(answer);
+                    GameManager.continueGame(answer);
                     return null;
                 }
             }
             case RESULT_ROUND -> {
-                if (message.getData() instanceof Match match) {
-                    for (User u : match.getPlayersList()) {
+                if (message.getData() instanceof Rond rond) {
+                    for (User u : rond.getPlayersList()) {
                         Connections c = ServerListener.findConnectionsByUser(u.getUsername());
-                        c.send(new Message(MessageType.RESULT_ROUND, match));
+                        c.send(new Message(MessageType.RESULT_ROUND, rond));
                     }
                 }
                 return null;

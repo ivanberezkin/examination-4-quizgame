@@ -124,8 +124,8 @@ public class ClientProtocol {
             }
 
             case RESULT_ROUND -> {
-                if (message.getData() instanceof Match match){
-                    ResultPanel resultPanel = new ResultPanel(match);
+                if (message.getData() instanceof Rond rond){
+                    ResultPanel resultPanel = new ResultPanel(rond);
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(resultPanel);
                         frame.revalidate();
