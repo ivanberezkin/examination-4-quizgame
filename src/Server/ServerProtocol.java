@@ -55,6 +55,11 @@ public class ServerProtocol {
                     }
                 }
             }
+            case START_NEXT_ROUND -> {
+                if (message.getData() instanceof User player) {
+                    gameManager.startNextRound(player, Question.Category.GEOGRAPHY);
+                }
+            }
 
             case SETTINGS_AVATAR_CHANGED -> {
                 ad.updateAvatarForUser(user);

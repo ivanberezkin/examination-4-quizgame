@@ -65,9 +65,14 @@ public class Game implements Serializable {
         }
     }
 
-    public void continuePlaying(Question.Category category) {
-        if (numberOfPlayers == 2 && rounds.size() < maxNumberOfRounds && (!round.completedRound()) && (round.getPointsPlayer1().size() == round.getPointsPlayer2().size())) {
-            round.sendRoundQuestions(category);
+    public void continuePlaying(User player, Question.Category category) {
+        if (rounds.size() < maxNumberOfRounds) {
+            int numberOfPlayersInRound = rounds.getLast().getPlayersList().size();
+            if (numberOfPlayersInRound == 0){
+            startRound(player, category);
+            }
+            else if (numberOfPlayersInRound == 1)
+            round.addPlayer(player);
         }
     }
 

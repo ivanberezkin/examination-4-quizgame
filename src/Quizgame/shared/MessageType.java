@@ -12,6 +12,7 @@ public enum MessageType implements Serializable {
     QUESTION,
     ANSWER,
     RESULT_ROUND,
+    START_NEXT_ROUND,
     GAME_FINISHED,
     MATCHMAKING,
     MATCHMAKING_WAITING_FOR_OPPONENT,

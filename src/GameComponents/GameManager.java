@@ -50,8 +50,11 @@ public class GameManager implements Serializable {
                     r.addPointsToList(answer);
                 }
             }
-    private void startNextRound(User player, Question.Category category){
-
+    public void startNextRound(User player, Question.Category category){
+        Game game = findActiveGame(player);
+        if (game != null){
+            game.continuePlaying(player, category);
+        }
     }
     private static Game findActiveGame(User user){
         for (Game g : getActiveGames()) {
