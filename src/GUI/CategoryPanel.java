@@ -6,23 +6,22 @@ import Quizgame.shared.User;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class CategoryPanel extends JPanel {
 
-    private JButton categoryButton1;
-    private JButton categoryButton2;
-    private JButton categoryButton3;
-    private JButton categoryButton4;
-    private JButton categoryButton5;
-    private JButton categoryButton6;
-    private JButton categoryButton7;
-    private JButton categoryButton8;
 
     private final int sizeofCategoryButton = 100;
+    private String filePathToCategoryFiles = "resources/CategoriesPictures/";
 
     private JFrame frame;
     private User user;
     private ClientBase client;
+    private ArrayList<String> listOfCategoriesFilename;
 
     CategoryPanel(User user, JFrame frame, ClientBase client ) {
         this.user = user;
@@ -42,8 +41,9 @@ public class CategoryPanel extends JPanel {
 
         JPanel middleCategoryPanel = new JPanel();
         middleCategoryPanel.setLayout(new GridLayout(2,4));
-        createCategoryButtons(middleCategoryPanel);
 
+        listOfCategoriesFilename = readFromCategoriesFilenamse("resources/CategoriesPictures/categoriesFilenames");
+        createCategoryButtons(middleCategoryPanel, listOfCategoriesFilename);
         add(middleCategoryPanel,BorderLayout.CENTER);
 
         JPanel buttonPanelBottom = new JPanel();
@@ -54,28 +54,32 @@ public class CategoryPanel extends JPanel {
         buttonPanelBottom.add(playButton);
         buttonPanelBottom.add(backButton);
         add(buttonPanelBottom,BorderLayout.SOUTH);
-
-    }
-    private void createCategoryButtons(JPanel middleCategoryPanel) {
-        categoryButton1 = createCategoryButton("resources/CategoriesPictures/CategoryAnimals.jpg");
-        categoryButton2 = createCategoryButton("resources/CategoriesPictures/CategoryBiology.jpg");
-        categoryButton3 = createCategoryButton("resources/CategoriesPictures/CategoryGames.jpg");
-        categoryButton4 = createCategoryButton("resources/CategoriesPictures/CategoryGeography.jpg");
-        categoryButton5 = createCategoryButton("resources/CategoriesPictures/CategoryHistory.jpg");
-        categoryButton6 = createCategoryButton("resources/CategoriesPictures/CategoryMusic.jpg");
-        categoryButton7 = createCategoryButton("resources/CategoriesPictures/CategoryScience.jpg");
-        categoryButton8 = createCategoryButton("resources/CategoriesPictures/CategorySport.jpg");
-
-        middleCategoryPanel.add(categoryButton1);
-        middleCategoryPanel.add(categoryButton2);
-        middleCategoryPanel.add(categoryButton3);
-        middleCategoryPanel.add(categoryButton4);
-        middleCategoryPanel.add(categoryButton5);
-        middleCategoryPanel.add(categoryButton6);
-        middleCategoryPanel.add(categoryButton7);
-        middleCategoryPanel.add(categoryButton8);
     }
 
+
+    private void createCategoryButtons(JPanel middleCategoryPanel, ArrayList<String> listOfCategoriesFilename) {
+        for(String s: listOfCategoriesFilename){
+            JButton categoryButton = createCategoryButton(s);
+            middleCategoryPanel.add(categoryButton);
+        }
+    }
+
+    private ArrayList<String> readFromCategoriesFilenamse(String filename){
+        ArrayList<String> listOfCategoriesFilename = new ArrayList<>();
+        try(BufferedReader br = new BufferedReader(new FileReader(filename))) {
+
+            String line;
+            while((line = br.readLine()) != null){
+                listOfCategoriesFilename.add(filePathToCategoryFiles + line);
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return listOfCategoriesFilename;
+    }
 
     private JButton createCategoryButton(String filename  ) {
         JButton categoryButton = new JButton();
