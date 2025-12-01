@@ -20,6 +20,7 @@ public enum MessageType implements Serializable {
     GIVE_UP,
     MOVE_TO_MENU,
     SETTINGS_AVATAR_CHANGED,
+    CHOOSING_CATEGORIES,
 
 
     //for authentication

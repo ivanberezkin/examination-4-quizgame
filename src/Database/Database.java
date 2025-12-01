@@ -15,7 +15,6 @@ public class Database {
     private ArrayList<Question> questionsListForUser = new ArrayList<>();
 
     public Database() {
-
         readFromQuestionsFile();
     }
 

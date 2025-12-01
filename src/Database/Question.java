@@ -9,9 +9,14 @@ public class Question implements Serializable {
     private String qCat;
 
     public enum Category {
-        ANIMALS("animals"),
-        GEOGRAPHY("geography"),
-        SPORT("sport");
+        ANIMALS("Animals"),
+        GEOGRAPHY("Geography"),
+        SPORT("Sport"),
+        SCIENCE("Science"),
+        BIOLOGY("Biology"),
+        HISTORY("History"),
+        GAMES("Games"),
+        MUSIC("Music");
         public final String qCat;
 
         Category(String qCat) {

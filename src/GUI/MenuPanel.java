@@ -18,8 +18,9 @@ public class MenuPanel extends JPanel {
     private final String defaultAvatarFilename = "resources/Avatars/default_avatar.png";
     private final int defaultAvatarSize = 75;
 
-    public MenuPanel(User user, ClientBase client) {
+    public MenuPanel(User user, ClientBase client, JFrame frame) {
         this.user = user;
+        this.frame = frame;
         this.client = client;
 
         setLayout(new BorderLayout());
@@ -89,9 +90,13 @@ public class MenuPanel extends JPanel {
 
         //TODO Här startar spelet, category ska in här .
         startGameButton.addActionListener(e -> {
-            client.sendMessage(new Message(MessageType.MATCHMAKING, user));
+//            client.sendMessage(new Message(MessageType.MATCHMAKING, user));
             //TODO move to MatchMaking Panel
-            IO.println(user.getUsername() + " moved to Matchmaking");
+//            IO.println(user.getUsername() + " moved to Matchmaking");
+            CategoryPanel categoryPanel = new CategoryPanel(user,frame,client, this);
+            frame.setContentPane(categoryPanel);
+            frame.revalidate();
+            frame.repaint();
         });
 
         JButton settingsButton = new JButton("Settings");

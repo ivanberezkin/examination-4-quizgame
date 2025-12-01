@@ -96,6 +96,10 @@ public class ServerProtocol {
                 //TODO lägga till logik för vad som händer när användare ger upp.
             }
 
+            case CHOOSING_CATEGORIES -> {
+                IO.println("Categories received");
+                //TODO fortsätter med att starta ett spel.
+            }
 
             //Matchmaking från
             case MATCHMAKING -> {
