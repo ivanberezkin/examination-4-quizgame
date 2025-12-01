@@ -1,38 +1,34 @@
 package Client;
 
 import Database.*;
-import GUI.ResultPanel;
+import GUI.*;
 import GameComponents.*;
-import GUI.GamePanel;
-import GUI.MatchmakingPanel;
-import GUI.MenuPanel;
 import Quizgame.shared.*;
 import javax.swing.*;
 
 public class ClientProtocol {
 
     private final ClientBase client;
-    private final JFrame frame;
+    private final MainFrame frame;
     private User loggedInUser;
 
-
-    public ClientProtocol(ClientBase client, JFrame frame) {
-        this.frame = frame;
+    public ClientProtocol(ClientBase client, MainFrame frame) {
         this.client = client;
+        this.frame = frame;
     }
 
     public void handleMessage(Message message) {
         IO.println("CLIENTPROTOCOL: Message type to process " + message.getType());
-
         switch (message.getType()) {
 
             case LOGIN_OK -> {
                 loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(frame, "Welcome " + loggedInUser.getUsername());
-                //Continue with matchmaking or game
-                IO.println(loggedInUser.getAvatar());
 
-                moveUserToMenuPanel();
+                MenuPanel menuPanel = new MenuPanel(loggedInUser,client, frame);
+                frame.setContentPane(menuPanel);
+                frame.revalidate();
+                frame.repaint();
             }
 
             case LOGIN_WRONG_PASSWORD -> {
@@ -72,7 +68,7 @@ public class ClientProtocol {
                 loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(null,
                         "User created! Logged in as " + loggedInUser.getUsername());
-                moveUserToMenuPanel();
+                //moveUserToMenuPanel();
             }
 
             case LOGIN_CREATE_FAIL -> {
@@ -139,11 +135,11 @@ public class ClientProtocol {
             }
         }
     }
-
-    public void moveUserToMenuPanel() {
-        MenuPanel menuPanel = new MenuPanel(loggedInUser, frame, client);
+   /* private void moveUserToMenuPanel() {
+        MenuPanel menuPanel = new MenuPanel(loggedInUser,frame,client);
         frame.setContentPane(menuPanel);
         frame.revalidate();
         frame.repaint();
-    }
+    } */
+
 }
