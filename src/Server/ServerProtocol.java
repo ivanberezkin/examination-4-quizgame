@@ -48,6 +48,7 @@ public class ServerProtocol {
                     return new Message(MessageType.LOGIN_CREATE_OK, newUser);
                 }
             case QUESTION -> {
+                System.out.println("message is instance of: " + message.getData().getClass());
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
                     for (User u : matchQuestion.getUsers()) {
                         Connections c = ServerListener.findConnectionsByUser(u.getUsername());

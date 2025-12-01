@@ -43,12 +43,13 @@ public class Round implements Serializable {
                 player1 = player;
                 players[0] = player1;
                 playersList.add(player1);
-                sendRoundQuestions(category);
+                sendNextQuestion(player);
             } else if (players[1] == null) {
+                System.out.println(". . . . . in Round, addPlayer[1] was reached");
                 player2 = player;
                 players[1] = player2;
                 playersList.add(player2);
-                sendRoundQuestions(category);
+                sendNextQuestion(player);
             }
         }
     }
@@ -63,6 +64,7 @@ public class Round implements Serializable {
     }
 
     public void addPointsToList(Answer answer) {
+        System.out.println("_ _ _ addPointsToLIst in Round was reached");
         int score = 0;
         if (answer.getIsAnswerCorrect()){
             score = 1;
@@ -74,75 +76,73 @@ public class Round implements Serializable {
             pointsPlayer2.add(score);
         }
     }
-    public void sendRoundQuestions(Question.Category category) {
-        if (completedRound()) {
-            game.setRoundScore(this); }
-
-        else if (!completedRound()) {
-            if (roundQuestions == null) {
-                roundQuestions = game.getQuestions(category);
+    public void sendNextQuestion(User player) {
+        if (!completedRound()) {
+            int index = 0;
+            List<User> singleUserToList = new ArrayList<>();
+            if (player.getUsername().equals(player1.getUsername()) && pointsPlayer1.size() < numberOfQuestions) {
+                index = pointsPlayer1.size();
+                singleUserToList.add(player1);
+            } else if (player.getUsername().equals(player2.getUsername()) && pointsPlayer2.size() < numberOfQuestions) {
+                index = pointsPlayer2.size();
+                singleUserToList.add(player2);
             }
-            if (pointsPlayer1.size() == pointsPlayer2.size()){
-                GameManager.sendQuestions(playersList, roundQuestions);}
-            else {
-                List<User> singleUserToList = new ArrayList<>();
-                if (pointsPlayer1.size() > pointsPlayer2.size()) {
-                    singleUserToList.add(player2);
-                }
-                else if (pointsPlayer1.size() < pointsPlayer2.size()){
-                    singleUserToList.add(player1);
-                }
-                GameManager.sendQuestions(singleUserToList, roundQuestions);
-            }
+            Question question = roundQuestions[index];
+            GameManager.sendQuestions(singleUserToList, question);
         }
     }
 
-public void findRoundWinner() {
-    if (completedRound()) {
-        int points1 = pointsPlayer1.get(numberOfQuestions - 1);
-        int points2 = pointsPlayer2.get(numberOfQuestions - 1);
-        if (points1 > points2) {
-            roundWinner = player1;
-        } else if (points1 < points2)
-            roundWinner = player2;
-    } else {
-        roundWinner = null;
+    public void findRoundWinner() {
+        if (completedRound()) {
+            int points1 = pointsPlayer1.get(numberOfQuestions - 1);
+            int points2 = pointsPlayer2.get(numberOfQuestions - 1);
+            if (points1 > points2) {
+                roundWinner = player1;
+            } else if (points1 < points2)
+                roundWinner = player2;
+        } else {
+            roundWinner = null;
+        }
+        GameManager.sendRoundScore(this);
     }
-    GameManager.sendRoundScore(this);
-}
-public List<User> getPlayersList(){
-    return playersList;
-}
+    public List<User> getPlayersList(){
+        return playersList;
+    }
 
-public boolean completedRound() {
-    return pointsPlayer1.size() == numberOfQuestions  && pointsPlayer2.size() == numberOfQuestions;
-}
+    public boolean completedRound() {
+        if(pointsPlayer1.size() == numberOfQuestions  && pointsPlayer2.size() == numberOfQuestions) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
-public void loadRoundQuestions() {
-    this.questions = game.getQuestions(category);
-}
+    public void loadRoundQuestions() {
+        this.questions = game.getQuestions(category);
+    }
 
-public User getRoundWinner() {
-    return roundWinner;
-}
+    public User getRoundWinner() {
+        return roundWinner;
+    }
 
-public int getNumberOfCompletedQuestions() {
-    return numberOfCompletedQuestion;
-}
+    public int getNumberOfCompletedQuestions() {
+        return numberOfCompletedQuestion;
+    }
 
-public int getRoundID() {
-    return RoundID;
-}
+    public int getRoundID() {
+        return RoundID;
+    }
 
-public List<Integer> getPointsPlayer1(){
-    return pointsPlayer1;
-}
-public List<Integer>getPointsPlayer2(){
-    return pointsPlayer2;
-}
-public String getCategory(){
-    return category.name();
-}
+    public List<Integer> getPointsPlayer1(){
+        return pointsPlayer1;
+    }
+    public List<Integer>getPointsPlayer2(){
+        return pointsPlayer2;
+    }
+    public String getCategory(){
+        return category.name();
+    }
 }
 
 

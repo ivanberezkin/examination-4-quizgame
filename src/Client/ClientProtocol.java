@@ -113,8 +113,10 @@ public class ClientProtocol {
 
             case QUESTION -> {
                 IO.println("Questions Received");
+                System.out.println("Message is instance of: " + message.getData().getClass());
                 if (message.getData() instanceof Question question) {
                     System.out.println("Question is: " + question);
+                    System.out.println("---- case Question in ClientProtocol was reached");
                     GamePanel gamePanel = new GamePanel(client, question, loggedInUser, frame);
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(gamePanel);

@@ -23,7 +23,8 @@ public class GameManager implements Serializable {
     public GameManager(){
 
     }
-    public void startGame(User player, Question.Category category) {
+    public void startGame(User player, Question.Category category){
+        System.out.println("startGame in GameManager was reached");
         this.category = category;
         if (!activeGames.isEmpty()) {
             for (Game g : activeGames) {
@@ -33,11 +34,11 @@ public class GameManager implements Serializable {
             }
         }
         else {
-            startNewGame(player, category);
+            createNewGame(player, category);
         }
     }
 
-    private void startNewGame(User player, Question.Category category) {
+    private void createNewGame(User player, Question.Category category) {
         Game game = new Game(player, category, maxPlayers, maxNumberOfQuestions, maxNumberOfRounds);
         activeGames.add(game);
     }
@@ -46,10 +47,12 @@ public class GameManager implements Serializable {
         Game game = findActiveGame(user);
         if (game != null) {
             Round r = game.getRounds().getLast();
-            if (!r.completedRound())
-                    r.addPointsToList(answer);
-                }
+            if (!r.completedRound()) {
+                r.addPointsToList(answer);
+                r.sendNextQuestion(user);
             }
+        }
+    }
     public void startNextRound(User player, Question.Category category){
         Game game = findActiveGame(player);
         if (game != null){
@@ -70,9 +73,9 @@ public class GameManager implements Serializable {
         return null;
     }
 
-    public static void sendQuestions(List<User> users, Question[] question) {
-        MatchQuestion matchQuestions = new MatchQuestion(users, question);
-        ServerProtocol.processInput(new Message(MessageType.QUESTION, matchQuestions));
+    public static void sendQuestions(List<User> users, Question question) {
+        MatchQuestion matchQuestion = new MatchQuestion(users, question);
+        ServerProtocol.processInput(new Message(MessageType.QUESTION, matchQuestion));
     }
     public static void sendRoundScore(Round round){
         ServerProtocol.processInput(new Message(MessageType.RESULT_ROUND, round));
