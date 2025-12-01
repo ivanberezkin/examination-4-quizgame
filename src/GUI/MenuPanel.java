@@ -18,10 +18,10 @@ public class MenuPanel extends JPanel {
     private final String defaultAvatarFilename = "resources/Avatars/default_avatar.png";
     private final int defaultAvatarSize = 75;
 
-    public MenuPanel(User user, JFrame frame, ClientBase client) {
-        this.frame = frame;
+    public MenuPanel(User user, ClientBase client) {
         this.user = user;
         this.client = client;
+
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
@@ -102,10 +102,10 @@ public class MenuPanel extends JPanel {
         settingsButton.setPreferredSize(new Dimension(200, 50));
 
         settingsButton.addActionListener(e -> {
-            SettingsPanel settingsPanel = new SettingsPanel(frame, this, user, client);
-            frame.setContentPane(settingsPanel);
-            frame.revalidate();
-            frame.repaint();
+            SettingsPanel settingsPanel = new SettingsPanel(this,user,client);
+            client.getMainframe().setContentPane(settingsPanel);
+            client.getMainframe().revalidate();
+            client.getMainframe().repaint();
         });
 
 
