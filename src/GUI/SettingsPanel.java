@@ -36,11 +36,12 @@ public class SettingsPanel extends JPanel {
     private User user;
     private ClientBase client;
 
-    public SettingsPanel(JFrame frame, MenuPanel previousPanel, User user, ClientBase client) {
-        this.frame = frame;
+    public SettingsPanel(MenuPanel previousPanel, User user, ClientBase client) {
         this.previousPanel = previousPanel;
         this.user = user;
         this.client = client;
+
+        this.frame = client.getMainframe();
 
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
@@ -135,9 +136,9 @@ public class SettingsPanel extends JPanel {
     }
 
     private void goBackToMenu(JPanel previousPanel) {
-        frame.setContentPane(previousPanel);
-        frame.revalidate();
-        frame.repaint();
+        client.getMainframe().setContentPane(previousPanel);
+        client.getMainframe().revalidate();
+        client.getMainframe().repaint();
     }
 
 
