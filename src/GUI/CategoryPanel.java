@@ -1,10 +1,13 @@
 package GUI;
 
 import Client.ClientBase;
+import Database.Question;
 import Quizgame.shared.User;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -22,8 +25,30 @@ public class CategoryPanel extends JPanel {
     private User user;
     private ClientBase client;
     private ArrayList<String> listOfCategoriesFilename;
+    private ArrayList<JButton> listOfChosenCategories = new ArrayList<>();
+    private ArrayList<JButton> listOfAvailableCategories = new ArrayList<>();
+    private JPanel categoriesToChooseFrom;
+    private JPanel chosenCategoriesButtons;
 
-    CategoryPanel(User user, JFrame frame, ClientBase client ) {
+
+
+    private final ActionListener moveBetweenChosenAndAvailable = e -> {
+        JButton clickedButton = (JButton) e.getSource();
+        String categoryName = (String) clickedButton.getClientProperty("categoryName");
+
+        if(listOfAvailableCategories.contains(clickedButton)) {
+            listOfAvailableCategories.remove(clickedButton);
+            listOfChosenCategories.add(clickedButton);
+        } else if(listOfChosenCategories.contains(clickedButton)) {
+            listOfChosenCategories.remove(clickedButton);
+            listOfAvailableCategories.add(clickedButton);
+        }
+
+        printCategoryButtons();
+
+    };
+
+    CategoryPanel(User user, JFrame frame, ClientBase client) {
         this.user = user;
         this.frame = frame;
         this.client = client;
@@ -37,39 +62,89 @@ public class CategoryPanel extends JPanel {
         JLabel chooseCategoryLabel = new JLabel("Choose Category");
         chooseCategoryLabel.setFont(new Font("Arial", Font.BOLD, 32));
         topPanel.add(chooseCategoryLabel);
-        add(topPanel,BorderLayout.NORTH);
+        add(topPanel, BorderLayout.NORTH);
 
         JPanel middleCategoryPanel = new JPanel();
-        middleCategoryPanel.setLayout(new GridLayout(2,4));
+        middleCategoryPanel.setLayout(new BorderLayout());
+
+        JPanel chosenCategories = new JPanel();
+        chosenCategories.setLayout(new BorderLayout());
+        JLabel chosenCategoriesLabel = new JLabel("Your chosen categories: ");
+        chosenCategoriesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        chosenCategoriesLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        chosenCategories.add(chosenCategoriesLabel, BorderLayout.NORTH);
+        middleCategoryPanel.add(chosenCategories, BorderLayout.SOUTH);
+
+
+
+
+        chosenCategoriesButtons = new JPanel();
+        chosenCategoriesButtons.setLayout(new GridLayout(1, 3, 10, 10));
+        categoriesToChooseFrom = new JPanel();
+        categoriesToChooseFrom.setLayout(new GridLayout(2, 4));
+
+
 
         listOfCategoriesFilename = readFromCategoriesFilenamse("resources/CategoriesPictures/categoriesFilenames");
-        createCategoryButtons(middleCategoryPanel, listOfCategoriesFilename);
-        add(middleCategoryPanel,BorderLayout.CENTER);
+        listOfAvailableCategories = createCategoryButtons(listOfCategoriesFilename);
+
+        printCategoryButtons();
+
+        chosenCategories.add(chosenCategoriesButtons, BorderLayout.CENTER);
+        middleCategoryPanel.add(categoriesToChooseFrom, BorderLayout.CENTER);
+        add(middleCategoryPanel, BorderLayout.CENTER);
 
         JPanel buttonPanelBottom = new JPanel();
-        buttonPanelBottom.setLayout(new GridLayout(1,2));
+        buttonPanelBottom.setLayout(new GridLayout(1, 2, 30, 20));
+        buttonPanelBottom.setBorder(new EmptyBorder(10, 10, 10, 10));
         JButton playButton = new JButton("Play");
         JButton backButton = new JButton("Back");
 
         buttonPanelBottom.add(playButton);
         buttonPanelBottom.add(backButton);
-        add(buttonPanelBottom,BorderLayout.SOUTH);
+        add(buttonPanelBottom, BorderLayout.SOUTH);
+
     }
 
+    private void revalidateAndRepaintButtonsPanel(){
+        chosenCategoriesButtons.revalidate();
+        chosenCategoriesButtons.repaint();
+        categoriesToChooseFrom.repaint();
+        categoriesToChooseFrom.revalidate();
 
-    private void createCategoryButtons(JPanel middleCategoryPanel, ArrayList<String> listOfCategoriesFilename) {
-        for(String s: listOfCategoriesFilename){
-            JButton categoryButton = createCategoryButton(s);
-            middleCategoryPanel.add(categoryButton);
+    }
+
+    private void printCategoryButtons() {
+        chosenCategoriesButtons.removeAll();
+        for (JButton button : listOfChosenCategories) {
+            chosenCategoriesButtons.add(button);
         }
+        categoriesToChooseFrom.removeAll();
+        for(JButton b :  listOfAvailableCategories) {
+            categoriesToChooseFrom.add(b);
+        }
+        revalidateAndRepaintButtonsPanel();
     }
 
-    private ArrayList<String> readFromCategoriesFilenamse(String filename){
+
+    //TODO fult sätt att hitta categoryNamn..
+    private ArrayList<JButton> createCategoryButtons(ArrayList<String> listOfCategoriesFilename) {
+        String categoryName;
+        for (String s : listOfCategoriesFilename) {
+            JButton categoryButton = createCategoryButton(s);
+            categoryName = s.substring(s.indexOf("Category") + 8, s.indexOf("."));
+            categoryButton.putClientProperty("categoryName", categoryName);
+            listOfAvailableCategories.add(categoryButton);
+        }
+        return listOfAvailableCategories;
+    }
+
+    private ArrayList<String> readFromCategoriesFilenamse(String filename) {
         ArrayList<String> listOfCategoriesFilename = new ArrayList<>();
-        try(BufferedReader br = new BufferedReader(new FileReader(filename))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 
             String line;
-            while((line = br.readLine()) != null){
+            while ((line = br.readLine()) != null) {
                 listOfCategoriesFilename.add(filePathToCategoryFiles + line);
             }
 
@@ -81,7 +156,7 @@ public class CategoryPanel extends JPanel {
         return listOfCategoriesFilename;
     }
 
-    private JButton createCategoryButton(String filename  ) {
+    private JButton createCategoryButton(String filename) {
         JButton categoryButton = new JButton();
         ImageIcon tempAvatar = new ImageIcon(filename);
         Image scaledTempAvatar = tempAvatar.getImage().getScaledInstance(sizeofCategoryButton, sizeofCategoryButton, Image.SCALE_SMOOTH);
@@ -92,7 +167,7 @@ public class CategoryPanel extends JPanel {
         categoryButton.setBorder(null);
         categoryButton.setMargin(new Insets(0, 0, 0, 0));
         categoryButton.setIcon(new ImageIcon(scaledTempAvatar));
-//        categoryButton.addActionListener(changePreviewPicture);
+        categoryButton.addActionListener(moveBetweenChosenAndAvailable);
         return categoryButton;
     }
 
