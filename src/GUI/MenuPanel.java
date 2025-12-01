@@ -21,6 +21,7 @@ public class MenuPanel extends JPanel {
     public MenuPanel(User user, ClientBase client) {
         this.user = user;
         this.client = client;
+
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
@@ -101,10 +102,10 @@ public class MenuPanel extends JPanel {
         settingsButton.setPreferredSize(new Dimension(200, 50));
 
         settingsButton.addActionListener(e -> {
-            SettingsPanel settingsPanel = new SettingsPanel(frame,this,user,client);
-            client.getFrame().setContentPane(settingsPanel);
-            client.getFrame().revalidate();
-            client.getFrame().repaint();
+            SettingsPanel settingsPanel = new SettingsPanel(this,user,client);
+            client.getMainframe().setContentPane(settingsPanel);
+            client.getMainframe().revalidate();
+            client.getMainframe().repaint();
         });
 
 

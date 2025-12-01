@@ -59,7 +59,7 @@ public class ClientBase extends Thread {
             e.printStackTrace();
         }
     }
-    public MainFrame getFrame() {
+    public MainFrame getMainframe() {
         return mainframe;
     }
 
