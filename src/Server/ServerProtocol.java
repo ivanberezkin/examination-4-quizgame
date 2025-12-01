@@ -102,9 +102,11 @@ public class ServerProtocol {
             }
 
             case CHOOSING_CATEGORIES -> {
-                IO.println("Categories received");
-                //TODO fortsätter med att starta ett spel.
+                if (message.getData() instanceof Question.Category category) {
+                    //Här måste någon metod in
+                }
             }
+
 
             //Matchmaking från
             case MATCHMAKING -> {
