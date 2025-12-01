@@ -16,6 +16,7 @@ public class LoginPanel extends JFrame {
     private final ClientBase client;
 
     private JLabel welcomeLabel = new JLabel("Welcome to QuizGame");
+    private JPanel backgroundPanel = new JPanel(new BorderLayout());
     private ImageIcon startImage = new ImageIcon("resources/QuizStartGame.jpg");
     JLabel backgroundImage = new JLabel(startImage);
 
@@ -31,6 +32,39 @@ public class LoginPanel extends JFrame {
     private LoginPanel(ClientBase client) {
         this.client = client;
         setLayout(new BorderLayout());
+
+        backgroundImage.setLayout(new BorderLayout());
+        backgroundPanel.add(backgroundImage, BorderLayout.CENTER);
+
+        welcomeLabel.setFont(new Font("Times New Roman", Font.BOLD, 30));
+        welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
+        welcomeLabel.setForeground(Color.BLUE);
+        backgroundImage.add(welcomeLabel, BorderLayout.NORTH);
+
+        buttonPanel.setLayout(new GridLayout(3, 2, 10, 10));
+        buttonPanel.add(usernameLabel);
+        buttonPanel.add(usernameInput);
+        buttonPanel.add(passwordLabel);
+        buttonPanel.add(passwordInput);
+        buttonPanel.add(loginButton);
+        buttonPanel.add(exitButton);
+
+        backgroundImage.add(buttonPanel, BorderLayout.SOUTH);
+        add(backgroundPanel, BorderLayout.CENTER);
+
+        loginButton.addActionListener(e -> {
+                    String inputUsername = usernameInput.getText();
+                    String inputPassword = passwordInput.getText();
+
+                    if (inputUsername.isEmpty() || inputPassword.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Please fill all the fields");
+                        return;
+                    }
+                    User user = new User(inputUsername, inputPassword);
+                    client.sendMessage(new Message(MessageType.LOGIN_REQUEST, user));
+        });
+
+        exitButton.addActionListener(e -> System.exit(0));
     }
 }
    /* JLabel welcomeLabel = new JLabel("Welcome to Quizgame");
