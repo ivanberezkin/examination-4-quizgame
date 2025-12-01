@@ -18,7 +18,7 @@ public class ClientHandler extends Thread {
         try {
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
-             newConnection = new Connections(out,in);
+            newConnection = new Connections(out, in);
             ServerListener.addNewConnection(newConnection);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -31,7 +31,7 @@ public class ClientHandler extends Thread {
             while (true) {
                 Message response = null;
                 Message message = (Message) in.readObject();
-                    response = ServerProtocol.processInput(message);
+                response = ServerProtocol.processInput(message);
                 if (message.getData() != null && response != null) {
                     System.out.println("Response is: " + response.getType());
 
