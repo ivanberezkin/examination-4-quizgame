@@ -1,10 +1,7 @@
 package Server;
 
 import Database.*;
-import GameComponents.GameManager;
-import GameComponents.Rond;
-import GameComponents.MatchQuestion;
-import GameComponents.TestGame;
+import GameComponents.*;
 import Quizgame.shared.*;
 
 import java.util.ArrayList;
@@ -54,7 +51,7 @@ public class ServerProtocol {
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
                     for (User u : matchQuestion.getUsers()) {
                         Connections c = ServerListener.findConnectionsByUser(u.getUsername());
-                        c.send(new Message(MessageType.QUESTION, matchQuestion.getQuestion()));
+                        c.send(new Message(MessageType.QUESTION, matchQuestion.getQuestions()));
                     }
                 }
             }
@@ -64,6 +61,8 @@ public class ServerProtocol {
             }
 
             case GAME_START -> {
+
+                //Städa
                 System.out.println("SERVERPROTOCOL: GAME_START was reached");
                 List<Connections> players = new ArrayList<>();
                 List<User> users = new ArrayList<>();
@@ -123,15 +122,21 @@ public class ServerProtocol {
             case ANSWER -> {
                 if (message.getData() instanceof Answer) {
                     Answer answer = (Answer) message.getData();
-                    GameManager.continueGame(answer);
+                    GameManager.registerAnswer(answer);
                     return null;
                 }
             }
             case RESULT_ROUND -> {
-                if (message.getData() instanceof Rond rond) {
-                    for (User u : rond.getPlayersList()) {
+                if (message.getData() instanceof Round round) {
+
+                }
+                return null;
+            }
+            case GAME_FINISHED -> {
+                if (message.getData() instanceof Game game) {
+                    for (User u : game.getPlayers()) {
                         Connections c = ServerListener.findConnectionsByUser(u.getUsername());
-                        c.send(new Message(MessageType.RESULT_ROUND, rond));
+                        c.send(new Message(MessageType.GAME_FINISHED, game));
                     }
                 }
                 return null;
@@ -180,10 +185,6 @@ public class ServerProtocol {
 ////                    return new Message(MessageType.QUESTION, questionsForUserList);
 
 //            }
-
-            case GAME_FINISHED -> {
-                return new Message(MessageType.GAME_FINISHED, null);
-            }
 
             default -> {
                 return new Message(MessageType.ERROR, "SERVERPROTOCOL: Invalid message");

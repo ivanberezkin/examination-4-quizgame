@@ -6,13 +6,13 @@ import Quizgame.shared.User;
 public class Score {
     User player;
     Question question;
-    Rond rond;
+    Round round;
     int points;
 
-    public Score(User player, Question question, Rond rond, int points){
+    public Score(User player, Question question, Round round, int points){
         this.player = player;
         this.question = question;
-        this.rond = rond;
+        this.round = round;
         this.points = points;
     }
     public User getPlayer(){
@@ -21,8 +21,8 @@ public class Score {
     public Question getQuestion(){
         return question;
     }
-    public Rond getMatch (){
-        return rond;
+    public Round getMatch (){
+        return round;
     }
     public int getPoints (){
         return points;

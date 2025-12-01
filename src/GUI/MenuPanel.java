@@ -87,6 +87,7 @@ public class MenuPanel extends JPanel {
         startGameButton.setPreferredSize(new Dimension(200, 50));
 
         startGameButton.addActionListener(e -> {
+            //Choose Category
             client.sendMessage(new Message(MessageType.MATCHMAKING, user));
             //TODO move to MatchMaking Panel
             IO.println(user.getUsername() + " moved to Matchmaking");

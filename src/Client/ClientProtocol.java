@@ -8,6 +8,7 @@ import GUI.MatchmakingPanel;
 import GUI.MenuPanel;
 import Quizgame.shared.*;
 import javax.swing.*;
+import java.util.List;
 
 public class ClientProtocol {
 
@@ -124,9 +125,10 @@ public class ClientProtocol {
             }
 
             case RESULT_ROUND -> {
-                if (message.getData() instanceof Rond rond){
-                    ResultPanel resultPanel = new ResultPanel(rond);
+                if (message.getData() instanceof Game game){
+                    ResultPanel resultPanel = new ResultPanel(game);
                     SwingUtilities.invokeLater(() -> {
+                        //Någonting med att lägga till knapp för att köra nästa runda, eller text "Waiting"
                         frame.setContentPane(resultPanel);
                         frame.revalidate();
                         frame.repaint();
@@ -135,7 +137,14 @@ public class ClientProtocol {
             }
 
             case GAME_FINISHED -> {
-                //add game logic here
+                if (message.getData() instanceof Game game){
+                    ResultPanel resultPanel = new ResultPanel(game);
+                    SwingUtilities.invokeLater(() -> {
+                        frame.setContentPane(resultPanel);
+                        frame.revalidate();
+                        frame.repaint();
+                    });
+                }
             }
         }
     }

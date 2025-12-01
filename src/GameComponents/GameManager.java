@@ -14,7 +14,7 @@ import java.util.List;
 
 public class GameManager implements Serializable {
     private int maxNumberOfQuestions = SettingsLoader.getQuestionsPerRound();
-    private int maxNumberOfMatches = SettingsLoader.getRoundsPerGame();
+    private int maxNumberOfRounds = SettingsLoader.getRoundsPerGame();
     private int maxPlayers = SettingsLoader.getMaxPlayers();
 
     private Question.Category category;
@@ -26,54 +26,63 @@ public class GameManager implements Serializable {
     public void startGame(User player, Question.Category category) {
         this.category = category;
         if (!activeGames.isEmpty()) {
-            for (Game s : activeGames) {
-                if (s.getNumberOfPlayers() == 1) {
-                    s.addPlayer(player);
+            for (Game g : activeGames) {
+                if (g.getNumberOfPlayers() == 1) {
+                    g.addPlayer(player, category);
                 }
             }
         }
         else {
-            startNewSet(player);
+            startNewGame(player, category);
         }
     }
 
-    private void startNewSet(User player) {
-        Game game = new Game(player, category, maxPlayers, maxNumberOfQuestions, maxNumberOfMatches);
+    private void startNewGame(User player, Question.Category category) {
+        Game game = new Game(player, category, maxPlayers, maxNumberOfQuestions, maxNumberOfRounds);
         activeGames.add(game);
     }
-    public static void continueGame(Answer answer){
-        for (Game s : getActiveSets()) {
-            for (Rond m : s.getMatches()) {
-                List<User> players = m.getPlayersList();
+    public static void registerAnswer(Answer answer) {
+        User user = answer.getUser();
+        Game game = findActiveGame(user);
+        if (game != null) {
+            Round r = game.getRounds().getLast();
+            if (!r.completedRound())
+                    r.addPointsToList(answer);
+                }
+            }
+    private void startNextRound(User player, Question.Category category){
+
+    }
+    private static Game findActiveGame(User user){
+        for (Game g : getActiveGames()) {
+            for (Round r : g.getRounds()) {
+                List<User> players = r.getPlayersList();
                 for (User u : players) {
-                    if (u.getUsername().equals(answer.getUser().getUsername())) {
-                        m.addPointsToList(answer);
-                        m.sendQuestion();
+                    if (u.getUsername().equals(user.getUsername())) {
+                        return g;
                     }
                 }
             }
         }
+        return null;
     }
 
-    public static void sendQuestion(List<User> users, Question question) {
-        MatchQuestion matchQuestion = new MatchQuestion(users, question);
-        ServerProtocol.processInput(new Message(MessageType.QUESTION, matchQuestion));
+    public static void sendQuestions(List<User> users, Question[] question) {
+        MatchQuestion matchQuestions = new MatchQuestion(users, question);
+        ServerProtocol.processInput(new Message(MessageType.QUESTION, matchQuestions));
     }
-    public static void sendMatchScore(Rond rond){
-        ServerProtocol.processInput(new Message(MessageType.RESULT_ROUND, rond));
-        checkSets();
+    public static void sendRoundScore(Round round){
+        ServerProtocol.processInput(new Message(MessageType.RESULT_ROUND, round));
     }
-    private static void removeCompletedSet(Game game){
+    public static void sendGameScore(Game game){
+        ServerProtocol.processInput(new Message(MessageType.GAME_FINISHED, game));
+        removeCompletedGame(game);
+    }
+
+    private static void removeCompletedGame(Game game){
         activeGames.remove(game);
     }
-    private static void checkSets(){
-        for (Game s : activeGames){
-            if(s.checkIfCompleted()){
-                removeCompletedSet(s);
-            }
-        }
-    }
-    private static List<Game>getActiveSets(){
+    private static List<Game>getActiveGames(){
         return activeGames;
 
     }
