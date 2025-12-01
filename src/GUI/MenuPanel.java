@@ -93,7 +93,7 @@ public class MenuPanel extends JPanel {
 //            client.sendMessage(new Message(MessageType.MATCHMAKING, user));
             //TODO move to MatchMaking Panel
 //            IO.println(user.getUsername() + " moved to Matchmaking");
-            CategoryPanel categoryPanel = new CategoryPanel(user,frame,client);
+            CategoryPanel categoryPanel = new CategoryPanel(user,frame,client, this);
             frame.setContentPane(categoryPanel);
             frame.revalidate();
             frame.repaint();

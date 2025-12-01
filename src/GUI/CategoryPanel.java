@@ -31,7 +31,7 @@ public class CategoryPanel extends JPanel {
     private ArrayList<JButton> listOfAvailableCategories = new ArrayList<>();
     private JPanel categoriesToChooseFrom;
     private JPanel chosenCategoriesButtons;
-
+    private MenuPanel previousPanel;
     private final ActionListener moveBetweenChosenAndAvailable = e -> {
         JButton clickedButton = (JButton) e.getSource();
         String categoryName = (String) clickedButton.getClientProperty("categoryName");
@@ -48,11 +48,11 @@ public class CategoryPanel extends JPanel {
 
     };
 
-    CategoryPanel(User user, JFrame frame, ClientBase client) {
+    CategoryPanel(User user, JFrame frame, ClientBase client, MenuPanel previousPanel) {
         this.user = user;
         this.frame = frame;
         this.client = client;
-
+        this.previousPanel = previousPanel;
         setName("CategoryPanel");
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
@@ -111,6 +111,12 @@ public class CategoryPanel extends JPanel {
             } else{
                 JOptionPane.showMessageDialog(this, "Please choose atleast 1 category.");
             }
+        });
+
+        backButton.addActionListener(e -> {
+           frame.setContentPane(previousPanel);
+           frame.revalidate();
+           frame.repaint();
         });
 
         buttonPanelBottom.add(playButton);
