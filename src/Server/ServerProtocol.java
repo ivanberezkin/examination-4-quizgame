@@ -98,6 +98,7 @@ public class ServerProtocol {
 
             case CHOOSING_CATEGORIES -> {
                 IO.println("Categories received");
+                //TODO fortsätter med att starta ett spel.
             }
 
             //Matchmaking från
