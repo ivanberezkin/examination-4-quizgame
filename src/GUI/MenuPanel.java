@@ -86,6 +86,8 @@ public class MenuPanel extends JPanel {
         startGameButton.setFocusPainted(false);
         startGameButton.setPreferredSize(new Dimension(200, 50));
 
+
+        //TODO Här startar spelet, category ska in här .
         startGameButton.addActionListener(e -> {
             //Choose Category
             client.sendMessage(new Message(MessageType.MATCHMAKING, user));

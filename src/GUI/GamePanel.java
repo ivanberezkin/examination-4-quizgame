@@ -112,6 +112,8 @@ public class GamePanel extends JPanel {
                 //TODO lägga till logik för antal rundor och sedan starta ny fråga
 
                 client.sendMessage(new Message(MessageType.ANSWER, new Answer(user, question, nextQuestion())));
+
+                //TODO lägg till någon snygg väntar på motståndare.
                 answerButtonsPanel.removeAll();
 
             } else {
@@ -120,6 +122,7 @@ public class GamePanel extends JPanel {
                         "\n Correct Answer is: " + correctAnswer);
                 clickedButton.setBackground(Color.LIGHT_GRAY);
                 client.sendMessage(new Message(MessageType.ANSWER, new Answer(user, question, nextQuestion())));
+                //TODO lägg till någon snygg väntar på motståndare.
                 answerButtonsPanel.removeAll();
             }
         };

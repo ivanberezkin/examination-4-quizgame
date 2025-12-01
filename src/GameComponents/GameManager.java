@@ -23,6 +23,7 @@ public class GameManager implements Serializable {
     public GameManager(){
 
     }
+    //Här startas ett nytt spel och den kollar ifall det är en eller två spelare.
     public void startGame(User player, Question.Category category){
         System.out.println("startGame in GameManager was reached");
         this.category = category;
@@ -88,8 +89,16 @@ public class GameManager implements Serializable {
     private static void removeCompletedGame(Game game){
         activeGames.remove(game);
     }
+    //TODO vi behöver spara historik av rundor någonstans
+    private static void checkGames(){
+        for (Game g : activeGames){
+            if(g.checkIfCompleted()){
+                removeCompletedGame(g);
+            }
+        }
+    }
+
     private static List<Game>getActiveGames(){
         return activeGames;
-
     }
 }

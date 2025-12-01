@@ -8,7 +8,6 @@ import GUI.MatchmakingPanel;
 import GUI.MenuPanel;
 import Quizgame.shared.*;
 import javax.swing.*;
-import java.util.List;
 
 public class ClientProtocol {
 
@@ -113,10 +112,8 @@ public class ClientProtocol {
 
             case QUESTION -> {
                 IO.println("Questions Received");
-                System.out.println("Message is instance of: " + message.getData().getClass());
                 if (message.getData() instanceof Question question) {
                     System.out.println("Question is: " + question);
-                    System.out.println("---- case Question in ClientProtocol was reached");
                     GamePanel gamePanel = new GamePanel(client, question, loggedInUser, frame);
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(gamePanel);
@@ -125,12 +122,13 @@ public class ClientProtocol {
                     });
                 }
             }
-
+                //TODO Se till att rätt input tas för ResultPanel.
             case RESULT_ROUND -> {
-                if (message.getData() instanceof Game game){
-                    ResultPanel resultPanel = new ResultPanel(game);
+                if (message.getData() instanceof Match match){
+                    ResultPanel resultPanel = new ResultPanel(match.getPlayersList().getFirst().getUsername(),
+                            match.getPlayersList().getLast().getUsername(),
+                             match.getPointsPlayer1().getFirst(), match.getPointsPlayer2().getLast(),"test");
                     SwingUtilities.invokeLater(() -> {
-                        //Någonting med att lägga till knapp för att köra nästa runda, eller text "Waiting"
                         frame.setContentPane(resultPanel);
                         frame.revalidate();
                         frame.repaint();
@@ -139,14 +137,7 @@ public class ClientProtocol {
             }
 
             case GAME_FINISHED -> {
-                if (message.getData() instanceof Game game){
-                    ResultPanel resultPanel = new ResultPanel(game);
-                    SwingUtilities.invokeLater(() -> {
-                        frame.setContentPane(resultPanel);
-                        frame.revalidate();
-                        frame.repaint();
-                    });
-                }
+                //add game logic here
             }
         }
     }

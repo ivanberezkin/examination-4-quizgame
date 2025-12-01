@@ -101,6 +101,8 @@ public class ServerProtocol {
                 //TODO lägga till logik för vad som händer när användare ger upp.
             }
 
+
+            //Matchmaking från
             case MATCHMAKING -> {
                 System.out.println("SERVERPROTOCOL: GAME_START was reached");
                 System.out.println("messageType for GameStart is: " + message.getType());
