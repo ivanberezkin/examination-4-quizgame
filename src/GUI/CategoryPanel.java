@@ -57,14 +57,14 @@ public class CategoryPanel extends JPanel {
 
     }
     private void createCategoryButtons(JPanel middleCategoryPanel) {
-        categoryButton1 = createCategoryButton("resources/CategoriesPictures/CategoryAnimals.jpg", changePreviewPicture);
-        categoryButton2 = createCategoryButton("resources/CategoriesPictures/CategoryBiology.jpg", changePreviewPicture);
-        categoryButton3 = createCategoryButton("resources/CategoriesPictures/CategoryGames.jpg", changePreviewPicture);
-        categoryButton4 = createCategoryButton("resources/CategoriesPictures/CategoryGeography.jpg", changePreviewPicture);
-        categoryButton5 = createCategoryButton("resources/CategoriesPictures/CategoryHistory.jpg", changePreviewPicture);
-        categoryButton6 = createCategoryButton("resources/CategoriesPictures/CategoryMusic.jpg", changePreviewPicture);
-        categoryButton7 = createCategoryButton("resources/CategoriesPictures/CategoryScience.webp", changePreviewPicture);
-        categoryButton8 = createCategoryButton("resources/CategoriesPictures/CategorySport.jpg", changePreviewPicture);
+        categoryButton1 = createCategoryButton("resources/CategoriesPictures/CategoryAnimals.jpg");
+        categoryButton2 = createCategoryButton("resources/CategoriesPictures/CategoryBiology.jpg");
+        categoryButton3 = createCategoryButton("resources/CategoriesPictures/CategoryGames.jpg");
+        categoryButton4 = createCategoryButton("resources/CategoriesPictures/CategoryGeography.jpg");
+        categoryButton5 = createCategoryButton("resources/CategoriesPictures/CategoryHistory.jpg");
+        categoryButton6 = createCategoryButton("resources/CategoriesPictures/CategoryMusic.jpg");
+        categoryButton7 = createCategoryButton("resources/CategoriesPictures/CategoryScience.jpg");
+        categoryButton8 = createCategoryButton("resources/CategoriesPictures/CategorySport.jpg");
 
         middleCategoryPanel.add(categoryButton1);
         middleCategoryPanel.add(categoryButton2);
@@ -77,7 +77,7 @@ public class CategoryPanel extends JPanel {
     }
 
 
-    private JButton createCategoryButton(String filename, ActionListener changePreviewPicture ) {
+    private JButton createCategoryButton(String filename  ) {
         JButton categoryButton = new JButton();
         ImageIcon tempAvatar = new ImageIcon(filename);
         Image scaledTempAvatar = tempAvatar.getImage().getScaledInstance(sizeofCategoryButton, sizeofCategoryButton, Image.SCALE_SMOOTH);

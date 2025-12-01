@@ -96,6 +96,9 @@ public class ServerProtocol {
                 //TODO lägga till logik för vad som händer när användare ger upp.
             }
 
+            case CHOOSING_CATEGORIES -> {
+
+            }
 
             //Matchmaking från
             case MATCHMAKING -> {
