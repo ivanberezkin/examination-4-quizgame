@@ -7,6 +7,7 @@ import Quizgame.shared.User;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ResultPanel extends JPanel {
@@ -31,8 +32,8 @@ public class ResultPanel extends JPanel {
         JLabel playerOneLabel = playerLabel(playerOne);
         JLabel playerTwoLabel = playerLabel(playerTwo);
         String text = "";
-        if (scoreRows.getFirst() != null){
-            text = String.valueOf(scoreRows.getFirst()[0]);
+        if (scoreRows != null && !scoreRows.isEmpty()){
+            text = Arrays.toString(scoreRows.getFirst());
         }
         JLabel scoreLabel = new JLabel(text);
         scoreLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
