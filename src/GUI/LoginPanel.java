@@ -13,8 +13,27 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class LoginPanel extends JFrame {
+    private final ClientBase client;
 
-    JLabel welcomeLabel = new JLabel("Welcome to Quizgame");
+    private JLabel welcomeLabel = new JLabel("Welcome to QuizGame");
+    private ImageIcon startImage = new ImageIcon("resources/QuizStartGame.jpg");
+    JLabel backgroundImage = new JLabel(startImage);
+
+    private JPanel buttonPanel = new JPanel();
+    private JButton loginButton = new JButton("Login");
+    private JButton exitButton = new JButton("Exit");
+
+    private JLabel usernameLabel = new JLabel("Username:");
+    private JTextField usernameInput = new JTextField(20);
+    private JLabel passwordLabel = new JLabel("Password:");
+    private JPasswordField passwordInput = new JPasswordField(20);
+
+    private LoginPanel(ClientBase client) {
+        this.client = client;
+        setLayout(new BorderLayout());
+    }
+}
+   /* JLabel welcomeLabel = new JLabel("Welcome to Quizgame");
 
     JPanel backgroudPanel = new JPanel();
     ImageIcon startImage = new ImageIcon("resources/QuizStartGame.jpg");
@@ -91,4 +110,4 @@ public class LoginPanel extends JFrame {
         System.exit(0);
     }
 
-}
+}*/
