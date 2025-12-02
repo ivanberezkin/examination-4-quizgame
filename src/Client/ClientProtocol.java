@@ -122,7 +122,6 @@ public class ClientProtocol {
             case QUESTION -> {
                 IO.println("Questions Received");
                 if (message.getData() instanceof Question question) {
-                    System.out.println("Question is: " + question);
                     GamePanel gamePanel = new GamePanel(client, question, loggedInUser, frame);
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(gamePanel);
@@ -133,13 +132,22 @@ public class ClientProtocol {
             }
                 //TODO Se till att rätt input tas för ResultPanel.
             case RESULT_ROUND -> {
+                boolean waiting;
                 if (message.getData() instanceof Game game){
-                    ResultPanel resultPanel = new ResultPanel(game);
+                    if (game.getRound().getNumberOfCompletedQuestions() == 3){
+                        waiting = false;
+                    } else {
+                        waiting = true;
+                    }
+                    ResultPanel resultPanel = new ResultPanel(game, client, loggedInUser);
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(resultPanel);
+                        resultPanel.setNextRoundButton(waiting);
                         frame.revalidate();
                         frame.repaint();
                     });
+                } else {
+                    waiting = true;
                 }
             }
 

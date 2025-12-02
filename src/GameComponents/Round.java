@@ -41,17 +41,12 @@ public class Round implements Serializable {
     }
 
     public void addPlayer(User player) {
-        System.out.println("In Round.addPlayer, number of players is: " + playersList.size());
-
         if (player != null) {
-            System.out.println("In Round.addPlayer, User is: " + player.getUsername());
             if (players[0] == null) {
-                System.out.println(". . . . . in Round, addPlayer[0] was reached");
                 player1 = player;
                 players[0] = player1;
                 playersList.add(player1);
             } else if (players[1] == null) {
-                System.out.println(". . . . . in Round, addPlayer[1] was reached");
                 player2 = player;
                 players[1] = player2;
                 playersList.add(player2);
@@ -69,35 +64,36 @@ public class Round implements Serializable {
     }
 
     public void addPointsToList(Answer answer) {
-        System.out.println("_ _ _ addPointsToLIst in Round was reached");
         int score = 0;
         if (answer.getIsAnswerCorrect()){
             score = 1;
         }
         if (answer.getUser().getUsername().equals(player1.getUsername())){
             pointsPlayer1.add(score);
-            if (pointsPlayer1.size() == numberOfQuestions){
+            if (pointsPlayer1.size() == pointsPlayer2.size()){
+                numberOfCompletedQuestion = pointsPlayer1.size();
             }
         }
         else if (answer.getUser().getUsername().equals(player2.getUsername())) {
             pointsPlayer2.add(score);
-            if (pointsPlayer2.size() == numberOfQuestions){
+            if (pointsPlayer1.size() == pointsPlayer2.size()){
+                numberOfCompletedQuestion = pointsPlayer1.size();
             }
         }
         if (pointsPlayer1.size() == numberOfQuestions && pointsPlayer2.size() == numberOfQuestions){
             game.setRoundScore(this);
         }
+
         else sendNextQuestion(answer.getUser());
     }
     public void sendNextQuestion(User player) {
-        System.out.println("sendNextQuestion in Round was reached");
         if (!completedRound() && !isUserWaiting(player)) {
             int index = 0;
             List<User> singleUserToList = new ArrayList<>();
             if (player.getUsername().equals(player1.getUsername()) && pointsPlayer1.size() < numberOfQuestions) {
                 index = pointsPlayer1.size();
                 singleUserToList.add(player1);
-            } else if (player.getUsername().equals(player2.getUsername()) && pointsPlayer2.size() < numberOfQuestions) {
+            } else if (player2 != null && player.getUsername().equals(player2.getUsername()) && pointsPlayer2.size() < numberOfQuestions) {
                 index = pointsPlayer2.size();
                 singleUserToList.add(player2);
             }
@@ -107,12 +103,12 @@ public class Round implements Serializable {
     }
     private boolean isUserWaiting(User player){
         if (player1.getUsername().equals(player.getUsername()) && pointsPlayer1.size() == numberOfQuestions){
-            GameManager.sendWaitingMessage(player, this);
+            GameManager.sendWaitingMessage(player);
             player1IsWaiting = true;
             return true;
         }
         else if (player2 != null && player2.getUsername().equals(player.getUsername()) && pointsPlayer2.size() == numberOfQuestions){
-            GameManager.sendWaitingMessage(player, this);
+            GameManager.sendWaitingMessage(player);
             player2IsWaiting = true;
             return true;
         }
