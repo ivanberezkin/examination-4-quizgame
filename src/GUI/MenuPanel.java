@@ -90,13 +90,13 @@ public class MenuPanel extends JPanel {
 
         //TODO Här startar spelet, category ska in här .
         startGameButton.addActionListener(e -> {
-//            client.sendMessage(new Message(MessageType.MATCHMAKING, user));
+            client.sendMessage(new Message(MessageType.MATCHMAKING, user));
             //TODO move to MatchMaking Panel
 //            IO.println(user.getUsername() + " moved to Matchmaking");
-            CategoryPanel categoryPanel = new CategoryPanel(user,frame,client, this);
-            frame.setContentPane(categoryPanel);
-            frame.revalidate();
-            frame.repaint();
+//            CategoryPanel categoryPanel = new CategoryPanel(user,frame,client, this);
+//            frame.setContentPane(categoryPanel);
+//            frame.revalidate();
+//            frame.repaint();
         });
 
         JButton settingsButton = new JButton("Settings");

@@ -50,7 +50,7 @@ public class Game implements Serializable {
         }
     }
 
-    public void addPlayer(User player, Question.Category category) {
+    public void addPlayer(User player) {
         if (numberOfPlayers == 0){
             this.player1 = player;
             players.add(player1);
@@ -62,6 +62,13 @@ public class Game implements Serializable {
             players.add(player2);
             numberOfPlayers += 1;
             round.addPlayer(player2);
+        }
+    }
+    public void joinRound(User player){
+        for (User user : round.getPlayersList()){
+            if (user.getUsername().equals(player.getUsername())){
+                round.sendNextQuestion(player);
+            }
         }
     }
 

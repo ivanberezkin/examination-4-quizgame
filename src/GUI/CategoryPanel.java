@@ -49,7 +49,7 @@ public class CategoryPanel extends JPanel {
 
     };
 
-    CategoryPanel(User user, JFrame frame, ClientBase client, MenuPanel previousPanel) {
+    public CategoryPanel(User user, JFrame frame, ClientBase client, MenuPanel previousPanel) {
         this.user = user;
         this.frame = frame;
         this.client = client;

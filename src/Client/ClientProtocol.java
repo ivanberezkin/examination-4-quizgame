@@ -89,9 +89,23 @@ public class ClientProtocol {
                 frame.revalidate();
                 frame.repaint();
             }
+            case ADDED_TO_GAME -> {
+
+            }
+            case CATEGORY_REQUEST -> {
+                User user = (User) message.getData();
+                CategoryPanel categoryPanel = new CategoryPanel(user, frame, client, new MenuPanel(user, client, frame));
+                SwingUtilities.invokeLater(() -> {
+                    frame.setContentPane(categoryPanel);
+                    frame.revalidate();
+                    frame.repaint();
+                });
+
+            }
             case GAME_START -> {
-                //User user = (User) message.getData();
-               // if (user != null) {
+
+                    //User user = (User) message.getData();
+                    // if (user != null) {
                     MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
                     });
                     SwingUtilities.invokeLater(() -> {

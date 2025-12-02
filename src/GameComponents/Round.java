@@ -37,6 +37,7 @@ public class Round implements Serializable {
         this.category = category;
         players = new User[maxPlayers];
         addPlayer(user);
+        sendNextQuestion(user);
     }
 
     public void addPlayer(User player) {
@@ -49,13 +50,11 @@ public class Round implements Serializable {
                 player1 = player;
                 players[0] = player1;
                 playersList.add(player1);
-                sendNextQuestion(player);
             } else if (players[1] == null) {
                 System.out.println(". . . . . in Round, addPlayer[1] was reached");
                 player2 = player;
                 players[1] = player2;
                 playersList.add(player2);
-                sendNextQuestion(player);
             }
         }
     }

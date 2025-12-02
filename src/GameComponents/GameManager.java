@@ -23,6 +23,18 @@ public class GameManager implements Serializable {
     public GameManager(){
 
     }
+    public Game checkAvailableGames(User player){
+        if (!activeGames.isEmpty()) {
+            for (Game g : activeGames) {
+                if (g.getNumberOfPlayers() == 1) {
+                    g.addPlayer(player);
+                }
+                return g;
+            }
+        }
+        return null;
+    }
+
     //Här startas ett nytt spel och den kollar ifall det är en eller två spelare.
     public void startGame(User player, Question.Category category){
         System.out.println("startGame in GameManager was reached");
@@ -30,7 +42,7 @@ public class GameManager implements Serializable {
         if (!activeGames.isEmpty()) {
             for (Game g : activeGames) {
                 if (g.getNumberOfPlayers() == 1) {
-                    g.addPlayer(player, category);
+                    g.addPlayer(player);
                 }
             }
         }
@@ -43,6 +55,12 @@ public class GameManager implements Serializable {
         System.out.println("createNewGame in GameManager was reached");
         Game game = new Game(player, category, maxPlayers, maxNumberOfQuestions, maxNumberOfRounds);
         activeGames.add(game);
+    }
+    public void joinStartedGame(User player){
+        Game game = findActiveGame(player);
+        if (game != null){
+            game.joinRound(player);
+        }
     }
     public static void registerAnswer(Answer answer) {
         User user = answer.getUser();
@@ -60,18 +78,15 @@ public class GameManager implements Serializable {
             game.continuePlaying(player, category);
         }
     }
-    private static Game findActiveGame(User user){
+    private static Game findActiveGame(User user) {
         for (Game g : getActiveGames()) {
-            for (Round r : g.getRounds()) {
-                List<User> players = r.getPlayersList();
-                for (User u : players) {
-                    if (u.getUsername().equals(user.getUsername())) {
-                        return g;
-                    }
+            for (User player : g.getPlayers()) {
+                if (player.getUsername().equals(user.getUsername())) {
+                    return g;
                 }
             }
         }
-        return null;
+    return null;
     }
 
     public static void sendQuestions(List<User> users, Question question) {

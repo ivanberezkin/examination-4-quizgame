@@ -109,9 +109,9 @@ public class ServerProtocol {
                     Question.Category category = startingParameters.getCategory();
                     User user = startingParameters.getUser();
                     Connections c = ServerListener.findConnectionsByUser(user.getUsername());
+                    System.out.println("In case Choosing Categories, messageType GAME_START is sent");
                     c.send(new Message(MessageType.GAME_START, category));
                     gameManager.startGame(user, category);
-                    System.out.println("In case Choosing Categories, messageType GAME_START is sent");
                 }
                 return null;
             }
@@ -119,29 +119,40 @@ public class ServerProtocol {
 
             //Matchmaking från
             case MATCHMAKING -> {
-                System.out.println("SERVERPROTOCOL: GAME_START was reached");
-                System.out.println("messageType for GameStart is: " + message.getType());
-                if (message.getData()!= null){
-                    System.out.println("message for GameStart is: " + message.getData().getClass());
-                }
-                List<Connections> players = new ArrayList<>();
-                List<User> users = new ArrayList<>();
-                if (message.getData() instanceof MatchQuestion matchQuestion) {
-                    if (!matchQuestion.getUsers().isEmpty()) {
-                        Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
-                                message.getData().toString().trim()));
-                        for (User u : users) {
-                            Connections player = matchmaking.getFirstConnectionFromMatchMakingList();
-                            player.setUser(u);
-                            players.add(player);
-                            player.send(new Message(MessageType.DUMMY, users.getFirst()));
-                        }
+                System.out.println("SERVERPROTOCOL: MATCHMAKING was reached");
+                if (message.getData() != null) {
+                    User player = (User) message.getData();
+                    Game game = gameManager.checkAvailableGames(player);
+                    Connections c = ServerListener.findConnectionsByUser(player.getUsername());
+                    if (game != null) {
+                        System.out.println("In Matchmaking, ADDED_TO_GAME is sent");
+                        c.send(new Message(MessageType.ADDED_TO_GAME, null));
+                        gameManager.joinStartedGame(player);
+
                     }
-                } else if (message.getData() instanceof User user) {
-                    gameManager.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
-                    return null;
+                    else {
+                        System.out.println("In Matchmaking: CATEGORY_REQUEST is sent");
+                        c.send(new Message(MessageType.CATEGORY_REQUEST, player));
+                    }
                 }
+                return null;
             }
+//
+//                List<Connections> players = new ArrayList<>();
+//                List<User> users = new ArrayList<>();
+//                if (message.getData() instanceof MatchQuestion matchQuestion) {
+//                    if (!matchQuestion.getUsers().isEmpty()) {
+//                        Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
+//                                message.getData().toString().trim()));
+//                        for (User u : users) {
+//                            Connections player = matchmaking.getFirstConnectionFromMatchMakingList();
+//                            player.setUser(u);
+//                            players.add(player);
+//                            player.send(new Message(MessageType.DUMMY, users.getFirst()));
+//                        }
+//                    }
+//                } else if (message.getData() instanceof User user) {
+//
             case ANSWER -> {
                 if (message.getData() instanceof Answer) {
                     Answer answer = (Answer) message.getData();
