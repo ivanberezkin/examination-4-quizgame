@@ -52,9 +52,11 @@ public class ServerProtocol {
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
                     for (User u : matchQuestion.getUsers()) {
                         Connections c = ServerListener.findConnectionsByUser(u.getUsername());
-                        c.send(new Message(MessageType.QUESTION, matchQuestion.getQuestions()));
+                        c.send(new Message(MessageType.QUESTION, matchQuestion.getQuestion()));
                     }
+                    return null;
                 }
+
             }
             case START_NEXT_ROUND -> {
                 if (message.getData() instanceof User player) {
@@ -102,9 +104,16 @@ public class ServerProtocol {
             }
 
             case CHOOSING_CATEGORIES -> {
-                if (message.getData() instanceof Question.Category category) {
-                    //Här måste någon metod in
+                System.out.println("message is instance of: " + message.getData().getClass());
+                if (message.getData() instanceof Quizgame.shared.UserAndCategory startingParameters) {
+                    Question.Category category = startingParameters.getCategory();
+                    User user = startingParameters.getUser();
+                    Connections c = ServerListener.findConnectionsByUser(user.getUsername());
+                    c.send(new Message(MessageType.GAME_START, category));
+                    gameManager.startGame(user, category);
+                    System.out.println("In case Choosing Categories, messageType GAME_START is sent");
                 }
+                return null;
             }
 
 

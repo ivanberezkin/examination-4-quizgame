@@ -90,8 +90,8 @@ public class ClientProtocol {
                 frame.repaint();
             }
             case GAME_START -> {
-                User user = (User) message.getData();
-                if (user != null) {
+                //User user = (User) message.getData();
+               // if (user != null) {
                     MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
                     });
                     SwingUtilities.invokeLater(() -> {
@@ -99,7 +99,6 @@ public class ClientProtocol {
                         frame.revalidate();
                         frame.repaint();
                     });
-                }
             }
 
             case MATCHMAKING -> {

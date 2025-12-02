@@ -1,6 +1,8 @@
 package Database;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Question implements Serializable {
@@ -56,7 +58,10 @@ public class Question implements Serializable {
     public String getCategory() {
         return qCat;
     }
-
+    public static List<Category> getAllCategories(){
+        List<Category> categories = new ArrayList<>(Arrays.asList(Category.values()));
+        return categories;
+    }
 
     @Override
     public String toString() {

@@ -33,7 +33,8 @@ public class ClientHandler extends Thread {
                 Message message = (Message) in.readObject();
                 response = ServerProtocol.processInput(message);
                 if (message.getData() != null && response != null) {
-                    System.out.println("Response is: " + response.getType());
+                    System.out.println("Message received in ClientHandler is: " + message.getData().getClass());
+                    System.out.println("Response is: " + response.getData());
 
                     //If Login OK then we are assigning a User to the connection.
                     if (response.getType() == MessageType.LOGIN_OK
