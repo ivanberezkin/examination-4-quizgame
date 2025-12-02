@@ -1,7 +1,6 @@
 package GUI;
 
 import Client.ClientBase;
-import Client.ClientStart;
 import Quizgame.shared.Message;
 import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
