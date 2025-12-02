@@ -23,51 +23,82 @@ public class GameManager implements Serializable {
     public GameManager(){
 
     }
-    //Här startas ett nytt spel och den kollar ifall det är en eller två spelare.
-    public void startGame(User player, Question.Category category){
-        System.out.println("startGame in GameManager was reached");
-        this.category = category;
+    public Game checkAvailableGames(User player){
         if (!activeGames.isEmpty()) {
             for (Game g : activeGames) {
                 if (g.getNumberOfPlayers() == 1) {
-                    g.addPlayer(player, category);
+                    g.addPlayer(player);
                 }
+                return g;
             }
         }
+        return null;
+    }
+
+    //Här startas ett nytt spel och den kollar ifall det är en eller två spelare.
+    public void startGame(User player, Question.Category category) {
+        boolean newGame = false;
+        if (findActiveGame(player) == null) {
+            newGame = true;
+        }
+            this.category = category;
+            if (newGame) {
+                if (!activeGames.isEmpty()) {
+                    for (Game g : activeGames) {
+                        if (g.getNumberOfPlayers() == 1) {
+                            g.addPlayer(player);
+                        }
+                    }
+                } else {
+                    createNewGame(player, category);
+                }
+            }
         else {
-            createNewGame(player, category);
+            startNextRound(player, category);
         }
     }
 
     private void createNewGame(User player, Question.Category category) {
-        System.out.println("createNewGame in GameManager was reached");
         Game game = new Game(player, category, maxPlayers, maxNumberOfQuestions, maxNumberOfRounds);
         activeGames.add(game);
+    }
+    public void joinStartedGame(User player){
+        Game game = findActiveGame(player);
+        if (game != null){
+            game.joinRound(player);
+        }
     }
     public static void registerAnswer(Answer answer) {
         User user = answer.getUser();
         Game game = findActiveGame(user);
         if (game != null) {
-            Round r = game.getRounds().getLast();
-            if (!r.completedRound()) {
+            Round r = game.getRound();
+            if (r != null && !r.completedRound()) {
                 r.addPointsToList(answer);
             }
+        }
+    }
+    public void setUpNextRound(User player){
+        Game game = findActiveGame(player);
+        if (game != null){
+            game.setUpNewRound(player);
         }
     }
     public void startNextRound(User player, Question.Category category){
         Game game = findActiveGame(player);
         if (game != null){
-            game.continuePlaying(player, category);
+            game.startRound(player, category);
         }
     }
-    private static Game findActiveGame(User user){
+    public static void sendCategoryRequest(User player){
+        ServerProtocol.processInput(new Message(MessageType.CATEGORY_REQUEST, player));
+    }
+
+    private static Game findActiveGame(User user) {
         for (Game g : getActiveGames()) {
-            for (Round r : g.getRounds()) {
-                List<User> players = r.getPlayersList();
-                for (User u : players) {
-                    if (u.getUsername().equals(user.getUsername())) {
-                        return g;
-                    }
+            for (User player : g.getPlayers()) {
+                if (player.getUsername().equals(user.getUsername())) {
+                    return g;
                 }
             }
         }
@@ -85,8 +116,8 @@ public class GameManager implements Serializable {
         ServerProtocol.processInput(new Message(MessageType.GAME_FINISHED, game));
         removeCompletedGame(game);
     }
-    public static void sendWaitingMessage(User user, Round round){
-        ServerProtocol.processInput(new Message(MessageType.WAITING, round));
+    public static void sendWaitingMessage(User user){
+        ServerProtocol.processInput(new Message(MessageType.WAITING, user));
     }
 
     private static void removeCompletedGame(Game game){

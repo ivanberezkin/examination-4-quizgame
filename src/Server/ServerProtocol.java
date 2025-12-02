@@ -48,17 +48,18 @@ public class ServerProtocol {
                 return new Message(MessageType.LOGIN_CREATE_OK, newUser);
             }
             case QUESTION -> {
-                System.out.println("message is instance of: " + message.getData().getClass());
                 if (message.getData() instanceof MatchQuestion matchQuestion) {
                     for (User u : matchQuestion.getUsers()) {
                         Connections c = ServerListener.findConnectionsByUser(u.getUsername());
-                        c.send(new Message(MessageType.QUESTION, matchQuestion.getQuestions()));
+                        c.send(new Message(MessageType.QUESTION, matchQuestion.getQuestion()));
                     }
+                    return null;
                 }
+
             }
             case START_NEXT_ROUND -> {
                 if (message.getData() instanceof User player) {
-                    gameManager.startNextRound(player, Question.Category.GEOGRAPHY);
+                    gameManager.setUpNextRound(player);
                 }
             }
 
@@ -68,27 +69,27 @@ public class ServerProtocol {
 
             case GAME_START -> {
 
-                //Städa
-                System.out.println("SERVERPROTOCOL: GAME_START was reached");
-                List<Connections> players = new ArrayList<>();
-                List<User> users = new ArrayList<>();
-                System.out.println("message Type is: " + message.getType());
-                if (message.getData() instanceof MatchQuestion matchQuestion) {
-                    if (!matchQuestion.getUsers().isEmpty()) {
-                        Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
-                                message.getData().toString().trim()));
-                        for (User u : users) {
-                            Connections player = matchmaking.getFirstConnectionFromMatchMakingList();
-                            player.setUser(u);
-                            players.add(player);
-                            player.send(new Message(MessageType.DUMMY, users.getFirst()));
-                        }
-                    }
-                }
-                else if (message.getData() instanceof User user) {
-                    gameManager.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
-                    return null;
-                }
+//                //Städa
+//                System.out.println("SERVERPROTOCOL: GAME_START was reached");
+//                List<Connections> players = new ArrayList<>();
+//                List<User> users = new ArrayList<>();
+//                System.out.println("message Type is: " + message.getType());
+//                if (message.getData() instanceof MatchQuestion matchQuestion) {
+//                    if (!matchQuestion.getUsers().isEmpty()) {
+//                        Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
+//                                message.getData().toString().trim()));
+//                        for (User u : users) {
+//                            Connections player = matchmaking.getFirstConnectionFromMatchMakingList();
+//                            player.setUser(u);
+//                            players.add(player);
+//                            player.send(new Message(MessageType.DUMMY, users.getFirst()));
+//                        }
+//                    }
+//                }
+//                else if (message.getData() instanceof User user) {
+//                    gameManager.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
+//                    return null;
+//                }
             }
             case MATCHMAKING_WAITING_FOR_OPPONENT -> {
                 while(Matchmaking.getMatchMakingListSize() < 2) {
@@ -102,37 +103,56 @@ public class ServerProtocol {
             }
 
             case CHOOSING_CATEGORIES -> {
-                if (message.getData() instanceof Question.Category category) {
-                    //Här måste någon metod in
+                if (message.getData() instanceof Quizgame.shared.UserAndCategory startingParameters) {
+                    Question.Category category = startingParameters.getCategory();
+                    User user = startingParameters.getUser();
+                    Connections c = ServerListener.findConnectionsByUser(user.getUsername());
+                    c.send(new Message(MessageType.GAME_START, category));
+                    gameManager.startGame(user, category);
                 }
+                return null;
             }
 
 
             //Matchmaking från
             case MATCHMAKING -> {
-                System.out.println("SERVERPROTOCOL: GAME_START was reached");
-                System.out.println("messageType for GameStart is: " + message.getType());
-                if (message.getData()!= null){
-                    System.out.println("message for GameStart is: " + message.getData().getClass());
-                }
-                List<Connections> players = new ArrayList<>();
-                List<User> users = new ArrayList<>();
-                if (message.getData() instanceof MatchQuestion matchQuestion) {
-                    if (!matchQuestion.getUsers().isEmpty()) {
-                        Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
-                                message.getData().toString().trim()));
-                        for (User u : users) {
-                            Connections player = matchmaking.getFirstConnectionFromMatchMakingList();
-                            player.setUser(u);
-                            players.add(player);
-                            player.send(new Message(MessageType.DUMMY, users.getFirst()));
-                        }
+                System.out.println("SERVERPROTOCOL: MATCHMAKING was reached");
+                if (message.getData() != null) {
+                    User player = (User) message.getData();
+                    Game game = gameManager.checkAvailableGames(player);
+                    Connections c = ServerListener.findConnectionsByUser(player.getUsername());
+                    if (game != null) {
+                        c.send(new Message(MessageType.ADDED_TO_GAME, null));
+                        gameManager.joinStartedGame(player);
+
                     }
-                } else if (message.getData() instanceof User user) {
-                    gameManager.startGame(user, Question.Category.ANIMALS);//Category will be chosen by user later on
-                    return null;
+                    else {
+                        c.send(new Message(MessageType.CATEGORY_REQUEST, player));
+                    }
                 }
+                return null;
             }
+            case CATEGORY_REQUEST -> {
+                User player = (User) message.getData();
+                Connections c = ServerListener.findConnectionsByUser(player.getUsername());
+                c.send(new Message(MessageType.CATEGORY_REQUEST, player));
+            }
+//
+//                List<Connections> players = new ArrayList<>();
+//                List<User> users = new ArrayList<>();
+//                if (message.getData() instanceof MatchQuestion matchQuestion) {
+//                    if (!matchQuestion.getUsers().isEmpty()) {
+//                        Matchmaking matchmaking = new Matchmaking(ServerListener.findConnectionsByUser(
+//                                message.getData().toString().trim()));
+//                        for (User u : users) {
+//                            Connections player = matchmaking.getFirstConnectionFromMatchMakingList();
+//                            player.setUser(u);
+//                            players.add(player);
+//                            player.send(new Message(MessageType.DUMMY, users.getFirst()));
+//                        }
+//                    }
+//                } else if (message.getData() instanceof User user) {
+//
             case ANSWER -> {
                 if (message.getData() instanceof Answer) {
                     Answer answer = (Answer) message.getData();

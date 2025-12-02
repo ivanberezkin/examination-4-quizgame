@@ -89,9 +89,23 @@ public class ClientProtocol {
                 frame.revalidate();
                 frame.repaint();
             }
-            case GAME_START -> {
+            case ADDED_TO_GAME -> {
+
+            }
+            case CATEGORY_REQUEST -> {
                 User user = (User) message.getData();
-                if (user != null) {
+                CategoryPanel categoryPanel = new CategoryPanel(user, frame, client, new MenuPanel(user, client, frame));
+                SwingUtilities.invokeLater(() -> {
+                    frame.setContentPane(categoryPanel);
+                    frame.revalidate();
+                    frame.repaint();
+                });
+
+            }
+            case GAME_START -> {
+
+                    //User user = (User) message.getData();
+                    // if (user != null) {
                     MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
                     });
                     SwingUtilities.invokeLater(() -> {
@@ -99,7 +113,6 @@ public class ClientProtocol {
                         frame.revalidate();
                         frame.repaint();
                     });
-                }
             }
 
             case MATCHMAKING -> {
@@ -109,7 +122,6 @@ public class ClientProtocol {
             case QUESTION -> {
                 IO.println("Questions Received");
                 if (message.getData() instanceof Question question) {
-                    System.out.println("Question is: " + question);
                     GamePanel gamePanel = new GamePanel(client, question, loggedInUser, frame);
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(gamePanel);
@@ -120,13 +132,22 @@ public class ClientProtocol {
             }
                 //TODO Se till att rätt input tas för ResultPanel.
             case RESULT_ROUND -> {
+                boolean waiting;
                 if (message.getData() instanceof Game game){
-                    ResultPanel resultPanel = new ResultPanel(game);
+                    if (game.getRound().getNumberOfCompletedQuestions() == 3){
+                        waiting = false;
+                    } else {
+                        waiting = true;
+                    }
+                    ResultPanel resultPanel = new ResultPanel(game, client, loggedInUser);
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(resultPanel);
+                        resultPanel.setNextRoundButton(waiting);
                         frame.revalidate();
                         frame.repaint();
                     });
+                } else {
+                    waiting = true;
                 }
             }
 

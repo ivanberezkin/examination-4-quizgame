@@ -9,6 +9,8 @@ public enum MessageType implements Serializable {
     USERNAME_OK,
     USERNAME_TAKEN,
     GAME_START,
+    ADDED_TO_GAME,
+    CATEGORY_REQUEST,
     QUESTION,
     ANSWER,
     RESULT_ROUND,

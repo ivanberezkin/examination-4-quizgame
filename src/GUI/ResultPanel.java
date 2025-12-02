@@ -1,8 +1,11 @@
 package GUI;
 
+import Client.ClientBase;
 import GameComponents.Game;
-import GameComponents.Round;
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,8 +17,15 @@ public class ResultPanel extends JPanel {
 
     private java.util.List<JButton> playerOneButtons = new ArrayList<>();
     private java.util.List<JButton> playerTwoButtons = new ArrayList<>();
+    private JPanel bottomPanel = new JPanel();
+    private ClientBase client;
+    private Game game;
+    private User user;
 
-    public ResultPanel(Game game){
+    public ResultPanel(Game game, ClientBase client, User user){
+        this.game = game;
+        this.client = client;
+        this.user = user;
         String playerOne = game.getPlayer1().getUsername();
         String playerTwo = game.getPlayer1().getUsername();
         List<int[]> scoreRows = game.getGameScores();
@@ -60,9 +70,10 @@ public class ResultPanel extends JPanel {
         add(namesPanel, BorderLayout.CENTER);
 
         // Knapp
-        JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+
+
 
         JPanel buttonRow1 = new JPanel(new FlowLayout(FlowLayout.CENTER, 10 ,10));
         buttonRow1.setOpaque(false);
@@ -86,6 +97,11 @@ public class ResultPanel extends JPanel {
         bottomPanel.add(buttonRow1);
         bottomPanel.add(buttonRow2);
 
+
+
+
+
+
 //        Runda
         JLabel roundLabel = new JLabel(roundText, SwingConstants.CENTER);
         roundLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
@@ -95,6 +111,20 @@ public class ResultPanel extends JPanel {
 
         add(bottomPanel, BorderLayout.SOUTH);
 
+    }
+    public void setNextRoundButton(boolean waiting){
+
+        if (waiting) {
+            JLabel waitingForOpponent = new JLabel("Waiting for opponent");
+            bottomPanel.add(waitingForOpponent);
+        }
+        else {
+            JButton nextRound = new JButton("Start next round");
+            bottomPanel.add(nextRound);
+            nextRound.addActionListener(e -> {
+                client.sendMessage(new Message(MessageType.START_NEXT_ROUND, user));
+            });
+        }
     }
 
     private static JLabel playerLabel(String text) {

@@ -5,6 +5,7 @@ import Database.Question;
 import Quizgame.shared.Message;
 import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
+import Quizgame.shared.UserAndCategory;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -48,7 +49,7 @@ public class CategoryPanel extends JPanel {
 
     };
 
-    CategoryPanel(User user, JFrame frame, ClientBase client, MenuPanel previousPanel) {
+    public CategoryPanel(User user, JFrame frame, ClientBase client, MenuPanel previousPanel) {
         this.user = user;
         this.frame = frame;
         this.client = client;
@@ -100,14 +101,19 @@ public class CategoryPanel extends JPanel {
         JButton backButton = new JButton("Back");
 
         playButton.addActionListener(e -> {
-            ArrayList<String> categoriesToSend = new ArrayList<>();
-            String category;
+            Question.Category categoryToSend = null;
             if(!listOfChosenCategories.isEmpty()){
                 for(JButton button : listOfChosenCategories){
-                    category = (String) button.getClientProperty("categoryName");
-                    categoriesToSend.add(category);
+                    String category = (String) button.getClientProperty("categoryName");
+                    for (Question.Category c : Question.getAllCategories()){
+                        if (category.equalsIgnoreCase(c.qCat)){
+                            categoryToSend = c;
+                        }
+                    }
                 }
-                client.sendMessage(new Message(MessageType.CHOOSING_CATEGORIES, categoriesToSend));
+                Quizgame.shared.UserAndCategory startingParameters = new UserAndCategory(user, categoryToSend);
+                System.out.println(" - - - In CategoryPanel, message is sent");
+                client.sendMessage(new Message(MessageType.CHOOSING_CATEGORIES, startingParameters));
             } else{
                 JOptionPane.showMessageDialog(this, "Please choose atleast 1 category.");
             }
