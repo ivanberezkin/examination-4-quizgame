@@ -43,6 +43,7 @@ public class ClientHandler extends Thread {
                     }
                     out.writeObject(response);
                     out.flush();
+                    out.reset();
                 }
             }
 

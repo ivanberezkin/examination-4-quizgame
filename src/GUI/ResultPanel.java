@@ -3,6 +3,8 @@ package GUI;
 import Client.ClientBase;
 import Database.AnswerOption;
 import GameComponents.Score;
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
 import Server.SettingsLoader;
 
@@ -22,6 +24,7 @@ public class ResultPanel extends JPanel {
     private List<Score> roundScores = new ArrayList<>();
     private int numberOfQuestions;
     private JPanel centerPanel;
+    private JPanel bottomPanel;
     private User playerOne;
     private User playerTwo;
     int maxNumberOfRounds = SettingsLoader.getRoundsPerGame();
@@ -38,6 +41,7 @@ public class ResultPanel extends JPanel {
         setBackground(new Color(30, 144, 255));
         this.roundScores = roundScores;
         this.user = user;
+        this.client = client;
         this.playerOne = roundScores.getFirst().getPlayer1();
         this.playerTwo = roundScores.getFirst().getPlayer2();
         numberOfQuestions = roundScores.getFirst().getNumberOfQuestions();
@@ -65,29 +69,6 @@ public class ResultPanel extends JPanel {
         p2.setMinimumSize(new Dimension(widthLong, rowHeight*2));
         p2.setMaximumSize(new Dimension(widthLong, rowHeight*2));
 
-//        this.scoreLabel = new JLabel("       ");
-//        scoreLabel.setPreferredSize(new Dimension(widthText, 110));
-//        scoreLabel.setMinimumSize(new Dimension(widthText, 110));
-//        scoreLabel.setMaximumSize(new Dimension(widthText, 110));
-//        scoreLabel.setOpaque(true);
-//        scoreLabel.setBackground(new Color(30, 144, 255));
-//////        scoreLabel.setFont(new Font("Times New Roman", Font.BOLD, 22));
-////        scoreLabel.setForeground(Color.WHITE);
-//        JLabel scoreLabel1 = new JLabel("       ");
-//        scoreLabel1.setOpaque(true);
-//        scoreLabel1.setPreferredSize(new Dimension(widthText, 110));
-//        scoreLabel1.setMinimumSize(new Dimension(widthText, 110));
-//        scoreLabel1.setMaximumSize(new Dimension(widthText, 110));
-//        scoreLabel1.setBackground(new Color(30, 144, 255));
-//
-//        JLabel scoreLabel2 = new JLabel("       ");
-//        scoreLabel2.setMinimumSize(new Dimension(widthText, 110));
-//        scoreLabel2.setMaximumSize(new Dimension(widthText, 110));
-//        scoreLabel2.setMinimumSize(new Dimension(widthText, 110));
-//        scoreLabel2.setBackground(new Color(30, 144, 255));
-//        scoreLabel2.setOpaque(true);
-//        scoreLabel2.setBackground(new Color(30, 144, 255));
-
 
         topPanel.add(Box.createHorizontalGlue());
         topPanel.add(p1);
@@ -110,54 +91,22 @@ public class ResultPanel extends JPanel {
         centerPanel.setBackground(new Color(30, 144, 255));
         add(centerPanel, BorderLayout.CENTER);
 
-    }
+        bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottomPanel.setOpaque(false);
 
-//        for (int i = 0; i < 5; i++) {
-//
-//            JPanel row = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
-//            row.setOpaque(false);
+        add(bottomPanel, BorderLayout.SOUTH);
 
-    // Vänster knappar
-//            for (int j = 0; j < 3; j++) {
-//                JButton left = new JButton();
-//                left.setPreferredSize(new Dimension(30, 10));
-//                left.setBackground(Color.LIGHT_GRAY);
-//                playerOneButtons.add(left);
-//                row.add(left);
-//            }
-
-    // Round label i mitten
-//            JLabel rl = new JLabel("Round " + (i + 1));
-//            rl.setFont(new Font("Times New Roman", Font.BOLD, 20));
-//            rl.setForeground(Color.WHITE);
-//            roundLabels.add(rl);
-//            row.add(rl);
-
-
-    // Höger knappar
-//            for (int j = 0; j < 3; j++) {
-//                JButton right = new JButton();
-//                right.setPreferredSize(new Dimension(30, 10));
-//                right.setBackground(Color.LIGHT_GRAY);
-//                playerTwoButtons.add(right);
-//                row.add(right);
-//            }
-//
-//            centerPanel.add(row);
-//        }
-//
-//    }
-
-
-    private static JLabel playerLabel(Icon avatar, String name) {
-        JLabel label = new JLabel(name, avatar, SwingConstants.CENTER);
+        setNextRoundButton(true);
 
     }
+
+
+
+
     /*public void setNextRoundButton(boolean waiting) {
         // Rensa tidigare komponenter i bottomPanel
         bottomPanel.removeAll();
-        label.setHorizontalTextPosition(SwingConstants.CENTER);
-        label.setVerticalTextPosition(SwingConstants.BOTTOM);
+
 
         if (waiting) {
             JLabel waitingForOpponent = new JLabel("Waiting for opponent");
@@ -192,6 +141,10 @@ public class ResultPanel extends JPanel {
         bottomPanel.revalidate();
         bottomPanel.repaint();
     } */
+    private static JLabel playerLabel(Icon avatar, String name) {
+        JLabel label = new JLabel(name, avatar, SwingConstants.CENTER);
+        label.setHorizontalTextPosition(SwingConstants.CENTER);
+        label.setVerticalTextPosition(SwingConstants.BOTTOM);
         label.setPreferredSize(new Dimension(90, 110));
         label.setMaximumSize(new Dimension(90, 110));
         label.setMinimumSize(new Dimension(90, 110)); // lite högre för text
@@ -203,6 +156,11 @@ public class ResultPanel extends JPanel {
 
         return label;
     }
+
+
+
+
+
 
     public void updateScore(int newScoreOne, int newScoreTwo) {
         scoreLabel.setText(newScoreOne + " - " + newScoreTwo);
@@ -261,6 +219,39 @@ public class ResultPanel extends JPanel {
             }
         }
     }
+    public void setNextRoundButton(boolean waiting) {
+        bottomPanel.removeAll();
+
+        if (waiting) {
+            JLabel waitingLabel = new JLabel("Waiting for opponent");
+            waitingLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+            waitingLabel.setForeground(Color.BLACK);
+            bottomPanel.add(waitingLabel);
+        } else {
+
+            JPanel row = new JPanel (new FlowLayout(FlowLayout.CENTER,10,10));
+            row.setOpaque(false);
+
+            JButton backButton = new JButton("Back to menu");
+            backButton.addActionListener(e -> {
+                MenuPanel menu = new MenuPanel(user,client,client.getMainframe());
+                client.getMainframe().setContentPane(menu);
+                client.getMainframe().revalidate();
+                client.getMainframe().repaint();
+            });
+
+            JButton nextRound = new JButton("Start next round");
+            nextRound.addActionListener(e -> {
+                client.sendMessage(new Message(MessageType.START_NEXT_ROUND, user));
+            });
+            row.add(backButton);
+            row.add(nextRound);
+            bottomPanel.add(row);
+        }
+        bottomPanel.revalidate();
+        bottomPanel.repaint();
+    }
+
     private void updateCenterPanel(List<Score>roundScores) {
         createButtons(roundScores);
         if (centerPanel != null) {
@@ -282,8 +273,6 @@ public class ResultPanel extends JPanel {
     }
 
     private void createButtons(List<Score>roundScores){
-        playerOneButtons.clear();
-        playerTwoButtons.clear();
         for (Score score : roundScores) {
             int [] playerOneScores = score.getRoundScoresPlayer1();
             for (int i = 0; i < playerOneScores.length; i++) {

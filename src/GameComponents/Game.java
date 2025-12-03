@@ -126,7 +126,7 @@ public class Game implements Serializable {
     }
 
     public boolean checkIfCompleted(){
-        return gameScores.size() == maxNumberOfRounds - 1;
+        return gameScores.size() == maxNumberOfRounds;
     }
 //    public void findGameWinner(){
 //        int player1Total = 0;
