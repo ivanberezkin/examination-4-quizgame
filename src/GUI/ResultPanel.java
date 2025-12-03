@@ -152,9 +152,46 @@ public class ResultPanel extends JPanel {
     private static JLabel playerLabel(Icon avatar, String name) {
         JLabel label = new JLabel(name, avatar, SwingConstants.CENTER);
 
+    }
+    /*public void setNextRoundButton(boolean waiting) {
+        // Rensa tidigare komponenter i bottomPanel
+        bottomPanel.removeAll();
         label.setHorizontalTextPosition(SwingConstants.CENTER);
         label.setVerticalTextPosition(SwingConstants.BOTTOM);
 
+        if (waiting) {
+            JLabel waitingForOpponent = new JLabel("Waiting for opponent");
+            waitingForOpponent.setForeground(Color.WHITE);
+            waitingForOpponent.setFont(new Font("Arial", Font.BOLD, 16));
+            bottomPanel.add(waitingForOpponent);
+        } else {
+            // Panel för knappar på samma rad
+            JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            buttonRow.setOpaque(false);
+
+            JButton backButton = new JButton("Back to Menu");
+            backButton.addActionListener(e -> {
+                // Gå tillbaka till menyn
+                MenuPanel menuPanel = new MenuPanel(user, client, client.getMainframe());
+                client.getMainframe().setContentPane(menuPanel);
+                client.getMainframe().revalidate();
+                client.getMainframe().repaint();
+            });
+
+            JButton nextRound = new JButton("Start next round");
+            nextRound.addActionListener(e -> {
+                client.sendMessage(new Message(MessageType.START_NEXT_ROUND, user));
+            });
+
+            buttonRow.add(backButton);
+            buttonRow.add(nextRound);
+
+            bottomPanel.add(buttonRow);
+        }
+
+        bottomPanel.revalidate();
+        bottomPanel.repaint();
+    } */
         label.setPreferredSize(new Dimension(90, 110));
         label.setMaximumSize(new Dimension(90, 110));
         label.setMinimumSize(new Dimension(90, 110)); // lite högre för text
