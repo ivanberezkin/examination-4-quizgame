@@ -132,13 +132,9 @@ public class ClientProtocol {
             }
                 //TODO Se till att rätt input tas för ResultPanel.
             case RESULT_ROUND -> {
-                boolean waiting;
-                if (message.getData() instanceof Game game){
-                    if (game.getRound().getNumberOfCompletedQuestions() == 3){
-                        waiting = false;
-                    } else {
-                        waiting = true;
-                    }
+                if (message.getData() instanceof Game game) {
+                    boolean waiting = game.getRound().getNumberOfCompletedQuestions() < 3;
+
                     ResultPanel resultPanel = new ResultPanel(game, client, loggedInUser);
                     SwingUtilities.invokeLater(() -> {
                         frame.setContentPane(resultPanel);
@@ -146,8 +142,6 @@ public class ClientProtocol {
                         frame.revalidate();
                         frame.repaint();
                     });
-                } else {
-                    waiting = true;
                 }
             }
 
