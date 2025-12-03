@@ -85,6 +85,13 @@ public class TESTResultPanel extends JPanel {
             waitingLabel.setForeground(Color.BLACK);
             bottomPanel.add(waitingLabel);
         } else {
+            JButton backButton = new JButton("Back to menu");
+            backButton.addActionListener(e -> {
+                MenuPanel menu = new MenuPanel(user,client,client.getMainframe());
+                client.getMainframe().setContentPane(menu);
+                client.getMainframe().revalidate();
+                client.getMainframe().repaint();
+            });
 
         }
     }
