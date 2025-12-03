@@ -2,6 +2,7 @@ package GUI;
 
 import Client.ClientBase;
 import GameComponents.Game;
+import GameComponents.Score;
 import Quizgame.shared.Message;
 import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
@@ -19,18 +20,21 @@ public class ResultPanel extends JPanel {
     private java.util.List<JButton> playerTwoButtons = new ArrayList<>();
     private JPanel bottomPanel = new JPanel();
     private ClientBase client;
-    private Game game;
     private User user;
+    private List<Score> roundScores;
 
-    public ResultPanel(Game game, ClientBase client, User user){
-        this.game = game;
+    public ResultPanel(List<Score> roundScores, User user, ClientBase client){
         this.client = client;
         this.user = user;
-        String playerOne = game.getPlayer1().getUsername();
-        String playerTwo = game.getPlayer1().getUsername();
-        List<int[]> scoreRows = game.getGameScores();
+        this.roundScores = roundScores;
+        String playerOne = roundScores.getFirst().getPlayer1().getUsername();
+        String playerTwo =  roundScores.getFirst().getPlayer2().getUsername();
 
-        List <String> roundTexts = game.getCategories();
+
+        List <String> roundTexts = new ArrayList<>();
+        for (Score score : roundScores){
+            roundTexts.add(score.getCategory());
+        }
         String roundText = roundTexts.getFirst();
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
@@ -42,9 +46,7 @@ public class ResultPanel extends JPanel {
         JLabel playerOneLabel = playerLabel(playerOne);
         JLabel playerTwoLabel = playerLabel(playerTwo);
         String text = "";
-        if (scoreRows != null && !scoreRows.isEmpty()){
-            text = Arrays.toString(scoreRows.getFirst());
-        }
+
         JLabel scoreLabel = new JLabel(text);
         scoreLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
         scoreLabel.setForeground(Color.WHITE);

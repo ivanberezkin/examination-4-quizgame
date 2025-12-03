@@ -109,11 +109,11 @@ public class GameManager implements Serializable {
         MatchQuestion matchQuestion = new MatchQuestion(users, question);
         ServerProtocol.processInput(new Message(MessageType.QUESTION, matchQuestion));
     }
-    public static void sendRoundScore(Game game){
-        ServerProtocol.processInput(new Message(MessageType.RESULT_ROUND, game));
+    public static void sendRoundScore(List<Score> roundScores){
+        ServerProtocol.processInput(new Message(MessageType.RESULT_ROUND, roundScores));
     }
-    public static void sendGameScore(Game game){
-        ServerProtocol.processInput(new Message(MessageType.GAME_FINISHED, game));
+    public static void sendGameScore(List<Score> roundScores, Game game){
+        ServerProtocol.processInput(new Message(MessageType.GAME_FINISHED, roundScores));
         removeCompletedGame(game);
     }
     public static void sendWaitingMessage(User user){

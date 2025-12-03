@@ -54,20 +54,13 @@ public class Round implements Serializable {
         }
     }
 
-    private int getPlayerIndex(Score score) {
-        for (int i = 0; i < players.length; i++) {
-            if (players[i].getUsername().equals(score.getPlayer().getUsername())) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     public void addPointsToList(Answer answer) {
+
         int score = 0;
         if (answer.getIsAnswerCorrect()){
             score = 1;
         }
+        System.out.println("In Round, addPointsToList, point is: " + score + "Answer is: " + answer.getIsAnswerCorrect());
         if (answer.getUser().getUsername().equals(player1.getUsername())){
             pointsPlayer1.add(score);
             if (pointsPlayer1.size() == pointsPlayer2.size()){
