@@ -114,7 +114,7 @@ public class ResultPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
 
     }
-    public void setNextRoundButton(boolean waiting) {
+    /*public void setNextRoundButton(boolean waiting) {
         // Rensa tidigare komponenter i bottomPanel
         bottomPanel.removeAll();
 
@@ -150,7 +150,7 @@ public class ResultPanel extends JPanel {
 
         bottomPanel.revalidate();
         bottomPanel.repaint();
-    }
+    } */
 
     private static JLabel playerLabel(String text) {
         JLabel label = new JLabel(text, SwingConstants.CENTER);

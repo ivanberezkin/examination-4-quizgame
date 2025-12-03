@@ -146,7 +146,7 @@ public class ClientProtocol {
                         TESTResultPanel resultPanel = new TESTResultPanel(roundScores, loggedInUser, client);
                         SwingUtilities.invokeLater(() -> {
                             frame.setContentPane(resultPanel);
-//                            resultPanel.setNextRoundButton(waiting);
+                            resultPanel.setNextRoundButton(false);
                             frame.revalidate();
                             frame.repaint();
                         });

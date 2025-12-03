@@ -87,6 +87,10 @@ public class TESTResultPanel extends JPanel {
             waitingLabel.setForeground(Color.BLACK);
             bottomPanel.add(waitingLabel);
         } else {
+
+            JPanel row = new JPanel (new FlowLayout(FlowLayout.CENTER,10,10));
+            row.setOpaque(false);
+
             JButton backButton = new JButton("Back to menu");
             backButton.addActionListener(e -> {
                 MenuPanel menu = new MenuPanel(user,client,client.getMainframe());
@@ -99,8 +103,9 @@ public class TESTResultPanel extends JPanel {
             nextRound.addActionListener(e -> {
                 client.sendMessage(new Message(MessageType.START_NEXT_ROUND, user));
             });
-            bottomPanel.add(backButton);
-            bottomPanel.add(nextRound);
+            row.add(backButton);
+            row.add(nextRound);
+            bottomPanel.add(row);
         }
         bottomPanel.revalidate();
         bottomPanel.repaint();
