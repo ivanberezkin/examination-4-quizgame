@@ -3,28 +3,50 @@ package GameComponents;
 import Database.Question;
 import Quizgame.shared.User;
 
-public class Score {
-    User player;
-    Question question;
-    Round round;
-    int points;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Score(User player, Question question, Round round, int points){
-        this.player = player;
-        this.question = question;
-        this.round = round;
-        this.points = points;
+public class Score {
+    User player1;
+    User player2;
+    List<int[]>roundScore;
+    String category;
+
+    public Score(List<int[]> roundScore, User player1, User player2, String category){
+        //roundScore är typ [1, 0] [1, 1] [0, 0]
+        this.player1 = player1;
+        this.player2 = player2;
+        this.roundScore = roundScore;
+        this.category = category;
+
     }
-    public User getPlayer(){
-        return player;
+    public int[] getRoundScoresPlayer1(){
+        int[] player1Scores = new int[roundScore.size()];
+        for (int i = 0; i < roundScore.size(); i++){
+            player1Scores[i] = roundScore.get(i)[0];
+        }
+        return player1Scores;
     }
-    public Question getQuestion(){
-        return question;
+    public int[] getRoundScoresPlayer2(){
+        int[] player2Scores = new int[roundScore.size()];
+        for (int i = 0; i < roundScore.size(); i++){
+            player2Scores[i] = roundScore.get(i)[1];
+        }
+        return player2Scores;
     }
-    public Round getMatch (){
-        return round;
+
+    public User getPlayer1(){
+        return player1;
     }
-    public int getPoints (){
-        return points;
+    public User getPlayer2(){
+        return player2;
     }
+    public List<int[]> getRoundScore (){
+        return roundScore;
+    }
+    public String getCategory(){
+        return category;
+    }
+
+
 }

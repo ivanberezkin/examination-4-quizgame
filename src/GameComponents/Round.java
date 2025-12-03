@@ -54,15 +54,6 @@ public class Round implements Serializable {
         }
     }
 
-    private int getPlayerIndex(Score score) {
-        for (int i = 0; i < players.length; i++) {
-            if (players[i].getUsername().equals(score.getPlayer().getUsername())) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     public void addPointsToList(Answer answer) {
         int score = 0;
         if (answer.getIsAnswerCorrect()){

@@ -28,7 +28,7 @@ public class ResultPanel extends JPanel {
         this.user = user;
         String playerOne = game.getPlayer1().getUsername();
         String playerTwo = game.getPlayer1().getUsername();
-        List<int[]> scoreRows = game.getGameScores();
+        List<int[]> scoreRows = game.getRoundScores();
 
         List <String> roundTexts = game.getCategories();
         String roundText = roundTexts.getFirst();
