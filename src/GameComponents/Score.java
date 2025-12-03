@@ -1,6 +1,5 @@
 package GameComponents;
 
-import Database.Question;
 import Quizgame.shared.User;
 
 import java.io.Serializable;
@@ -54,6 +53,9 @@ public class Score implements Serializable {
         players.add(player1);
         players.add(player2);
         return players;
+    }
+    public int getNumberOfQuestions(){
+        return getRoundScoresPlayer1().length;
     }
 
 

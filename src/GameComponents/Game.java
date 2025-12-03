@@ -96,6 +96,7 @@ public class Game implements Serializable {
             for (int i = 0; i < maxQuestionsRound; i++) {
                 int [] score = new int[]{round.getPointsPlayer1().get(i), round.getPointsPlayer2().get(i)};
                 roundScores.add(score);
+                System.out.println("In Game, setRoundScore, printout is: " + round.getPointsPlayer1().get(i) + " " + round.getPointsPlayer2().get(i));
             }
             gameScores.add(new Score(roundScores, player1, player2, round.getCategory()));
             //Listan gameScores innehåller objekt av klassen Scores, på der här sättet:
