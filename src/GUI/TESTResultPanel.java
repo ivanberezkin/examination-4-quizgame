@@ -25,6 +25,7 @@ public class TESTResultPanel extends JPanel {
     private List<String> categories = new ArrayList<>();
     private int numberOfQuestions;
     private JPanel centerPanel;
+    private JPanel bottomPanel;
     private User playerOne;
     private User playerTwo;
     int maxNumberOfRounds = SettingsLoader.getRoundsPerGame();
@@ -34,6 +35,7 @@ public class TESTResultPanel extends JPanel {
         setBackground(new Color(30, 144, 255));
         this.roundScores = roundScores;
         this.user = user;
+        this.client = client;
         this.playerOne = roundScores.getFirst().getPlayer1();
         this.playerTwo = roundScores.getFirst().getPlayer2();
         numberOfQuestions = roundScores.getFirst().getNumberOfQuestions();
@@ -66,7 +68,14 @@ public class TESTResultPanel extends JPanel {
         centerPanel.setOpaque(false);
         add(centerPanel, BorderLayout.CENTER);
 
+        bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottomPanel.setOpaque(false);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        setNextRoundButton(true);
     }
+
 
 //        for (int i = 0; i < 5; i++) {
 //
