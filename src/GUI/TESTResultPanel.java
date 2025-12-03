@@ -4,6 +4,8 @@ import Client.ClientBase;
 import Database.AnswerOption;
 import Database.Question;
 import GameComponents.Score;
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
 import Server.SettingsLoader;
 
@@ -25,6 +27,7 @@ public class TESTResultPanel extends JPanel {
     private List<String> categories = new ArrayList<>();
     private int numberOfQuestions;
     private JPanel centerPanel;
+    private JPanel bottomPanel;
     private User playerOne;
     private User playerTwo;
     int maxNumberOfRounds = SettingsLoader.getRoundsPerGame();
@@ -34,6 +37,7 @@ public class TESTResultPanel extends JPanel {
         setBackground(new Color(30, 144, 255));
         this.roundScores = roundScores;
         this.user = user;
+        this.client = client;
         this.playerOne = roundScores.getFirst().getPlayer1();
         this.playerTwo = roundScores.getFirst().getPlayer2();
         numberOfQuestions = roundScores.getFirst().getNumberOfQuestions();
@@ -66,8 +70,46 @@ public class TESTResultPanel extends JPanel {
         centerPanel.setOpaque(false);
         add(centerPanel, BorderLayout.CENTER);
 
+        bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottomPanel.setOpaque(false);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        setNextRoundButton(true);
     }
 
+    public void setNextRoundButton(boolean waiting) {
+        bottomPanel.removeAll();
+
+        if (waiting) {
+            JLabel waitingLabel = new JLabel("Waiting for opponent");
+            waitingLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+            waitingLabel.setForeground(Color.BLACK);
+            bottomPanel.add(waitingLabel);
+        } else {
+
+            JPanel row = new JPanel (new FlowLayout(FlowLayout.CENTER,10,10));
+            row.setOpaque(false);
+
+            JButton backButton = new JButton("Back to menu");
+            backButton.addActionListener(e -> {
+                MenuPanel menu = new MenuPanel(user,client,client.getMainframe());
+                client.getMainframe().setContentPane(menu);
+                client.getMainframe().revalidate();
+                client.getMainframe().repaint();
+            });
+
+            JButton nextRound = new JButton("Start next round");
+            nextRound.addActionListener(e -> {
+                client.sendMessage(new Message(MessageType.START_NEXT_ROUND, user));
+            });
+            row.add(backButton);
+            row.add(nextRound);
+            bottomPanel.add(row);
+        }
+        bottomPanel.revalidate();
+        bottomPanel.repaint();
+    }
 //        for (int i = 0; i < 5; i++) {
 //
 //            JPanel row = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
