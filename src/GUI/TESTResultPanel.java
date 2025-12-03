@@ -4,6 +4,8 @@ import Client.ClientBase;
 import Database.AnswerOption;
 import Database.Question;
 import GameComponents.Score;
+import Quizgame.shared.Message;
+import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
 import Server.SettingsLoader;
 
@@ -93,7 +95,15 @@ public class TESTResultPanel extends JPanel {
                 client.getMainframe().repaint();
             });
 
+            JButton nextRound = new JButton("Start next round");
+            nextRound.addActionListener(e -> {
+                client.sendMessage(new Message(MessageType.START_NEXT_ROUND, user));
+            });
+            bottomPanel.add(backButton);
+            bottomPanel.add(nextRound);
         }
+        bottomPanel.revalidate();
+        bottomPanel.repaint();
     }
 //        for (int i = 0; i < 5; i++) {
 //
