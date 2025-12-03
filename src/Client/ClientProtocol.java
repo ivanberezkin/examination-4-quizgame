@@ -143,7 +143,7 @@ public class ClientProtocol {
 //                            waiting = true;
 //                        }
                         waiting = false;
-                        TESTResultPanel resultPanel = new TESTResultPanel(roundScores, loggedInUser, client);
+                        GUI.ResultPanel resultPanel = new ResultPanel(roundScores, loggedInUser, client);
                         SwingUtilities.invokeLater(() -> {
                             frame.setContentPane(resultPanel);
                             resultPanel.setNextRoundButton(false);

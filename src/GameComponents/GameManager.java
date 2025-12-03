@@ -110,6 +110,7 @@ public class GameManager implements Serializable {
         ServerProtocol.processInput(new Message(MessageType.QUESTION, matchQuestion));
     }
     public static void sendRoundScore(List<Score> roundScores){
+        System.out.println("in GameManager, roundScores.size is: " + roundScores.size());
         ServerProtocol.processInput(new Message(MessageType.RESULT_ROUND, roundScores));
     }
     public static void sendGameScore(List<Score> roundScores, Game game){
