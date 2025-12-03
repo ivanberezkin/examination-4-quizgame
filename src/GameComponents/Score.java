@@ -3,10 +3,11 @@ package GameComponents;
 import Database.Question;
 import Quizgame.shared.User;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Score {
+public class Score implements Serializable {
     User player1;
     User player2;
     List<int[]>roundScore;
@@ -46,6 +47,13 @@ public class Score {
     }
     public String getCategory(){
         return category;
+    }
+
+    public List<User>getPlayers(){
+        List<User>players = new ArrayList<>();
+        players.add(player1);
+        players.add(player2);
+        return players;
     }
 
 
