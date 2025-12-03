@@ -76,7 +76,18 @@ public class TESTResultPanel extends JPanel {
         setNextRoundButton(true);
     }
 
+    public void setNextRoundButton(boolean waiting) {
+        bottomPanel.removeAll();
 
+        if (waiting) {
+            JLabel waitingLabel = new JLabel("Waiting for opponent");
+            waitingLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+            waitingLabel.setForeground(Color.BLACK);
+            bottomPanel.add(waitingLabel);
+        } else {
+
+        }
+    }
 //        for (int i = 0; i < 5; i++) {
 //
 //            JPanel row = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
