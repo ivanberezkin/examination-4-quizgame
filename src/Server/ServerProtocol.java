@@ -174,10 +174,13 @@ public class ServerProtocol {
                 }
             }
             case RESULT_ROUND -> {
-                if (message.getData() instanceof Game game) {
-                    for (User u : game.getPlayers()) {
-                        Connections c = ServerListener.findConnectionsByUser(u.getUsername());
-                        c.send(new Message(MessageType.RESULT_ROUND, game));
+                if (message.getData() instanceof List list) {
+                    if (list.getFirst() instanceof Score score) {
+                        List<Score>roundScores = (List<Score>) message.getData();
+                        for (User u : score.getPlayers()) {
+                            Connections c = ServerListener.findConnectionsByUser(u.getUsername());
+                            c.send(new Message(MessageType.RESULT_ROUND, roundScores));
+                        }
                     }
                 }
                 return null;

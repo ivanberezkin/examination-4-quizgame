@@ -5,6 +5,7 @@ import GUI.*;
 import GameComponents.*;
 import Quizgame.shared.*;
 import javax.swing.*;
+import java.util.List;
 
 public class ClientProtocol {
 
@@ -132,16 +133,26 @@ public class ClientProtocol {
             }
                 //TODO Se till att rätt input tas för ResultPanel.
             case RESULT_ROUND -> {
-                if (message.getData() instanceof Game game) {
-                    boolean waiting = game.getRound().getNumberOfCompletedQuestions() < 3;
-
-                    ResultPanel resultPanel = new ResultPanel(game, client, loggedInUser);
-                    SwingUtilities.invokeLater(() -> {
-                        frame.setContentPane(resultPanel);
-                        resultPanel.setNextRoundButton(waiting);
-                        frame.revalidate();
-                        frame.repaint();
-                    });
+                boolean waiting;
+                if (message.getData() instanceof List list) {
+                    if (!list.isEmpty() && list.getFirst() instanceof Score) {
+                        List<Score> roundScores = (List<Score>) message.getData();
+//                        if (roundScores.size() == 5) {
+//                            waiting = false;
+//                        } else {
+//                            waiting = true;
+//                        }
+                        waiting = false;
+                        TESTResultPanel resultPanel = new TESTResultPanel(roundScores, loggedInUser, client);
+                        SwingUtilities.invokeLater(() -> {
+                            frame.setContentPane(resultPanel);
+//                            resultPanel.setNextRoundButton(waiting);
+                            frame.revalidate();
+                            frame.repaint();
+                        });
+                    } else {
+                        waiting = true;
+                    }
                 }
             }
 
