@@ -59,6 +59,8 @@ public class ServerProtocol {
             case START_NEXT_ROUND -> {
                 if (message.getData() instanceof User player) {
                     gameManager.setUpNextRound(player);
+
+
                 }
             }
 
@@ -69,11 +71,7 @@ public class ServerProtocol {
             case GAME_START -> {
 
             }
-            case MATCHMAKING_WAITING_FOR_OPPONENT -> {
-                while(Matchmaking.getMatchMakingListSize() < 2) {
 
-                }
-            }
             case GIVE_UP -> {
                 IO.println("CLIENTPROTOCOL: " + "Received " + message.getType() + " from " + user.getUsername());
                 return new Message(MessageType.MOVE_TO_MENU, null);
@@ -84,9 +82,24 @@ public class ServerProtocol {
                 if (message.getData() instanceof Quizgame.shared.UserAndCategory startingParameters) {
                     Question.Category category = startingParameters.getCategory();
                     User user = startingParameters.getUser();
-                    Connections c = ServerListener.findConnectionsByUser(user.getUsername());
-                    c.send(new Message(MessageType.GAME_START, category));
+                    Game game = gameManager.checkAvailableGames(user);
+
+
+                    User opponent;
+                    if(game != null && game.getPlayer1() != null && game.getPlayer2() != null){
+                        if(user.getUsername().equalsIgnoreCase(game.getPlayer1().getUsername())){
+                            opponent = game.getPlayer2();
+                        }else{
+                            opponent = game.getPlayer1();
+                        }
+                        gameManager.setUpNextRound(opponent);
+                    }
+
+
+//                    Connections c = ServerListener.findConnectionsByUser(user.getUsername());
+//                    c.send(new Message(MessageType.GAME_START, category));
                     gameManager.startGame(user, category);
+
                 }
                 return null;
             }

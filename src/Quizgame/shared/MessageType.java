@@ -4,10 +4,6 @@ import java.io.Serializable;
 
 public enum MessageType implements Serializable {
     ERROR,
-    USERNAME_REQUEST,
-    USERNAME,
-    USERNAME_OK,
-    USERNAME_TAKEN,
     GAME_START,
     ADDED_TO_GAME,
     CATEGORY_REQUEST,
@@ -17,9 +13,7 @@ public enum MessageType implements Serializable {
     START_NEXT_ROUND,
     GAME_FINISHED,
     MATCHMAKING,
-    MATCHMAKING_WAITING_FOR_OPPONENT,
     WAITING,
-    DUMMY,
     GIVE_UP,
     MOVE_TO_MENU,
     SETTINGS_AVATAR_CHANGED,

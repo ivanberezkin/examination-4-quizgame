@@ -14,7 +14,7 @@ public class MatchmakingPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
 
-        JLabel title = new JLabel("Matchmaking...", SwingConstants.CENTER);
+        JLabel title = new JLabel("Waiting for opponent...", SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 32));
         title.setForeground(Color.WHITE);
         add(title, BorderLayout.NORTH);
@@ -23,11 +23,11 @@ public class MatchmakingPanel extends JPanel {
         centerPanel.setOpaque(false);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
-        JLabel loading = new JLabel("Loading...", SwingConstants.CENTER);
+        JLabel loading = new JLabel("Waiting...", SwingConstants.CENTER);
         loading.setFont(new Font("Arial", Font.BOLD, 25));
         loading.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        timerLabel = new JLabel("Tid väntad: 0 sekunder", SwingConstants.CENTER);
+        timerLabel = new JLabel("Time elapsed: 0 seconds", SwingConstants.CENTER);
         timerLabel.setFont(new Font("Arial", Font.BOLD, 24));
         timerLabel.setForeground(Color.WHITE);
         timerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -39,7 +39,7 @@ public class MatchmakingPanel extends JPanel {
 
         add(centerPanel, BorderLayout.CENTER);
 
-        JButton cancelButton = new JButton("Avbryt");
+        JButton cancelButton = new JButton("Cancel");
         cancelButton.setBackground(Color.RED);
         cancelButton.setForeground(Color.WHITE);
         cancelButton.setFont(new Font("Arial", Font.BOLD, 18));
@@ -54,7 +54,7 @@ public class MatchmakingPanel extends JPanel {
 
         timer = new Timer(1000, e -> {
             secondsWaited++;
-            timerLabel.setText("Tid väntad: " + secondsWaited + " sekunder");
+            timerLabel.setText("Time elapsed: " + secondsWaited + " seconds");
         });
         timer.start();
 
@@ -67,21 +67,5 @@ public class MatchmakingPanel extends JPanel {
     public void stopTimer() {
         timer.stop();
     }
-
-
-    //TESTTT
-//    public static void main(String[] args) {
-//        JFrame frame = new JFrame("Test Matchmaking");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//
-//        MatchmakingPanel panel = new MatchmakingPanel(() -> {
-//            System.out.println("Matchmaking canceled!");
-//        });
-//
-//        frame.setContentPane(panel);
-//        frame.setSize(400, 300);
-//        frame.setLocationRelativeTo(null);
-//        frame.setVisible(true);
-//    }
 
 }

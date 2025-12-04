@@ -66,7 +66,6 @@ public class Database {
         boolean validBatch = false;
         while (!validBatch){
             Question q = questionsList.get(rand.nextInt(questionsList.size()));
-            System.out.println("question is: " + q.getCategory());
             if (q.getCategory().equalsIgnoreCase(category.qCat)) {
                 result.add(q);
             }

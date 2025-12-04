@@ -80,10 +80,7 @@ public class ClientProtocol {
             }
 
             case WAITING -> {
-
-                IO.println("MATCHMAKING:" + loggedInUser.getUsername() + " waiting for opponent.");
                 MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
-                    System.out.println("Matchmaking canceled!");
                 });
                 frame.setContentPane(matchmakingPanel);
                 frame.revalidate();
@@ -102,18 +99,18 @@ public class ClientProtocol {
                 });
 
             }
-            case GAME_START -> {
-
-                    //User user = (User) message.getData();
-                    // if (user != null) {
-                    MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
-                    });
-                    SwingUtilities.invokeLater(() -> {
-                        frame.setContentPane(matchmakingPanel);
-                        frame.revalidate();
-                        frame.repaint();
-                    });
-            }
+//            case GAME_START -> {
+//
+//                    //User user = (User) message.getData();
+//                    // if (user != null) {
+//                    MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
+//                    });
+//                    SwingUtilities.invokeLater(() -> {
+//                        frame.setContentPane(matchmakingPanel);
+//                        frame.revalidate();
+//                        frame.repaint();
+//                    });
+//            }
 
             case QUESTION -> {
                 IO.println("Questions Received");
@@ -141,7 +138,7 @@ public class ClientProtocol {
                         GUI.ResultPanel resultPanel = new ResultPanel(roundScores, loggedInUser, client);
                         SwingUtilities.invokeLater(() -> {
                             frame.setContentPane(resultPanel);
-                            resultPanel.setNextRoundButton(false);
+//                            resultPanel.setNextRoundButton(false);
                             frame.revalidate();
                             frame.repaint();
                         });
