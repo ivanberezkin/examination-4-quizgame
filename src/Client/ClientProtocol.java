@@ -155,7 +155,22 @@ public class ClientProtocol {
             }
 
             case GAME_FINISHED -> {
-                //add game logic here
+                System.out.println("In ClientProtocol, case GAME_FINISHED was reached");
+                System.out.println("In ClientProtocol, frame.getContentPane is: " + frame.getContentPane().toString());
+                if (message.getData() instanceof List list) {
+                    if (!list.isEmpty() && list.getFirst() instanceof Score) {
+                        List<Score> roundScores = (List<Score>) message.getData();
+                        GUI.ResultPanel resultPanel = new ResultPanel(roundScores, loggedInUser, client);
+                        SwingUtilities.invokeLater(() -> {
+                            frame.setContentPane(resultPanel);
+                            frame.revalidate();
+                            frame.repaint();
+                        });
+//                            frame.revalidate();
+//                            frame.repaint();
+                    }
+                }
+
             }
         }
     }
