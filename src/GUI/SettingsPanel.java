@@ -91,6 +91,7 @@ public class SettingsPanel extends JPanel {
             Icon icon = currentAvatarPreview.getIcon();
             user.setAvatar(icon);
             previousPanel.updateAvatarLabel(icon);
+            JOptionPane.showMessageDialog(null,"Changed to new avatar");
             client.sendMessage(new Message(MessageType.SETTINGS_AVATAR_CHANGED,user));
         });
 
