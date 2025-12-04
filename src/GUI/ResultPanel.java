@@ -37,6 +37,7 @@ public class ResultPanel extends JPanel {
     private int buttonDimension = 30;
 
     public ResultPanel(List<Score> roundScores, User user, ClientBase client) {
+        System.out.println("in ResultPanel, roundScores.size is:" + roundScores.size());
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
         this.roundScores = roundScores;
@@ -81,23 +82,17 @@ public class ResultPanel extends JPanel {
         topWrapper.add(topPanel, BorderLayout.CENTER);
         add(topWrapper, BorderLayout.NORTH);
 
-        centerPanel = new JPanel(new BorderLayout());
+
 //        centerPanel.setPreferredSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 100), rowHeight*7));
 //        centerPanel.setMaximumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 100), rowHeight*7));
 //        centerPanel.setMinimumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 100), rowHeight*7));
 
-
+        centerPanel = new JPanel(new BorderLayout());
         updateCenterPanel();
         centerPanel.setOpaque(false);
         centerPanel.setBackground(new Color(30, 144, 255));
         add(centerPanel, BorderLayout.CENTER);
 
-        bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        bottomPanel.setOpaque(false);
-
-        add(bottomPanel, BorderLayout.SOUTH);
-
-        setNextRoundButton(whoGetsToChoose());
         if (roundScores.size() == maxNumberOfRounds) {
             JPanel endPanel = createEndPanel(roundScores);
             if (bottomPanel != null) {
@@ -122,8 +117,8 @@ public class ResultPanel extends JPanel {
         else {
             bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
             bottomPanel.setOpaque(false);
-            setNextRoundButton(true);
             add(bottomPanel, BorderLayout.SOUTH);
+            setNextRoundButton(whoGetsToChoose());
 
         }
     }
@@ -153,10 +148,6 @@ public class ResultPanel extends JPanel {
             }
         }
         return false;
-    }
-    public void setRoundText(int index, String text) {
-        if (index < 0 || index >= roundLabels.size()) return;
-        roundLabels.get(index).setText(text);
     }
 
     public void setNextRoundButton(boolean waiting) {
@@ -198,15 +189,22 @@ public class ResultPanel extends JPanel {
         createButtons(roundScores);
         if (centerPanel != null) {
             centerPanel.removeAll();
-            JPanel scorePanel = new JPanel();
-            scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS));
-            scorePanel.setOpaque(false);
-            scorePanel.setPreferredSize(new Dimension((widthScore * 2 + widthText * 2 + widthLong + 50), rowHeight * 6));
-            scorePanel.setMaximumSize(new Dimension((widthScore * 2 + widthText * 2 + widthLong + 50), rowHeight * 6));
-            scorePanel.setMinimumSize(new Dimension((widthScore * 2 + widthText * 2 + widthLong + 50), rowHeight * 6));
-            for (int i = 0; i < maxNumberOfRounds; i++) {
-                scorePanel.add(getRow(i));
-            }
+
+        }
+        else {
+            centerPanel = new JPanel(new BorderLayout());
+            centerPanel.setOpaque(false);
+            centerPanel.setBackground(new Color(30, 144, 255));
+            add(centerPanel, BorderLayout.CENTER);
+        }
+        JPanel scorePanel = new JPanel();
+        scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS));
+        scorePanel.setOpaque(false);
+        scorePanel.setPreferredSize(new Dimension((widthScore * 2 + widthText * 2 + widthLong + 50), rowHeight * 6));
+        scorePanel.setMaximumSize(new Dimension((widthScore * 2 + widthText * 2 + widthLong + 50), rowHeight * 6));
+        scorePanel.setMinimumSize(new Dimension((widthScore * 2 + widthText * 2 + widthLong + 50), rowHeight * 6));
+        for (int i = 0; i < maxNumberOfRounds; i++) {
+            scorePanel.add(getRow(i));
             centerPanel.add(scorePanel, BorderLayout.CENTER);
             add(centerPanel, BorderLayout.CENTER);
             repaint();
