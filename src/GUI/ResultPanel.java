@@ -466,33 +466,52 @@ public class ResultPanel extends JPanel {
         resPanel.setPreferredSize(new Dimension(85, 85));
         resPanel.setMaximumSize(new Dimension(85, 85));
         resPanel.setMinimumSize(new Dimension(85, 85));
-        User gameWinner = getWinner(roundScores);
         JPanel scoreDisplay = finalResults(roundScores);
+        User gameWinner = getWinner(roundScores);
+        if (gameWinner != null) {
+            resPanel.setLayout(new BoxLayout(resPanel, BoxLayout.X_AXIS));
+            resPanel.setOpaque(false);
+            resPanel.setBackground(new Color(30, 144, 255));
+            resPanel.setPreferredSize(new Dimension(85, 85));
+            resPanel.setMaximumSize(new Dimension(85, 85));
+            resPanel.setMinimumSize(new Dimension(85, 85));
 
-        Icon avatar = gameWinner.getAvatar();
-        JLabel winnerAvatar = new JLabel(avatar);
-        winnerAvatar.setPreferredSize(new Dimension(85, 85));
-        winnerAvatar.setMaximumSize(new Dimension(85, 85));
-        winnerAvatar.setMinimumSize(new Dimension(85, 85));
-        winnerAvatar.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 3));
-        JLabel winnerName = new JLabel(gameWinner.getUsername());
-        winnerName.setFont(new Font("Montserrat", Font.BOLD, 24));
-        winnerName.setHorizontalAlignment(0);
-        winnerName.setForeground(Color.ORANGE);
-        JPanel winnerPanel = new JPanel();
-        winnerPanel.setBackground(new Color(30, 144, 255));
-        winnerPanel.setLayout(new BorderLayout());
-        winnerPanel.setPreferredSize(new Dimension(75, 75));
-        winnerPanel.setMaximumSize(new Dimension(75, 75));
-        winnerPanel.setMinimumSize(new Dimension(75, 75));
-        winnerPanel.add(winnerAvatar, BorderLayout.CENTER);
-        winnerPanel.add(winnerName, BorderLayout.SOUTH);
+            Icon avatar = gameWinner.getAvatar();
+            JLabel winnerAvatar = new JLabel(avatar);
+            winnerAvatar.setPreferredSize(new Dimension(85, 85));
+            winnerAvatar.setMaximumSize(new Dimension(85, 85));
+            winnerAvatar.setMinimumSize(new Dimension(85, 85));
+            winnerAvatar.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 3));
+            JLabel winnerName = new JLabel(gameWinner.getUsername());
+            winnerName.setFont(new Font("Montserrat", Font.BOLD, 24));
+            winnerName.setHorizontalAlignment(0);
+            winnerName.setForeground(Color.ORANGE);
+            JPanel winnerPanel = new JPanel();
+            winnerPanel.setBackground(new Color(30, 144, 255));
+            winnerPanel.setLayout(new BorderLayout());
+            winnerPanel.setPreferredSize(new Dimension(75, 75));
+            winnerPanel.setMaximumSize(new Dimension(75, 75));
+            winnerPanel.setMinimumSize(new Dimension(75, 75));
+            winnerPanel.add(winnerAvatar, BorderLayout.CENTER);
+            winnerPanel.add(winnerName, BorderLayout.SOUTH);
 
-        resPanel.add(Box.createHorizontalGlue());
-        resPanel.add(scoreDisplay);
-        resPanel.add(Box.createHorizontalGlue());
-        resPanel.add(winnerPanel);
-        resPanel.add(Box.createHorizontalGlue());
+            resPanel.add(Box.createHorizontalGlue());
+            resPanel.add(scoreDisplay);
+            resPanel.add(Box.createHorizontalGlue());
+            resPanel.add(winnerPanel);
+            resPanel.add(Box.createHorizontalGlue());
+
+        }
+        else {
+            JLabel draw = new JLabel("\nNone! Or Both!");
+            draw.setFont(new Font("Montserrat", Font.BOLD, 34));
+            draw.setForeground(Color.ORANGE);
+            resPanel.add(Box.createHorizontalGlue());
+            resPanel.add(scoreDisplay);
+            resPanel.add(Box.createHorizontalGlue());
+            resPanel.add(draw);
+            resPanel.add(Box.createHorizontalGlue());
+        }
 
         JButton backToMenu = new JButton("Return to menu");
         backToMenu.setFont(new Font("Montserrat", Font.BOLD, 12));
@@ -507,6 +526,7 @@ public class ResultPanel extends JPanel {
             client.getMainframe().revalidate();
             client.getMainframe().repaint();
         });
+
         JPanel endPanel = new JPanel();
         endPanel.setLayout(new BorderLayout());
         endPanel.setBackground(new Color(30, 144, 255));
