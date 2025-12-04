@@ -101,6 +101,7 @@ public class GamePanel extends JPanel {
         answerB.setFocusable(false);
         answerC.setFocusable(false);
         answerD.setFocusable(false);
+        answerA.setPreferredSize(new Dimension(150, 150));
         newQuestion(question);
 
         ActionListener answerButtonListener = e -> {
