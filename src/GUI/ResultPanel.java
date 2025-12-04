@@ -1,5 +1,4 @@
 package GUI;
-
 import Client.ClientBase;
 import Database.AnswerOption;
 import GameComponents.Score;
@@ -12,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.XMLFormatter;
 
 public class ResultPanel extends JPanel {
 
@@ -60,14 +60,14 @@ public class ResultPanel extends JPanel {
         topPanel.setOpaque(false);
 
         JLabel p1 = playerLabel(playerOne.getAvatar(), playerOne.getUsername());
-        p1.setPreferredSize(new Dimension(widthLong, rowHeight*2));
-        p1.setMinimumSize(new Dimension(widthLong, rowHeight*2));
-        p1.setMaximumSize(new Dimension(widthLong, rowHeight*2));
+        p1.setPreferredSize(new Dimension(widthLong, rowHeight * 2));
+        p1.setMinimumSize(new Dimension(widthLong, rowHeight * 2));
+        p1.setMaximumSize(new Dimension(widthLong, rowHeight * 2));
         JLabel p2 = playerLabel(playerTwo.getAvatar(), playerTwo.getUsername());
 
-        p2.setPreferredSize(new Dimension(widthLong, rowHeight*2));
-        p2.setMinimumSize(new Dimension(widthLong, rowHeight*2));
-        p2.setMaximumSize(new Dimension(widthLong, rowHeight*2));
+        p2.setPreferredSize(new Dimension(widthLong, rowHeight * 2));
+        p2.setMinimumSize(new Dimension(widthLong, rowHeight * 2));
+        p2.setMaximumSize(new Dimension(widthLong, rowHeight * 2));
 
 
         topPanel.add(Box.createHorizontalGlue());
@@ -86,21 +86,42 @@ public class ResultPanel extends JPanel {
 //        centerPanel.setMaximumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 100), rowHeight*7));
 //        centerPanel.setMinimumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 100), rowHeight*7));
 
-        updateCenterPanel(roundScores);
+
+        updateCenterPanel();
         centerPanel.setOpaque(false);
         centerPanel.setBackground(new Color(30, 144, 255));
         add(centerPanel, BorderLayout.CENTER);
 
-        bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        bottomPanel.setOpaque(false);
+        if (roundScores.size() == maxNumberOfRounds) {
+            JPanel endPanel = createEndPanel(roundScores);
+            if (bottomPanel != null) {
+                bottomPanel.removeAll();
+                bottomPanel.add(endPanel);
+                add(bottomPanel);
+                repaint();
+                revalidate();
+            }
+            else {
+                bottomPanel = new JPanel(new BorderLayout());
+                bottomPanel.setBackground(new Color(30, 144, 255));
+                bottomPanel.setPreferredSize(new Dimension(0, 120));
+                bottomPanel.setMinimumSize(new Dimension(0, 120));
+                bottomPanel.setMaximumSize(new Dimension(0, 120));
+                bottomPanel.add(endPanel, BorderLayout.CENTER);
+                add(bottomPanel, BorderLayout.SOUTH);
+                repaint();
+                revalidate();
+            }
+        }
+        else {
+            bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            bottomPanel.setOpaque(false);
+            setNextRoundButton(true);
+            add(bottomPanel, BorderLayout.SOUTH);
 
-        add(bottomPanel, BorderLayout.SOUTH);
-
-        setNextRoundButton(true);
+        }
 
     }
-
-
 
 
     /*public void setNextRoundButton(boolean waiting) {
@@ -158,13 +179,10 @@ public class ResultPanel extends JPanel {
     }
 
 
-
-
-
-
     public void updateScore(int newScoreOne, int newScoreTwo) {
         scoreLabel.setText(newScoreOne + " - " + newScoreTwo);
     }
+
     public void markAnswer(int questionIndex, boolean isCorrect, boolean isPlayerOne) {
         JButton btn;
 
@@ -186,11 +204,12 @@ public class ResultPanel extends JPanel {
         if (index < 0 || index >= roundLabels.size()) return;
         roundLabels.get(index).setText(text);
     }
+
     public void markRoundAnswer(int round, String userAnswerP1, String userAnswerP2, Database.Question question) {
         List<AnswerOption> options = question.getAnswerOptions();
 
         for (int i = 0; i < options.size(); i++) {
-            JButton btn = playerOneButtons.get(round * 3 + i);
+            JButton btn = playerOneButtons.get(round * numberOfQuestions + i);
             AnswerOption opt = options.get(i);
 
             btn.setText(opt.getText());
@@ -219,6 +238,7 @@ public class ResultPanel extends JPanel {
             }
         }
     }
+
     public void setNextRoundButton(boolean waiting) {
         bottomPanel.removeAll();
 
@@ -229,12 +249,12 @@ public class ResultPanel extends JPanel {
             bottomPanel.add(waitingLabel);
         } else {
 
-            JPanel row = new JPanel (new FlowLayout(FlowLayout.CENTER,10,10));
+            JPanel row = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
             row.setOpaque(false);
 
             JButton backButton = new JButton("Back to menu");
             backButton.addActionListener(e -> {
-                MenuPanel menu = new MenuPanel(user,client,client.getMainframe());
+                MenuPanel menu = new MenuPanel(user, client, client.getMainframe());
                 client.getMainframe().setContentPane(menu);
                 client.getMainframe().revalidate();
                 client.getMainframe().repaint();
@@ -252,17 +272,17 @@ public class ResultPanel extends JPanel {
         bottomPanel.repaint();
     }
 
-    private void updateCenterPanel(List<Score>roundScores) {
+    public void updateCenterPanel() {
         createButtons(roundScores);
         if (centerPanel != null) {
             centerPanel.removeAll();
             JPanel scorePanel = new JPanel();
             scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS));
             scorePanel.setOpaque(false);
-            scorePanel.setPreferredSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 50), rowHeight*6));
-            scorePanel.setMaximumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 50), rowHeight*6));
-            scorePanel.setMinimumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 50), rowHeight*6));
-            for (int i = 0; i < maxNumberOfRounds; i++){
+            scorePanel.setPreferredSize(new Dimension((widthScore * 2 + widthText * 2 + widthLong + 50), rowHeight * 6));
+            scorePanel.setMaximumSize(new Dimension((widthScore * 2 + widthText * 2 + widthLong + 50), rowHeight * 6));
+            scorePanel.setMinimumSize(new Dimension((widthScore * 2 + widthText * 2 + widthLong + 50), rowHeight * 6));
+            for (int i = 0; i < maxNumberOfRounds; i++) {
                 scorePanel.add(getRow(i));
             }
             centerPanel.add(scorePanel, BorderLayout.CENTER);
@@ -272,9 +292,9 @@ public class ResultPanel extends JPanel {
         }
     }
 
-    private void createButtons(List<Score>roundScores){
+    private void createButtons(List<Score> roundScores) {
         for (Score score : roundScores) {
-            int [] playerOneScores = score.getRoundScoresPlayer1();
+            int[] playerOneScores = score.getRoundScoresPlayer1();
             for (int i = 0; i < playerOneScores.length; i++) {
                 int points = playerOneScores[i];
                 System.out.println("In createButtons, points is: " + points);
@@ -288,8 +308,8 @@ public class ResultPanel extends JPanel {
                 playerOneButtons.add(questionResult);
             }
         }
-        for (Score score : roundScores){
-            int [] playerTwoScores = score.getRoundScoresPlayer2();
+        for (Score score : roundScores) {
+            int[] playerTwoScores = score.getRoundScoresPlayer2();
             for (int i = 0; i < playerTwoScores.length; i++) {
                 int points = playerTwoScores[i];
                 System.out.println("In createButtons, points is: " + points);
@@ -304,9 +324,10 @@ public class ResultPanel extends JPanel {
             }
         }
     }
+
     private JPanel getScoreButtonBatch(User player, int index) {
         int size = roundScores.size();
-        int start = numberOfQuestions*index;
+        int start = numberOfQuestions * index;
         int end = start + numberOfQuestions;
 
         if (index < size) {
@@ -337,8 +358,7 @@ public class ResultPanel extends JPanel {
                 }
                 return scoreButtonBatch;
             }
-        }
-        else {
+        } else {
             JPanel scoreButtonBatch = new JPanel();
             scoreButtonBatch.setLayout(new BoxLayout(scoreButtonBatch, BoxLayout.X_AXIS));
             scoreButtonBatch.setPreferredSize(new Dimension(widthScore, rowCompHeight));
@@ -356,7 +376,7 @@ public class ResultPanel extends JPanel {
         return null;
     }
 
-    private List<JButton> getEmptyButtons(){
+    private List<JButton> getEmptyButtons() {
         List<JButton> emptyButtons = new ArrayList<>();
         for (int i = 0; i < numberOfQuestions; i++) {
             JButton emptyButton = new JButton();
@@ -373,7 +393,6 @@ public class ResultPanel extends JPanel {
     }
 
     private JPanel getRow(int index) {
-        System.out.println("getRows in TESTResultPanel was reached, maxNumberOfRounds is: " + maxNumberOfRounds + " and roundScores.size is: " + roundScores.size());
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
         row.add(Box.createHorizontalStrut(10));
@@ -385,7 +404,7 @@ public class ResultPanel extends JPanel {
         row.setBackground(new Color(30, 144, 255));
         row.setBorder(BorderFactory.createLineBorder(new Color(30, 144, 255), 1));
 
-        int printIndex = index+1;
+        int printIndex = index + 1;
         JLabel roundIndex = new JLabel("Round " + printIndex + " :");
         roundIndex.setPreferredSize(new Dimension(widthText, rowCompHeight));
         roundIndex.setMinimumSize(new Dimension(widthText, rowCompHeight));
@@ -398,9 +417,9 @@ public class ResultPanel extends JPanel {
         }
         JLabel roundCategory = new JLabel(roundCategoryString);
         roundCategory.setFont(new Font("Montserrat", Font.BOLD, 14));
-        roundCategory.setPreferredSize(new Dimension(widthLong+20, rowCompHeight));
-        roundCategory.setMaximumSize(new Dimension(widthLong+20, rowCompHeight));
-        roundCategory.setMinimumSize(new Dimension(widthLong+20, rowCompHeight));
+        roundCategory.setPreferredSize(new Dimension(widthLong + 20, rowCompHeight));
+        roundCategory.setMaximumSize(new Dimension(widthLong + 20, rowCompHeight));
+        roundCategory.setMinimumSize(new Dimension(widthLong + 20, rowCompHeight));
         roundCategory.setForeground(Color.orange);
         roundCategory.setHorizontalAlignment(0);
         JLabel emptyPanel = new JLabel();
@@ -429,7 +448,7 @@ public class ResultPanel extends JPanel {
         return row;
     }
 
-    private Color assignColorToButton(int i){
+    private Color assignColorToButton(int i) {
         if (i == 1) {
             return Color.GREEN;
         } else if (i == 0) {
@@ -438,4 +457,149 @@ public class ResultPanel extends JPanel {
             return Color.LIGHT_GRAY;
         }
     }
+
+    private JPanel createEndPanel(List<Score> roundScores) {
+        JPanel resPanel = new JPanel();
+        resPanel.setLayout(new BoxLayout(resPanel, BoxLayout.X_AXIS));
+        resPanel.setOpaque(false);
+        resPanel.setBackground(new Color(30, 144, 255));
+        resPanel.setPreferredSize(new Dimension(85, 85));
+        resPanel.setMaximumSize(new Dimension(85, 85));
+        resPanel.setMinimumSize(new Dimension(85, 85));
+        User gameWinner = getWinner(roundScores);
+        JPanel scoreDisplay = finalResults(roundScores);
+
+        Icon avatar = gameWinner.getAvatar();
+        JLabel winnerAvatar = new JLabel(avatar);
+        winnerAvatar.setPreferredSize(new Dimension(85, 85));
+        winnerAvatar.setMaximumSize(new Dimension(85, 85));
+        winnerAvatar.setMinimumSize(new Dimension(85, 85));
+        winnerAvatar.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 3));
+        JLabel winnerName = new JLabel(gameWinner.getUsername());
+        winnerName.setFont(new Font("Montserrat", Font.BOLD, 24));
+        winnerName.setHorizontalAlignment(0);
+        winnerName.setForeground(Color.ORANGE);
+        JPanel winnerPanel = new JPanel();
+        winnerPanel.setBackground(new Color(30, 144, 255));
+        winnerPanel.setLayout(new BorderLayout());
+        winnerPanel.setPreferredSize(new Dimension(75, 75));
+        winnerPanel.setMaximumSize(new Dimension(75, 75));
+        winnerPanel.setMinimumSize(new Dimension(75, 75));
+        winnerPanel.add(winnerAvatar, BorderLayout.CENTER);
+        winnerPanel.add(winnerName, BorderLayout.SOUTH);
+
+        resPanel.add(Box.createHorizontalGlue());
+        resPanel.add(scoreDisplay);
+        resPanel.add(Box.createHorizontalGlue());
+        resPanel.add(winnerPanel);
+        resPanel.add(Box.createHorizontalGlue());
+
+        JButton backToMenu = new JButton("Return to menu");
+        backToMenu.setFont(new Font("Montserrat", Font.BOLD, 12));
+        backToMenu.setBackground((new Color(30, 144, 200)));
+        backToMenu.setForeground(Color.ORANGE);
+        backToMenu.setPreferredSize(new Dimension(120, 20));
+        backToMenu.setMaximumSize(new Dimension(120, 20));
+        backToMenu.setMinimumSize(new Dimension(120, 20));
+        backToMenu.addActionListener(e -> {
+            MenuPanel menuPanel = new MenuPanel(user, client, client.getMainframe());
+            client.getMainframe().setContentPane(menuPanel);
+            client.getMainframe().revalidate();
+            client.getMainframe().repaint();
+        });
+        JPanel endPanel = new JPanel();
+        endPanel.setLayout(new BorderLayout());
+        endPanel.setBackground(new Color(30, 144, 255));
+        endPanel.setOpaque(false);
+        endPanel.add(resPanel, BorderLayout.CENTER);
+        endPanel.add(backToMenu, BorderLayout.SOUTH);
+
+
+        return endPanel;
+    }
+
+    private int getFinalPoints(List<Score> roundScores, User player) {
+        int finalPoints = 0;
+        for (Score score : roundScores) {
+            if (player.getUsername().equalsIgnoreCase(score.getPlayer1().getUsername())) {
+                int[] roundScore = score.getRoundScoresPlayer1();
+                for (int i = 0; i < roundScore.length; i++) {
+                    finalPoints += roundScore[i];
+                }
+            } else if (player.getUsername().equalsIgnoreCase(score.getPlayer2().getUsername())) {
+                int[] roundScore = score.getRoundScoresPlayer2();
+                for (int i = 0; i < roundScore.length; i++) {
+                    finalPoints += roundScore[i];
+                }
+            }
+        }
+        return finalPoints;
+    }
+    private User getWinner (List<Score> roundScores){
+        User gameWinner = null;
+        int pointsPlayerOne = getFinalPoints(roundScores, playerOne);
+        int pointsPlayerTwo = getFinalPoints(roundScores, playerTwo);
+        if (pointsPlayerOne > pointsPlayerTwo){
+            gameWinner = playerOne;
+        }
+        else if (pointsPlayerOne < pointsPlayerTwo){
+            gameWinner = playerTwo;
+        }
+        else {
+            return null;
+        }
+        System.out.println("in getWinner, winner is: " + gameWinner.getUsername());
+        return gameWinner;
+    }
+    private JPanel finalResults (List<Score> roundScores){
+        JPanel results = new JPanel();
+        results.setBackground(new Color(30, 144, 255));
+//        results.setMinimumSize(new Dimension(400, 200));
+//        results.setMaximumSize(new Dimension(400, 200));
+//        results.setPreferredSize(new Dimension(400, 200));
+        results.setLayout(new GridLayout(2, 1));
+        int pointsPlayerOne = getFinalPoints(roundScores, playerOne);
+        int pointsPlayerTwo = getFinalPoints(roundScores, playerTwo);
+
+        JLabel scoreHeader = new JLabel("Final result:      ");
+        scoreHeader.setFont(new Font("Montserrat", Font.BOLD, 18));
+        scoreHeader.setForeground(Color.ORANGE);
+        JLabel player1 = new JLabel(playerOne.getUsername());
+        player1.setFont(new Font("Montserrat", Font.BOLD, 18));
+        player1.setForeground(Color.ORANGE);
+        JLabel player2 = new JLabel(playerTwo.getUsername());
+        player2.setFont(new Font("Montserrat", Font.BOLD, 18));
+        player2.setForeground(Color.ORANGE);
+        JLabel points = new JLabel("   " + pointsPlayerOne + "   -   " + pointsPlayerTwo + "   ");
+        points.setForeground(Color.ORANGE);
+        points.setFont(new Font("Montserrat", Font.BOLD, 24));
+        JPanel finalScore = new JPanel();
+        finalScore.setLayout(new BoxLayout(finalScore, BoxLayout.X_AXIS));
+        finalScore.add(scoreHeader);
+        finalScore.add(player1);
+        finalScore.add(points);
+        finalScore.add(player2);
+        finalScore.setOpaque(false);
+        finalScore.setBackground(new Color(30, 144, 255));
+
+        JLabel winnerIs = new JLabel("The winner is: ");
+        winnerIs.setHorizontalAlignment(SwingConstants.LEFT);
+        winnerIs.setOpaque(false);
+        winnerIs.setFont(new Font("Montserrat", Font.BOLD, 28));
+        winnerIs.setForeground(Color.ORANGE);
+
+        results.add(finalScore);
+        results.add(winnerIs);
+
+        return results;
+
+
+
+
+    }
 }
+
+
+
+
+

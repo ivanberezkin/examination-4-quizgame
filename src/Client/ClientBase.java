@@ -50,6 +50,7 @@ public class ClientBase extends Thread {
     }
 
     public void sendMessage(Message message) {
+        System.out.println("sendMessage in ClientBase was reached, message is: " + message.getType() + " , with data: " + message.getData().getClass());
         try {
             out.writeObject(message);
             out.flush();

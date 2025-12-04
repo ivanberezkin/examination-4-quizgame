@@ -24,6 +24,7 @@ public class GameManager implements Serializable {
 
     }
     public Game checkAvailableGames(User player){
+        System.out.println("in GameManager, maximum numberOfRounds is: " + maxNumberOfRounds);
         if (!activeGames.isEmpty()) {
             for (Game g : activeGames) {
                 if (g.getNumberOfPlayers() == 1) {

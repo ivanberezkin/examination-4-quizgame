@@ -18,6 +18,7 @@ public class Connections implements Serializable {
     }
 
     public  void send(Message response){
+        System.out.println("in Connections, message is: " + response.getType());
         try {
             out.writeObject(response);
             out.flush();

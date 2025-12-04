@@ -186,13 +186,17 @@ public class ServerProtocol {
                 return null;
             }
             case GAME_FINISHED -> {
-                if (message.getData() instanceof Game game) {
-                    for (User u : game.getPlayers()) {
-                        Connections c = ServerListener.findConnectionsByUser(u.getUsername());
-                        c.send(new Message(MessageType.GAME_FINISHED, game));
+                System.out.println("in case GAME_FINISHED, message.getData() is: " + message.getData().getClass());
+                if (message.getData() instanceof List list) {
+                    if (list.getFirst() instanceof Score score) {
+                        List<Score> roundScores = (List<Score>) message.getData();
+                        for (User u : score.getPlayers()) {
+                            Connections c = ServerListener.findConnectionsByUser(u.getUsername());
+                            c.send(new Message(MessageType.GAME_FINISHED, roundScores));
+                        }
                     }
+                    return null;
                 }
-                return null;
             }
 //                System.out.println("SERVERPROTOCOL: GAME_START was reached, message type is:" + message.getType() + " Class is: " + message.getData().getClass());
 //                List<Connections> players = new ArrayList<>();
