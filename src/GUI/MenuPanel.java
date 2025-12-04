@@ -31,8 +31,8 @@ public class MenuPanel extends JPanel {
         topPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 30, 0));
 
         JLabel title = new JLabel("Quizkampen");
-        title.setForeground(Color.WHITE);
-        title.setFont(new Font("Arial", Font.BOLD, 32));
+        title.setForeground(Color.ORANGE);
+        title.setFont(new Font("Montserrat", Font.BOLD, 32));
 
         topPanel.add(title);
         add(topPanel, BorderLayout.NORTH);
@@ -70,7 +70,7 @@ public class MenuPanel extends JPanel {
         card.setBackground(new Color(30, 144, 255));
         card.setBorder(null);
         JLabel label = new JLabel(title, SwingConstants.CENTER);
-        label.setFont(new Font("Serif", Font.BOLD, 20));
+        label.setFont((new Font("Montserrat", Font.BOLD, 20)));
 
         card.setPreferredSize(new Dimension(300, 400));
 
