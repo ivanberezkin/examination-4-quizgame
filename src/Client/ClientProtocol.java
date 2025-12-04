@@ -68,7 +68,7 @@ public class ClientProtocol {
             case LOGIN_CREATE_OK -> {
                 loggedInUser = (User) message.getData();
                 JOptionPane.showMessageDialog(null,
-                        "User created! Logged in as " + loggedInUser.getUsername());
+                        "User " + loggedInUser.getUsername() + " created!" );
                 //moveUserToMenuPanel();
             }
 
