@@ -7,8 +7,7 @@ import java.util.*;
 public class Game implements Serializable {
     int maxPlayers;
     int numberOfPlayers;
-    private final int maxQuestionsRound;
-    private final int maxQuestionsGame;
+    private final int maxQuestionsRound;;
     private final int maxNumberOfRounds;
     private List<User>players = new ArrayList<>();
     private User player1;
@@ -21,11 +20,11 @@ public class Game implements Serializable {
     static Database db = new Database();
     private List <String> categories = new ArrayList<>();
 
-    public Game(User player, Question.Category category, int maxPlayers, int maxQuestionsRound, int maxNumberOfGames) {
+    public Game(User player, Question.Category category, int maxPlayers, int maxQuestionsRound, int maxNumberOfRounds) {
         this.maxPlayers = maxPlayers;
-        this.maxNumberOfRounds = maxNumberOfGames;
+        this.maxNumberOfRounds = maxNumberOfRounds;
+        System.out.println("in Game, maxNumberOfRounds is: " + maxNumberOfRounds);
         this.maxQuestionsRound = maxQuestionsRound;
-        this.maxQuestionsGame = maxQuestionsRound* maxNumberOfGames;
         this.player1 = player;
         players.add(player);
         this.numberOfPlayers = players.size();
