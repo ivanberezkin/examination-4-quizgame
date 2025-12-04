@@ -37,7 +37,8 @@ public class CategoryPanel extends JPanel {
         JButton clickedButton = (JButton) e.getSource();
         String categoryName = (String) clickedButton.getClientProperty("categoryName");
 
-        if(listOfAvailableCategories.contains(clickedButton)) {
+
+        if(listOfAvailableCategories.contains(clickedButton) && listOfChosenCategories.isEmpty()) {
             listOfAvailableCategories.remove(clickedButton);
             listOfChosenCategories.add(clickedButton);
         } else if(listOfChosenCategories.contains(clickedButton)) {
@@ -151,8 +152,6 @@ public class CategoryPanel extends JPanel {
         revalidateAndRepaintButtonsPanel();
     }
 
-
-    //TODO fult sätt att hitta categoryNamn..
     private ArrayList<JButton> createCategoryButtons(ArrayList<String> listOfCategoriesFilename) {
         String categoryName;
         for (String s : listOfCategoriesFilename) {

@@ -59,25 +59,3 @@ public class ServerListener {
         new ServerListener().start();
     }
 }
-
- /*
-    public static void sendOutputToAll(Object object) {
-        try {
-            for (ObjectOutputStream outputStream : allServers) {
-                outputStream.writeObject(object);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void processInput(Message message) {
-        if (message != null) {
-            Message messageFromServer = ServerProtocol.processInput(message);
-
-            IO.println("Message sent from processInput " + messageFromServer.getType());
-
-            sendOutputToAll(messageFromServer);
-        }
-    }
-} */

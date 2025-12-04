@@ -33,11 +33,11 @@ public class ClientHandler extends Thread {
                 Message message = (Message) in.readObject();
                 System.out.println("in ClientHandler, message is: " + message.getType());
                 response = ServerProtocol.processInput(message);
-                if (message.getData() != null && response != null) {
-                    System.out.println("from ClientHandler, response is: " + response.getData().getClass() + " , messageType: " + response.getType());
+//                if (message.getData() != null && response != null) {
+//                    System.out.println("from ClientHandler, response is: " + response.getData().getClass() + " , messageType: " + response.getType());
 
                     //If Login OK then we are assigning a User to the connection.
-                    if (response.getType() == MessageType.LOGIN_OK
+                    if (response != null && response.getType() == MessageType.LOGIN_OK
                             || response.getType() == MessageType.LOGIN_CREATE_OK) {
                         newConnection.setUser((User) response.getData());
                         IO.println("CLIENTHANDLER: " + newConnection.getUser().getUsername() + " added to connectionList");
@@ -47,7 +47,7 @@ public class ClientHandler extends Thread {
                     out.flush();
                     out.reset();
                 }
-            }
+//            }
 
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("CLIENTHANDLER: Client disconnected");

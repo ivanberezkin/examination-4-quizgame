@@ -30,7 +30,6 @@ public class User implements Serializable {
 
     private Icon avatar;
 
-
     public User(String username,String password){
         this.username = username;
         this.password = password;
@@ -38,7 +37,6 @@ public class User implements Serializable {
         this.state = UserState.WAITING;
         this.connected = true;
     }
-
 
 
     public Icon getAvatar() {
@@ -51,21 +49,6 @@ public class User implements Serializable {
 
     public String getUsername() {return username;}
     public String getPassword() {return password;}
-    public int getScore() {return score;}
-    public int getCorrectAnswers() {return correctAnswers;}
-    public int getIncorrectAnswers() {return incorrectAnswers;}
-    public UserState getState() {return state;}
-    public boolean isConnected() {return connected;}
-
-    public void setUsername(String username) {this.username = username;}
-    public void setPassword(String password) {this.password = password;}
-    public void setState(UserState state) {this.state = state;}
-    public void setConnected(boolean connected) {this.connected = connected;}
-
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
-    }
-
 
     public void resetMatchStats() {
         this.score = 0;
@@ -76,17 +59,6 @@ public class User implements Serializable {
     public void addCorrectAnswers(int points) {
         this.correctAnswers++;
         this.score += points;
-    }
-
-    public void addIncorrectAnswers() {
-        this.incorrectAnswers++;
-    }
-
-    public List<GameManager>getGames(){
-        return gameManagers;
-    }
-    public void addGame(GameManager gameManager){
-        gameManagers.add(gameManager);
     }
 
 }

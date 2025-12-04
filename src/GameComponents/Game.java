@@ -12,8 +12,6 @@ public class Game implements Serializable {
     private List<User>players = new ArrayList<>();
     private User player1;
     private User player2;
-    private int gameScorePlayer1 = 0;
-    private int gameScorePlayer2 = 0;
     private User gameWinner;
     private List <Score> gameScores = new ArrayList<>();
     private List<Round> completedRounds = new ArrayList<>();
@@ -85,6 +83,7 @@ public class Game implements Serializable {
             }   else if (!getsToChoose && round.getPlayersList().size() < 2) {
                 round.addPlayer(player);
                 round.sendNextQuestion(player);
+
             }
         }
     }
