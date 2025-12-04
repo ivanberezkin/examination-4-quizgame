@@ -146,15 +146,6 @@ public class GamePanel extends JPanel {
         questionArea.updateUI();
     }
 
-    private boolean nextQuestion() {
-//        if (questionsForRound.size() == 0) {
-//            IO.println("There are no questions to play.");
-//        } else {
-            Question temp = question;
-
-            return newQuestion(temp);
-//        }
-    }
 
     private boolean newQuestion(Question newQuestion) {
 //        Question newQuestion = db.getNewQuestion();

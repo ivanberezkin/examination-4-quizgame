@@ -60,7 +60,7 @@ public class Database {
     }
 
     public Set<Question> getQuestionsForRound(int questionsPerRound, Question.Category category) {
-        System.out.println("In Database, getQuestionsForRound is reached, Category is: " + category.qCat);
+//        System.out.println("In Database, getQuestionsForRound is reached, Category is: " + category.qCat);
         Set<Question> result = new LinkedHashSet<>();
         Random rand = new Random();
         boolean validBatch = false;
@@ -73,7 +73,8 @@ public class Database {
             if (result.size() == questionsPerRound){
                 validBatch = true;
             }
-        }System.out.println("In Database, getQuestionsForRound, results.size() is " + result.size());
+        }
+//        System.out.println("In Database, getQuestionsForRound, results.size() is " + result.size());
         return result;
     }
 }

@@ -57,12 +57,6 @@ public class AuthenticationDatabase {
         }
     }
 
-    protected void printUsers(){
-        for(User u : users){
-            System.out.println("AD: " + u.getUsername() + " Avatar: "+u.getAvatar());
-        }
-    }
-
     protected void saveUsers() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
             oos.writeObject(users);
@@ -70,23 +64,5 @@ public class AuthenticationDatabase {
             e.printStackTrace();
         }
     }
-
-
-   /* public static boolean validateLogin(String username, String password) {
-        for (User u : users) {
-            if (u.getUsername().equals(username) &&
-                    u.getPassword().equals(password)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-
-
-    public static List<User> getAllUsers() {
-        return users;
-    } */
 
 }

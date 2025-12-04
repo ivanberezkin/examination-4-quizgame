@@ -78,8 +78,7 @@ public class ClientProtocol {
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
-            case DUMMY -> {
-            }
+
             case WAITING -> {
 
                 IO.println("MATCHMAKING:" + loggedInUser.getUsername() + " waiting for opponent.");
@@ -116,10 +115,6 @@ public class ClientProtocol {
                     });
             }
 
-            case MATCHMAKING -> {
-                //Server skickar frågor i en Message_type question
-            }
-
             case QUESTION -> {
                 IO.println("Questions Received");
                 if (message.getData() instanceof Question question) {
@@ -131,7 +126,7 @@ public class ClientProtocol {
                     });
                 }
             }
-                //TODO Se till att rätt input tas för ResultPanel.
+
             case RESULT_ROUND -> {
                 boolean waiting;
                 if (message.getData() instanceof List list) {
