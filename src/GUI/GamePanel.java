@@ -111,7 +111,7 @@ public class GamePanel extends JPanel {
                 clickedButton.setBackground(Color.LIGHT_GRAY);
                 //TODO lägga till logik för antal rundor och sedan starta ny fråga
 
-                client.sendMessage(new Message(MessageType.ANSWER, new Answer(user, question, nextQuestion())));
+                client.sendMessage(new Message(MessageType.ANSWER, new Answer(user, question, true)));
 
                 //TODO lägg till någon snygg väntar på motståndare.
                 answerButtonsPanel.removeAll();
@@ -121,7 +121,7 @@ public class GamePanel extends JPanel {
                 JOptionPane.showMessageDialog(GamePanel.this, "You guessed the incorrect answer" +
                         "\n Correct Answer is: " + correctAnswer);
                 clickedButton.setBackground(Color.LIGHT_GRAY);
-                client.sendMessage(new Message(MessageType.ANSWER, new Answer(user, question, nextQuestion())));
+                client.sendMessage(new Message(MessageType.ANSWER, new Answer(user, question, false)));
                 //TODO lägg till någon snygg väntar på motståndare.
                 answerButtonsPanel.removeAll();
             }

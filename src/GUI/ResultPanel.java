@@ -1,206 +1,441 @@
 package GUI;
 
 import Client.ClientBase;
-import GameComponents.Game;
+import Database.AnswerOption;
+import GameComponents.Score;
 import Quizgame.shared.Message;
 import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
-
+import Server.SettingsLoader;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ResultPanel extends JPanel {
 
     private java.util.List<JButton> playerOneButtons = new ArrayList<>();
     private java.util.List<JButton> playerTwoButtons = new ArrayList<>();
-    private JPanel bottomPanel = new JPanel();
-    private ClientBase client;
-    private Game game;
+    private java.util.List<JLabel> roundLabels = new ArrayList<>();
+    private JLabel scoreLabel;
     private User user;
+    private ClientBase client;
+    private List<Score> roundScores = new ArrayList<>();
+    private int numberOfQuestions;
+    private JPanel centerPanel;
+    private JPanel bottomPanel;
+    private User playerOne;
+    private User playerTwo;
+    int maxNumberOfRounds = SettingsLoader.getRoundsPerGame();
+    private JPanel topPanel;
+    private int widthText = 85;
+    private int widthScore = 94;
+    private int widthLong = 110;
+    private int rowHeight = 70;
+    private int rowCompHeight = 40;
+    private int buttonDimension = 30;
 
-    public ResultPanel(Game game, ClientBase client, User user){
-        this.game = game;
-        this.client = client;
-        this.user = user;
-        String playerOne = game.getPlayer1().getUsername();
-        String playerTwo = game.getPlayer1().getUsername();
-        List<int[]> scoreRows = game.getGameScores();
-
-        List <String> roundTexts = game.getCategories();
-        String roundText = roundTexts.getFirst();
+    public ResultPanel(List<Score> roundScores, User user, ClientBase client) {
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
+        this.roundScores = roundScores;
+        this.user = user;
+        this.client = client;
+        this.playerOne = roundScores.getFirst().getPlayer1();
+        this.playerTwo = roundScores.getFirst().getPlayer2();
+        numberOfQuestions = roundScores.getFirst().getNumberOfQuestions();
+        for (Score score : roundScores) {
+            String category = score.getCategory();
+            System.out.println("category is: " + category);
+        }
 
-        // Spelare och poäng
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        // Top panelen
+        this.topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+//        topPanel.setPreferredSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 100), rowHeight*3));
+//        topPanel.setMaximumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 100), rowHeight*3));
+//        topPanel.setMinimumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 100), rowHeight*3));
         topPanel.setOpaque(false);
 
-        JLabel playerOneLabel = playerLabel(playerOne);
-        JLabel playerTwoLabel = playerLabel(playerTwo);
-        String text = "";
-        if (scoreRows != null && !scoreRows.isEmpty()){
-            text = Arrays.toString(scoreRows.getFirst());
-        }
-        JLabel scoreLabel = new JLabel(text);
-        scoreLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        scoreLabel.setForeground(Color.WHITE);
+        JLabel p1 = playerLabel(playerOne.getAvatar(), playerOne.getUsername());
+        p1.setPreferredSize(new Dimension(widthLong, rowHeight*2));
+        p1.setMinimumSize(new Dimension(widthLong, rowHeight*2));
+        p1.setMaximumSize(new Dimension(widthLong, rowHeight*2));
+        JLabel p2 = playerLabel(playerTwo.getAvatar(), playerTwo.getUsername());
 
-        topPanel.add(playerOneLabel);
-        topPanel.add(scoreLabel);
-        topPanel.add(playerTwoLabel);
-        add(topPanel, BorderLayout.NORTH);
+        p2.setPreferredSize(new Dimension(widthLong, rowHeight*2));
+        p2.setMinimumSize(new Dimension(widthLong, rowHeight*2));
+        p2.setMaximumSize(new Dimension(widthLong, rowHeight*2));
 
-        // Namn
-        JPanel namesPanel = new JPanel(new GridLayout(1, 2));
-        namesPanel.setOpaque(false);
 
-        JLabel leftName = new JLabel(playerOne, SwingConstants.CENTER);
-        JLabel rightName = new JLabel(playerTwo, SwingConstants.CENTER);
-        leftName.setOpaque(true);
-        leftName.setBackground(Color.WHITE);
-        rightName.setOpaque(true);
-        rightName.setBackground(Color.WHITE);
+        topPanel.add(Box.createHorizontalGlue());
+        topPanel.add(p1);
+        topPanel.add(Box.createHorizontalGlue());
+        topPanel.add(p2);
+        topPanel.add(Box.createHorizontalGlue());
 
-        namesPanel.add(leftName);
-        namesPanel.add(rightName);
-        add(namesPanel, BorderLayout.CENTER);
+        JPanel topWrapper = new JPanel(new BorderLayout());
+        topWrapper.setOpaque(false);
+        topWrapper.add(topPanel, BorderLayout.CENTER);
+        add(topWrapper, BorderLayout.NORTH);
 
-        // Knapp
+        centerPanel = new JPanel(new BorderLayout());
+//        centerPanel.setPreferredSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 100), rowHeight*7));
+//        centerPanel.setMaximumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 100), rowHeight*7));
+//        centerPanel.setMinimumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 100), rowHeight*7));
+
+        updateCenterPanel(roundScores);
+        centerPanel.setOpaque(false);
+        centerPanel.setBackground(new Color(30, 144, 255));
+        add(centerPanel, BorderLayout.CENTER);
+
+        bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         bottomPanel.setOpaque(false);
-        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
-
-
-
-        JPanel buttonRow1 = new JPanel(new FlowLayout(FlowLayout.CENTER, 10 ,10));
-        buttonRow1.setOpaque(false);
-        JPanel buttonRow2 = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        buttonRow2.setOpaque(false);
-
-        for (int i = 0; i < 3; i++) { /* antal knappar */
-            JButton b1 = new JButton();
-            b1.setPreferredSize(new Dimension(50, 50));
-            b1.setBackground(Color.LIGHT_GRAY);
-            playerOneButtons.add(b1);
-            buttonRow1.add(b1);
-
-            JButton b2 = new JButton();
-            b2.setPreferredSize(new Dimension(50, 50));
-            b2.setBackground(Color.LIGHT_GRAY);
-            playerTwoButtons.add(b2);
-            buttonRow2.add(b2);
-
-        }
-        bottomPanel.add(buttonRow1);
-        bottomPanel.add(buttonRow2);
-
-
-
-
-
-
-//        Runda
-        JLabel roundLabel = new JLabel(roundText, SwingConstants.CENTER);
-        roundLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
-        roundLabel.setForeground(Color.WHITE);
-        roundLabel.setAlignmentX(CENTER_ALIGNMENT);
-        bottomPanel.add(roundLabel);
 
         add(bottomPanel, BorderLayout.SOUTH);
 
+        setNextRoundButton(true);
+
     }
-    public void setNextRoundButton(boolean waiting){
+
+
+
+
+    /*public void setNextRoundButton(boolean waiting) {
+        // Rensa tidigare komponenter i bottomPanel
+        bottomPanel.removeAll();
+
 
         if (waiting) {
             JLabel waitingForOpponent = new JLabel("Waiting for opponent");
+            waitingForOpponent.setForeground(Color.WHITE);
+            waitingForOpponent.setFont(new Font("Arial", Font.BOLD, 16));
             bottomPanel.add(waitingForOpponent);
-        }
-        else {
+        } else {
+            // Panel för knappar på samma rad
+            JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            buttonRow.setOpaque(false);
+
+            JButton backButton = new JButton("Back to Menu");
+            backButton.addActionListener(e -> {
+                // Gå tillbaka till menyn
+                MenuPanel menuPanel = new MenuPanel(user, client, client.getMainframe());
+                client.getMainframe().setContentPane(menuPanel);
+                client.getMainframe().revalidate();
+                client.getMainframe().repaint();
+            });
+
             JButton nextRound = new JButton("Start next round");
-            bottomPanel.add(nextRound);
             nextRound.addActionListener(e -> {
                 client.sendMessage(new Message(MessageType.START_NEXT_ROUND, user));
             });
-        }
-    }
 
-    private static JLabel playerLabel(String text) {
-        JLabel label = new JLabel(text, SwingConstants.CENTER);
-        label.setPreferredSize(new Dimension(90, 90));
-        label.setFont(new Font("Times New Roman", Font.BOLD, 30));
-        label.setForeground(Color.BLACK);
-        label.setBackground(Color.WHITE);
-        label.setOpaque(true);
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+            buttonRow.add(backButton);
+            buttonRow.add(nextRound);
+
+            bottomPanel.add(buttonRow);
+        }
+
+        bottomPanel.revalidate();
+        bottomPanel.repaint();
+    } */
+    private static JLabel playerLabel(Icon avatar, String name) {
+        JLabel label = new JLabel(name, avatar, SwingConstants.CENTER);
+        label.setHorizontalTextPosition(SwingConstants.CENTER);
+        label.setVerticalTextPosition(SwingConstants.BOTTOM);
+        label.setPreferredSize(new Dimension(90, 110));
+        label.setMaximumSize(new Dimension(90, 110));
+        label.setMinimumSize(new Dimension(90, 110)); // lite högre för text
+        label.setFont(new Font("Montserrat", Font.BOLD, 26));
+        label.setForeground(Color.orange);
+        label.setBackground(Color.BLACK);
+        label.setOpaque(false);
+//        label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+
         return label;
     }
 
-    //    Markera knappar
-    public void markPlayerOneButton(int temp, boolean correct) {
-        if(temp < 0 || temp >= playerOneButtons.size()) return;
-        Color color;
-        if(correct) {
-            color = Color.GREEN;
+
+
+
+
+
+    public void updateScore(int newScoreOne, int newScoreTwo) {
+        scoreLabel.setText(newScoreOne + " - " + newScoreTwo);
+    }
+    public void markAnswer(int questionIndex, boolean isCorrect, boolean isPlayerOne) {
+        JButton btn;
+
+        if (isPlayerOne) {
+            btn = playerOneButtons.get(questionIndex);
         } else {
-            color = Color.RED;
+            btn = playerTwoButtons.get(questionIndex);
         }
-        playerOneButtons.get(temp).setBackground(color);
 
-    }
-
-    public void markPlayerTwoButton(int temp, boolean correct) {
-        if(temp < 0 || temp >= playerTwoButtons.size()) return;
-        Color color;
-        if(correct) {
-            color = Color.GREEN;
+        if (isCorrect) {
+            btn.setBackground(Color.GREEN);
         } else {
-            color = Color.RED;
+            btn.setBackground(Color.RED);
         }
-        playerTwoButtons.get(temp).setBackground(color);
-
-    }
-
-    public void resetButtons() {
-        for (JButton b : playerOneButtons) b.setBackground(Color.LIGHT_GRAY);
-        for (JButton b : playerTwoButtons) b.setBackground(Color.LIGHT_GRAY);
-    }
-
-    public void setPlayerOneRightA(int roundIndex) {
-        if(roundIndex < 0 || roundIndex >= playerOneButtons.size()) return;
-        JButton b1 = playerOneButtons.get(roundIndex);
-        b1.setText("1");
-        b1.setBackground(Color.GREEN);
-
-    }
-
-    public void setPlayerTwoRightA(int roundIndex) {
-        if(roundIndex < 0 || roundIndex >= playerTwoButtons.size()) return;
-        JButton b2 = playerTwoButtons.get(roundIndex);
-        b2.setText("2");
-        b2.setBackground(Color.RED);
     }
 
 
-    // TEST
-    /*
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Test ResultPanel");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        ResultPanel panel = new ResultPanel("KÖPA", "CHIPS", 0, 0, "Round 1");
-        frame.add(panel);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-
-        new Timer(1000, e -> panel.markPlayerOneButton(0, true)).start();
-        new Timer(2000, e -> panel.markPlayerOneButton(1, false)).start();
-        new Timer(3000, e -> panel.markPlayerTwoButton(0, true)).start();
-        new Timer(4000, e -> panel.markPlayerTwoButton(2, false)).start();
-        new Timer(1000, e -> panel.setPlayerOneRightA(0)).start();
+    public void setRoundText(int index, String text) {
+        if (index < 0 || index >= roundLabels.size()) return;
+        roundLabels.get(index).setText(text);
     }
-     */
+    public void markRoundAnswer(int round, String userAnswerP1, String userAnswerP2, Database.Question question) {
+        List<AnswerOption> options = question.getAnswerOptions();
+
+        for (int i = 0; i < options.size(); i++) {
+            JButton btn = playerOneButtons.get(round * 3 + i);
+            AnswerOption opt = options.get(i);
+
+            btn.setText(opt.getText());
+
+            if (opt.getCorrect()) {
+                btn.setBackground(Color.GREEN);
+            } else if (opt.getText().equals(userAnswerP1)) {
+                btn.setBackground(Color.RED);
+            } else {
+                btn.setBackground(Color.LIGHT_GRAY);
+            }
+        }
+
+        for (int i = 0; i < options.size(); i++) {
+            JButton btn = playerTwoButtons.get(round * 3 + i);
+            AnswerOption opt = options.get(i);
+
+            btn.setText(opt.getText());
+
+            if (opt.getCorrect()) {
+                btn.setBackground(Color.GREEN);
+            } else if (opt.getText().equals(userAnswerP2)) {
+                btn.setBackground(Color.RED);
+            } else {
+                btn.setBackground(Color.LIGHT_GRAY);
+            }
+        }
+    }
+    public void setNextRoundButton(boolean waiting) {
+        bottomPanel.removeAll();
+
+        if (waiting) {
+            JLabel waitingLabel = new JLabel("Waiting for opponent");
+            waitingLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+            waitingLabel.setForeground(Color.BLACK);
+            bottomPanel.add(waitingLabel);
+        } else {
+
+            JPanel row = new JPanel (new FlowLayout(FlowLayout.CENTER,10,10));
+            row.setOpaque(false);
+
+            JButton backButton = new JButton("Back to menu");
+            backButton.addActionListener(e -> {
+                MenuPanel menu = new MenuPanel(user,client,client.getMainframe());
+                client.getMainframe().setContentPane(menu);
+                client.getMainframe().revalidate();
+                client.getMainframe().repaint();
+            });
+
+            JButton nextRound = new JButton("Start next round");
+            nextRound.addActionListener(e -> {
+                client.sendMessage(new Message(MessageType.START_NEXT_ROUND, user));
+            });
+            row.add(backButton);
+            row.add(nextRound);
+            bottomPanel.add(row);
+        }
+        bottomPanel.revalidate();
+        bottomPanel.repaint();
+    }
+
+    private void updateCenterPanel(List<Score>roundScores) {
+        createButtons(roundScores);
+        if (centerPanel != null) {
+            centerPanel.removeAll();
+            JPanel scorePanel = new JPanel();
+            scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS));
+            scorePanel.setOpaque(false);
+            scorePanel.setPreferredSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 50), rowHeight*6));
+            scorePanel.setMaximumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 50), rowHeight*6));
+            scorePanel.setMinimumSize(new Dimension((widthScore*2 +widthText*2 + widthLong + 50), rowHeight*6));
+            for (int i = 0; i < maxNumberOfRounds; i++){
+                scorePanel.add(getRow(i));
+            }
+            centerPanel.add(scorePanel, BorderLayout.CENTER);
+            add(centerPanel, BorderLayout.CENTER);
+            repaint();
+            revalidate();
+        }
+    }
+
+    private void createButtons(List<Score>roundScores){
+        for (Score score : roundScores) {
+            int [] playerOneScores = score.getRoundScoresPlayer1();
+            for (int i = 0; i < playerOneScores.length; i++) {
+                int points = playerOneScores[i];
+                System.out.println("In createButtons, points is: " + points);
+                JButton questionResult = new JButton();
+                questionResult.setOpaque(true);
+                questionResult.setBorder(BorderFactory.createLineBorder(new Color(30, 144, 255), 2));
+                questionResult.setMinimumSize(new Dimension(buttonDimension, buttonDimension));
+                questionResult.setMaximumSize(new Dimension(buttonDimension, buttonDimension));
+                questionResult.setPreferredSize(new Dimension(buttonDimension, buttonDimension));
+                questionResult.setBackground(assignColorToButton(points));
+                playerOneButtons.add(questionResult);
+            }
+        }
+        for (Score score : roundScores){
+            int [] playerTwoScores = score.getRoundScoresPlayer2();
+            for (int i = 0; i < playerTwoScores.length; i++) {
+                int points = playerTwoScores[i];
+                System.out.println("In createButtons, points is: " + points);
+                JButton questionResult = new JButton();
+                questionResult.setOpaque(true);
+                questionResult.setBorder(BorderFactory.createLineBorder(new Color(30, 144, 255), 2));
+                questionResult.setMinimumSize(new Dimension(buttonDimension, buttonDimension));
+                questionResult.setMaximumSize(new Dimension(buttonDimension, buttonDimension));
+                questionResult.setPreferredSize(new Dimension(buttonDimension, buttonDimension));
+                questionResult.setBackground(assignColorToButton(points));
+                playerTwoButtons.add(questionResult);
+            }
+        }
+    }
+    private JPanel getScoreButtonBatch(User player, int index) {
+        int size = roundScores.size();
+        int start = numberOfQuestions*index;
+        int end = start + numberOfQuestions;
+
+        if (index < size) {
+            if (player.getUsername().equalsIgnoreCase(playerOne.getUsername())) {
+                JPanel scoreButtonBatch = new JPanel();
+                scoreButtonBatch.setLayout(new BoxLayout(scoreButtonBatch, BoxLayout.X_AXIS));
+                scoreButtonBatch.setPreferredSize(new Dimension(widthScore, rowCompHeight));
+                scoreButtonBatch.setMinimumSize(new Dimension(widthScore, rowCompHeight));
+                scoreButtonBatch.setMaximumSize(new Dimension(widthScore, rowCompHeight));
+                scoreButtonBatch.setOpaque(true);
+                scoreButtonBatch.setBackground(new Color(30, 144, 255));
+                scoreButtonBatch.setBorder(BorderFactory.createLineBorder(new Color(30, 144, 255), 2));
+                for (int i = start; i < end; i++) {
+                    scoreButtonBatch.add(playerOneButtons.get(i));
+                }
+                return scoreButtonBatch;
+            } else if (player.getUsername().equalsIgnoreCase(playerTwo.getUsername())) {
+                JPanel scoreButtonBatch = new JPanel();
+                scoreButtonBatch.setLayout(new BoxLayout(scoreButtonBatch, BoxLayout.X_AXIS));
+                scoreButtonBatch.setPreferredSize(new Dimension(widthScore, rowCompHeight));
+                scoreButtonBatch.setMinimumSize(new Dimension(widthScore, rowCompHeight));
+                scoreButtonBatch.setMaximumSize(new Dimension(widthScore, rowCompHeight));
+                scoreButtonBatch.setOpaque(true);
+                scoreButtonBatch.setBackground(new Color(30, 144, 255));
+                scoreButtonBatch.setBorder(BorderFactory.createLineBorder(new Color(30, 144, 255), 2));
+                for (int i = start; i < end; i++) {
+                    scoreButtonBatch.add(playerTwoButtons.get(i));
+                }
+                return scoreButtonBatch;
+            }
+        }
+        else {
+            JPanel scoreButtonBatch = new JPanel();
+            scoreButtonBatch.setLayout(new BoxLayout(scoreButtonBatch, BoxLayout.X_AXIS));
+            scoreButtonBatch.setPreferredSize(new Dimension(widthScore, rowCompHeight));
+            scoreButtonBatch.setMinimumSize(new Dimension(widthScore, rowCompHeight));
+            scoreButtonBatch.setMaximumSize(new Dimension(widthScore, rowCompHeight));
+            List<JButton> emptyButtons = getEmptyButtons();
+            for (JButton button : emptyButtons) {
+                scoreButtonBatch.add(button);
+            }
+            scoreButtonBatch.setOpaque(true);
+            scoreButtonBatch.setBackground(new Color(30, 144, 255));
+            scoreButtonBatch.setBorder(BorderFactory.createLineBorder(new Color(30, 144, 255), 2));
+            return scoreButtonBatch;
+        }
+        return null;
+    }
+
+    private List<JButton> getEmptyButtons(){
+        List<JButton> emptyButtons = new ArrayList<>();
+        for (int i = 0; i < numberOfQuestions; i++) {
+            JButton emptyButton = new JButton();
+            emptyButton.setOpaque(true);
+            emptyButton.setMinimumSize(new Dimension(buttonDimension, buttonDimension));
+            emptyButton.setMaximumSize(new Dimension(buttonDimension, buttonDimension));
+            emptyButton.setPreferredSize(new Dimension(buttonDimension, buttonDimension));
+            emptyButton.setBackground(Color.LIGHT_GRAY);
+            emptyButton.setBackground(assignColorToButton(2));
+            emptyButton.setBorder(BorderFactory.createLineBorder(new Color(30, 144, 255), 2));
+            emptyButtons.add(emptyButton);
+        }
+        return emptyButtons;
+    }
+
+    private JPanel getRow(int index) {
+        System.out.println("getRows in TESTResultPanel was reached, maxNumberOfRounds is: " + maxNumberOfRounds + " and roundScores.size is: " + roundScores.size());
+        JPanel row = new JPanel();
+        row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
+        row.add(Box.createHorizontalStrut(10));
+        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, rowHeight));
+        row.setPreferredSize(new Dimension(0, rowHeight));
+        row.setMinimumSize(new Dimension(0, rowHeight));
+
+        row.setOpaque(true);
+        row.setBackground(new Color(30, 144, 255));
+        row.setBorder(BorderFactory.createLineBorder(new Color(30, 144, 255), 1));
+
+        int printIndex = index+1;
+        JLabel roundIndex = new JLabel("Round " + printIndex + " :");
+        roundIndex.setPreferredSize(new Dimension(widthText, rowCompHeight));
+        roundIndex.setMinimumSize(new Dimension(widthText, rowCompHeight));
+        roundIndex.setMinimumSize(new Dimension(widthText, rowCompHeight));
+        roundIndex.setOpaque(false);
+
+        String roundCategoryString = "";
+        if (index < roundScores.size()) {
+            roundCategoryString = roundScores.get(index).getCategory();
+        }
+        JLabel roundCategory = new JLabel(roundCategoryString);
+        roundCategory.setFont(new Font("Montserrat", Font.BOLD, 14));
+        roundCategory.setPreferredSize(new Dimension(widthLong+20, rowCompHeight));
+        roundCategory.setMaximumSize(new Dimension(widthLong+20, rowCompHeight));
+        roundCategory.setMinimumSize(new Dimension(widthLong+20, rowCompHeight));
+        roundCategory.setForeground(Color.orange);
+        roundCategory.setHorizontalAlignment(0);
+        JLabel emptyPanel = new JLabel();
+        emptyPanel.setPreferredSize(new Dimension(widthText, rowCompHeight));
+        emptyPanel.setMaximumSize(new Dimension(widthText, rowCompHeight));
+        emptyPanel.setMinimumSize(new Dimension(widthText, rowCompHeight));
+        emptyPanel.setOpaque(false);
+        emptyPanel.setBackground(new Color(30, 144, 255));
+
+        roundIndex.setFont(new Font("Montserrat", Font.BOLD, 14));
+        roundIndex.setForeground(Color.orange);
+
+        roundIndex.setHorizontalAlignment(0);
+        row.add(Box.createHorizontalGlue());
+        row.add(roundIndex);
+        row.add(Box.createHorizontalGlue());
+        row.add(getScoreButtonBatch(playerOne, index));
+        row.add(Box.createHorizontalGlue());
+        row.add(roundCategory);
+        row.add(Box.createHorizontalGlue());
+        row.add(getScoreButtonBatch(playerTwo, index));
+        row.add(Box.createHorizontalGlue());
+        row.add(emptyPanel);
+        row.add(Box.createHorizontalGlue());
+
+        return row;
+    }
+
+    private Color assignColorToButton(int i){
+        if (i == 1) {
+            return Color.GREEN;
+        } else if (i == 0) {
+            return Color.RED;
+        } else {
+            return Color.LIGHT_GRAY;
+        }
+    }
 }

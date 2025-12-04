@@ -2,10 +2,7 @@ package GameComponents;
 import Database.*;
 import Quizgame.shared.User;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Game implements Serializable {
     int maxPlayers;
@@ -19,7 +16,7 @@ public class Game implements Serializable {
     private int gameScorePlayer1 = 0;
     private int gameScorePlayer2 = 0;
     private User gameWinner;
-    private List<int[]> gameScores = new ArrayList<>();
+    private List <Score> gameScores = new ArrayList<>();
     private List<Round> completedRounds = new ArrayList<>();
     private Round round;
     private Set<Question> allGameQuestions = new LinkedHashSet<>();
@@ -44,7 +41,7 @@ public class Game implements Serializable {
         }
         else {
             if (checkIfCompleted()){
-                GameManager.sendGameScore(this);
+                GameManager.sendGameScore(gameScores, this);
             }
         }
     }
@@ -94,15 +91,30 @@ public class Game implements Serializable {
     }
 
     public void setRoundScore(Round round) {
+        List <int[]> roundScores = new ArrayList<>();
         if (round.completedRound()) {
             for (int i = 0; i < maxQuestionsRound; i++) {
-                gameScores.add(new int[]{round.getPointsPlayer1().get(i), round.getPointsPlayer2().get(i)});
+                int [] score = new int[]{round.getPointsPlayer1().get(i), round.getPointsPlayer2().get(i)};
+                roundScores.add(score);
+                System.out.println("In Game, setRoundScore, printout is: " + round.getPointsPlayer1().get(i) + " " + round.getPointsPlayer2().get(i));
             }
+            gameScores.add(new Score(roundScores, player1, player2, round.getCategory()));
+            //Listan gameScores innehåller objekt av klassen Scores, på der här sättet:
+            //Score för runda1: [1, 0] [1, 1] [0, 0], User1, User2, Animals
+            //Score för runda2: [1, 1] [0, 0] [0, 1], User1, User2, Geography
+            //Score för runda3: [0, 0] [1, 1] [1, 0], User1, User2, Science
+            // osv.
+            //Man kan också från Score få fram poäng för spelare1 och spelare2:
+            //Score för runda1: [1, 1, 0] [0, 1, 0]
+            //Score för runda2: [1, 0, 0] [1, 0, 1]
+            //Score för runda3: [0, 1, 1] [0, 1, 0]
+            //osv
+
             if (checkIfCompleted()) {
-                GameManager.sendGameScore(this);
+                GameManager.sendGameScore(gameScores, this);
             } else {
                 completedRounds.add(round);
-                GameManager.sendRoundScore(this);
+                GameManager.sendRoundScore(gameScores);
             }
         }
     }
@@ -114,27 +126,27 @@ public class Game implements Serializable {
     }
 
     public boolean checkIfCompleted(){
-        return gameScores.size() == maxNumberOfRounds - 1;
+        return gameScores.size() == maxNumberOfRounds;
     }
-    public void findGameWinner(){
-        int player1Total = 0;
-        int player2Total = 0;
-        if (checkIfCompleted()){
-            for (int [] score : gameScores){
-                player1Total += score[0];
-                player2Total += score[1];
-            }
-            if (player1Total > player2Total){
-                gameWinner = player1;
-            }
-            else if (player1Total < player2Total){
-                gameWinner = player2;
-            }
-            else {
-                gameWinner = null;
-            }
-        }
-    }
+//    public void findGameWinner(){
+//        int player1Total = 0;
+//        int player2Total = 0;
+//        if (checkIfCompleted()){
+//            for (int [] score : roundScores){
+//                player1Total += score[0];
+//                player2Total += score[1];
+//            }
+//            if (player1Total > player2Total){
+//                gameWinner = player1;
+//            }
+//            else if (player1Total < player2Total){
+//                gameWinner = player2;
+//            }
+//            else {
+//                gameWinner = null;
+//            }
+//        }
+//    }
     public List<User> getPlayers(){
         return players;
     }
@@ -154,7 +166,7 @@ public class Game implements Serializable {
     public User getPlayer2(){
         return player2;
     }
-    public List<int[]> getGameScores(){
+    public List<Score> getGameScores(){
         return gameScores;
     }
     public List <String> getCategories(){
