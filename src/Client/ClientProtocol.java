@@ -79,6 +79,12 @@ public class ClientProtocol {
                         JOptionPane.ERROR_MESSAGE);
             }
 
+            case REQUEST_NEW_ROUND -> {
+                if(message.getData() instanceof User user){
+                    client.sendMessage(new Message(MessageType.START_NEXT_ROUND, user));
+                }
+            }
+
             case WAITING -> {
                 MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
                 });

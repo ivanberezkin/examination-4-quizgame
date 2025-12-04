@@ -83,7 +83,7 @@ public class ServerProtocol {
                     Question.Category category = startingParameters.getCategory();
                     User user = startingParameters.getUser();
                     Game game = gameManager.checkAvailableGames(user);
-
+                    gameManager.startGame(user, category);
 
                     User opponent;
                     if(game != null && game.getPlayer1() != null && game.getPlayer2() != null){
@@ -92,13 +92,9 @@ public class ServerProtocol {
                         }else{
                             opponent = game.getPlayer1();
                         }
-                        gameManager.setUpNextRound(opponent);
+                        Connections c = ServerListener.findConnectionsByUser(opponent.getUsername());
+                        c.send(new Message(MessageType.REQUEST_NEW_ROUND, opponent));
                     }
-
-
-//                    Connections c = ServerListener.findConnectionsByUser(user.getUsername());
-//                    c.send(new Message(MessageType.GAME_START, category));
-                    gameManager.startGame(user, category);
 
                 }
                 return null;
