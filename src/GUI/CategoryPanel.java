@@ -151,8 +151,6 @@ public class CategoryPanel extends JPanel {
         revalidateAndRepaintButtonsPanel();
     }
 
-
-    //TODO fult sätt att hitta categoryNamn..
     private ArrayList<JButton> createCategoryButtons(ArrayList<String> listOfCategoriesFilename) {
         String categoryName;
         for (String s : listOfCategoriesFilename) {

@@ -5,6 +5,8 @@ import Quizgame.shared.Answer;
 import Quizgame.shared.Message;
 import Quizgame.shared.MessageType;
 import Quizgame.shared.User;
+import Server.Connections;
+import Server.ServerListener;
 import Server.ServerProtocol;
 import Server.SettingsLoader;
 
@@ -119,19 +121,21 @@ public class GameManager implements Serializable {
     }
     public static void sendWaitingMessage(User user){
         ServerProtocol.processInput(new Message(MessageType.WAITING, user));
+        Connections conn = ServerListener.findConnectionsByUser(user.getUsername());
+        conn.send(new Message(MessageType.WAITING,user));
     }
 
     private static void removeCompletedGame(Game game){
         activeGames.remove(game);
     }
-    //TODO vi behöver spara historik av rundor någonstans
-    private static void checkGames(){
-        for (Game g : activeGames){
-            if(g.checkIfCompleted()){
-                removeCompletedGame(g);
-            }
-        }
-    }
+
+//    private static void checkGames(){
+//        for (Game g : activeGames){
+//            if(g.checkIfCompleted()){
+//                removeCompletedGame(g);
+//            }
+//        }
+//    }
 
     private static List<Game>getActiveGames(){
         return activeGames;

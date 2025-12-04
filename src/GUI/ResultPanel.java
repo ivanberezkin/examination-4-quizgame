@@ -96,51 +96,10 @@ public class ResultPanel extends JPanel {
 
         add(bottomPanel, BorderLayout.SOUTH);
 
-        setNextRoundButton(true);
+        setNextRoundButton(whoGetsToChoose());
 
     }
 
-
-
-
-    /*public void setNextRoundButton(boolean waiting) {
-        // Rensa tidigare komponenter i bottomPanel
-        bottomPanel.removeAll();
-
-
-        if (waiting) {
-            JLabel waitingForOpponent = new JLabel("Waiting for opponent");
-            waitingForOpponent.setForeground(Color.WHITE);
-            waitingForOpponent.setFont(new Font("Arial", Font.BOLD, 16));
-            bottomPanel.add(waitingForOpponent);
-        } else {
-            // Panel för knappar på samma rad
-            JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-            buttonRow.setOpaque(false);
-
-            JButton backButton = new JButton("Back to Menu");
-            backButton.addActionListener(e -> {
-                // Gå tillbaka till menyn
-                MenuPanel menuPanel = new MenuPanel(user, client, client.getMainframe());
-                client.getMainframe().setContentPane(menuPanel);
-                client.getMainframe().revalidate();
-                client.getMainframe().repaint();
-            });
-
-            JButton nextRound = new JButton("Start next round");
-            nextRound.addActionListener(e -> {
-                client.sendMessage(new Message(MessageType.START_NEXT_ROUND, user));
-            });
-
-            buttonRow.add(backButton);
-            buttonRow.add(nextRound);
-
-            bottomPanel.add(buttonRow);
-        }
-
-        bottomPanel.revalidate();
-        bottomPanel.repaint();
-    } */
     private static JLabel playerLabel(Icon avatar, String name) {
         JLabel label = new JLabel(name, avatar, SwingConstants.CENTER);
         label.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -152,15 +111,8 @@ public class ResultPanel extends JPanel {
         label.setForeground(Color.orange);
         label.setBackground(Color.BLACK);
         label.setOpaque(false);
-//        label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-
         return label;
     }
-
-
-
-
-
 
     public void updateScore(int newScoreOne, int newScoreTwo) {
         scoreLabel.setText(newScoreOne + " - " + newScoreTwo);
@@ -181,52 +133,30 @@ public class ResultPanel extends JPanel {
         }
     }
 
+    private boolean whoGetsToChoose() {
 
-    public void setRoundText(int index, String text) {
-        if (index < 0 || index >= roundLabels.size()) return;
-        roundLabels.get(index).setText(text);
-    }
-    public void markRoundAnswer(int round, String userAnswerP1, String userAnswerP2, Database.Question question) {
-        List<AnswerOption> options = question.getAnswerOptions();
-
-        for (int i = 0; i < options.size(); i++) {
-            JButton btn = playerOneButtons.get(round * 3 + i);
-            AnswerOption opt = options.get(i);
-
-            btn.setText(opt.getText());
-
-            if (opt.getCorrect()) {
-                btn.setBackground(Color.GREEN);
-            } else if (opt.getText().equals(userAnswerP1)) {
-                btn.setBackground(Color.RED);
-            } else {
-                btn.setBackground(Color.LIGHT_GRAY);
+        if (roundScores.size() < maxNumberOfRounds) {
+            if (user.getUsername().equalsIgnoreCase(playerOne.getUsername()) && roundScores.size() % 2 != 0) {
+                return true;
+            } else if (user.getUsername().equalsIgnoreCase(playerTwo.getUsername()) && roundScores.size() % 2 == 0) {
+                return true;
             }
         }
-
-        for (int i = 0; i < options.size(); i++) {
-            JButton btn = playerTwoButtons.get(round * 3 + i);
-            AnswerOption opt = options.get(i);
-
-            btn.setText(opt.getText());
-
-            if (opt.getCorrect()) {
-                btn.setBackground(Color.GREEN);
-            } else if (opt.getText().equals(userAnswerP2)) {
-                btn.setBackground(Color.RED);
-            } else {
-                btn.setBackground(Color.LIGHT_GRAY);
-            }
-        }
+        return false;
     }
+
+
     public void setNextRoundButton(boolean waiting) {
         bottomPanel.removeAll();
+        IO.println(user.getUsername() + " is waiting " + waiting);
 
         if (waiting) {
-            JLabel waitingLabel = new JLabel("Waiting for opponent");
+            JLabel waitingLabel = new JLabel("Waiting for opponent to choose category");
             waitingLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
             waitingLabel.setForeground(Color.BLACK);
             bottomPanel.add(waitingLabel);
+            bottomPanel.revalidate();
+            bottomPanel.repaint();
         } else {
 
             JPanel row = new JPanel (new FlowLayout(FlowLayout.CENTER,10,10));

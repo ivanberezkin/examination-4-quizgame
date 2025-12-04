@@ -101,6 +101,7 @@ public class GamePanel extends JPanel {
         answerB.setFocusable(false);
         answerC.setFocusable(false);
         answerD.setFocusable(false);
+        answerA.setPreferredSize(new Dimension(150, 150));
         newQuestion(question);
 
         ActionListener answerButtonListener = e -> {
@@ -146,15 +147,6 @@ public class GamePanel extends JPanel {
         questionArea.updateUI();
     }
 
-    private boolean nextQuestion() {
-//        if (questionsForRound.size() == 0) {
-//            IO.println("There are no questions to play.");
-//        } else {
-            Question temp = question;
-
-            return newQuestion(temp);
-//        }
-    }
 
     private boolean newQuestion(Question newQuestion) {
 //        Question newQuestion = db.getNewQuestion();

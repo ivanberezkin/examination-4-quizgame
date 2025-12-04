@@ -78,13 +78,15 @@ public class ClientProtocol {
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
-            case DUMMY -> {
-            }
-            case WAITING -> {
 
-                IO.println("MATCHMAKING:" + loggedInUser.getUsername() + " waiting for opponent.");
+            case REQUEST_NEW_ROUND -> {
+                if(message.getData() instanceof User user){
+                    client.sendMessage(new Message(MessageType.START_NEXT_ROUND, user));
+                }
+            }
+
+            case WAITING -> {
                 MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
-                    System.out.println("Matchmaking canceled!");
                 });
                 frame.setContentPane(matchmakingPanel);
                 frame.revalidate();
@@ -103,22 +105,18 @@ public class ClientProtocol {
                 });
 
             }
-            case GAME_START -> {
-
-                    //User user = (User) message.getData();
-                    // if (user != null) {
-                    MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
-                    });
-                    SwingUtilities.invokeLater(() -> {
-                        frame.setContentPane(matchmakingPanel);
-                        frame.revalidate();
-                        frame.repaint();
-                    });
-            }
-
-            case MATCHMAKING -> {
-                //Server skickar frågor i en Message_type question
-            }
+//            case GAME_START -> {
+//
+//                    //User user = (User) message.getData();
+//                    // if (user != null) {
+//                    MatchmakingPanel matchmakingPanel = new MatchmakingPanel(() -> {
+//                    });
+//                    SwingUtilities.invokeLater(() -> {
+//                        frame.setContentPane(matchmakingPanel);
+//                        frame.revalidate();
+//                        frame.repaint();
+//                    });
+//            }
 
             case QUESTION -> {
                 IO.println("Questions Received");
@@ -131,7 +129,7 @@ public class ClientProtocol {
                     });
                 }
             }
-                //TODO Se till att rätt input tas för ResultPanel.
+
             case RESULT_ROUND -> {
                 boolean waiting;
                 if (message.getData() instanceof List list) {
@@ -146,7 +144,7 @@ public class ClientProtocol {
                         GUI.ResultPanel resultPanel = new ResultPanel(roundScores, loggedInUser, client);
                         SwingUtilities.invokeLater(() -> {
                             frame.setContentPane(resultPanel);
-                            resultPanel.setNextRoundButton(false);
+//                            resultPanel.setNextRoundButton(false);
                             frame.revalidate();
                             frame.repaint();
                         });
