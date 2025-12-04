@@ -58,33 +58,42 @@ public class CategoryPanel extends JPanel {
         setName("CategoryPanel");
         setLayout(new BorderLayout());
         setBackground(new Color(30, 144, 255));
+        setForeground(Color.ORANGE);
+
 
 
         //Top Panel
         JPanel topPanel = new JPanel();
         topPanel.setOpaque(false);
         JLabel chooseCategoryLabel = new JLabel("Choose Category");
-        chooseCategoryLabel.setFont(new Font("Arial", Font.BOLD, 32));
+        chooseCategoryLabel.setFont(new Font("Montserrat", Font.BOLD, 32));
+        chooseCategoryLabel.setForeground(Color.ORANGE);
         topPanel.add(chooseCategoryLabel);
+        topPanel.setBackground(new Color(30, 144, 255));
         add(topPanel, BorderLayout.NORTH);
 
 
         // MID panel
         JPanel middleCategoryPanel = new JPanel();
         middleCategoryPanel.setLayout(new BorderLayout());
+        middleCategoryPanel.setBackground(new Color(30, 144, 255));
 
         JPanel chosenCategories = new JPanel();
+        chosenCategories.setBackground(new Color(30, 144, 255));
         chosenCategories.setLayout(new BorderLayout());
         JLabel chosenCategoriesLabel = new JLabel("Your chosen categories: ");
+        chosenCategoriesLabel.setForeground(Color.ORANGE);
         chosenCategoriesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        chosenCategoriesLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        chosenCategoriesLabel.setFont(new Font("Montserrat", Font.BOLD, 16));
         chosenCategories.add(chosenCategoriesLabel, BorderLayout.NORTH);
         middleCategoryPanel.add(chosenCategories, BorderLayout.SOUTH);
 
         chosenCategoriesButtons = new JPanel();
         chosenCategoriesButtons.setLayout(new GridLayout(1, 3, 10, 10));
+        chosenCategoriesButtons.setBackground(new Color(30, 144, 255));
         categoriesToChooseFrom = new JPanel();
         categoriesToChooseFrom.setLayout(new GridLayout(2, 4));
+        categoriesToChooseFrom.setBackground(new Color(30, 144, 255));
 
         listOfCategoriesFilename = readFromCategoriesFilenamse("resources/CategoriesPictures/categoriesFilenames");
         listOfAvailableCategories = createCategoryButtons(listOfCategoriesFilename);
@@ -98,6 +107,7 @@ public class CategoryPanel extends JPanel {
         JPanel buttonPanelBottom = new JPanel();
         buttonPanelBottom.setLayout(new GridLayout(1, 2, 30, 20));
         buttonPanelBottom.setBorder(new EmptyBorder(10, 10, 10, 10));
+        buttonPanelBottom.setBackground(new Color(30, 144, 255));
         JButton playButton = new JButton("Play");
         JButton backButton = new JButton("Back");
 
@@ -113,10 +123,9 @@ public class CategoryPanel extends JPanel {
                     }
                 }
                 Quizgame.shared.UserAndCategory startingParameters = new UserAndCategory(user, categoryToSend);
-                System.out.println(" - - - In CategoryPanel, message is sent");
                 client.sendMessage(new Message(MessageType.CHOOSING_CATEGORIES, startingParameters));
             } else{
-                JOptionPane.showMessageDialog(this, "Please choose atleast 1 category.");
+                JOptionPane.showMessageDialog(this, "Please choose at least 1 category.");
             }
         });
 
