@@ -49,19 +49,19 @@ public class GamePanel extends JPanel {
     private JFrame frame;
 
     public GamePanel(ClientBase client, Question question, User user, JFrame frame) {
-        System.out.println("GamePanel Constructor was reached");
         this.clientBase = client;
         this.question = question;
         this.questionsForRound = questionsForRound;
         this.user = user;
         this.frame = frame;
 
-        setBackground(Color.CYAN);
+        setBackground(new Color(30, 144, 255));
+        setForeground(Color.ORANGE);
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 
         //NORTH
-        northPanel.setBackground(Color.CYAN);
+        northPanel.setBackground(new Color(30, 144, 255));
         giveUpButton.setBorderPainted(false);
         giveUpButton.setContentAreaFilled(false);
         giveUpButton.setFocusPainted(false);
@@ -84,7 +84,7 @@ public class GamePanel extends JPanel {
 
         //CENTER
         add(questionPanel, BorderLayout.CENTER);
-        questionPanel.setBackground(Color.CYAN);
+        questionPanel.setBackground(new Color(30, 144, 255));
         questionPanel.add(questionArea);
 
         add(answerButtonsPanel, BorderLayout.SOUTH);
@@ -140,10 +140,12 @@ public class GamePanel extends JPanel {
     private void questionAreaSetText(String question, String category) {
         final String startOfHTML = "<html><div style='text-align: center; padding: 20px;'>";
         final String endOfHTML = "</div></html>";
-        String categoryText = "<span style = 'color: red;'" + category + "'>" + category + "</span><br><br>";
+        String categoryText = "<span style = 'color: orange;'" + category + "'>" + category + "</span><br><br>";
 
         questionArea.setText(startOfHTML + categoryText + question + endOfHTML);
         questionArea.setHorizontalAlignment(JLabel.CENTER);
+        questionArea.setFont(new Font("Montserrat", Font.BOLD, 14));
+        questionArea.setForeground(Color.orange);
         questionArea.updateUI();
     }
 

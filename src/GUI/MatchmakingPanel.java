@@ -15,8 +15,8 @@ public class MatchmakingPanel extends JPanel {
         setBackground(new Color(30, 144, 255));
 
         JLabel title = new JLabel("Waiting for opponent...", SwingConstants.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 32));
-        title.setForeground(Color.WHITE);
+        title.setFont(new Font("Montserrat", Font.BOLD, 32));
+        title.setForeground(Color.ORANGE);
         add(title, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel();
@@ -24,12 +24,12 @@ public class MatchmakingPanel extends JPanel {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
         JLabel loading = new JLabel("Waiting...", SwingConstants.CENTER);
-        loading.setFont(new Font("Arial", Font.BOLD, 25));
+        loading.setFont(new Font("Montserrat", Font.BOLD, 25));
         loading.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         timerLabel = new JLabel("Time elapsed: 0 seconds", SwingConstants.CENTER);
-        timerLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        timerLabel.setForeground(Color.WHITE);
+        timerLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
+        timerLabel.setForeground(Color.ORANGE);
         timerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         centerPanel.add(Box.createVerticalStrut(50));

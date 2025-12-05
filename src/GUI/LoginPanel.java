@@ -35,7 +35,7 @@ public class LoginPanel extends JPanel {
         backgroundImage.setLayout(new BorderLayout());
         backgroundPanel.add(backgroundImage, BorderLayout.CENTER);
 
-        welcomeLabel.setFont(new Font("Times New Roman", Font.BOLD, 30));
+        welcomeLabel.setFont(new Font("Montserrat", Font.BOLD, 30));
         welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
         welcomeLabel.setForeground(Color.BLUE);
         backgroundImage.add(welcomeLabel, BorderLayout.NORTH);

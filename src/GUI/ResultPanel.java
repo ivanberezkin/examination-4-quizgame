@@ -393,15 +393,21 @@ public class ResultPanel extends JPanel {
             resPanel.setOpaque(false);
             resPanel.setBackground(new Color(30, 144, 255));
             resPanel.setPreferredSize(new Dimension(85, 85));
-            resPanel.setMaximumSize(new Dimension(85, 85));
+//            resPanel.setMaximumSize(new Dimension(85, 85));
             resPanel.setMinimumSize(new Dimension(85, 85));
 
             Icon avatar = gameWinner.getAvatar();
+            JPanel wrapperWinnerAvatar = new JPanel();
+            wrapperWinnerAvatar.setBackground(new Color(30, 144, 255));
             JLabel winnerAvatar = new JLabel(avatar);
-            winnerAvatar.setPreferredSize(new Dimension(85, 85));
-            winnerAvatar.setMaximumSize(new Dimension(85, 85));
-            winnerAvatar.setMinimumSize(new Dimension(85, 85));
+            winnerAvatar.setPreferredSize(new Dimension(avatar.getIconWidth(), avatar.getIconHeight()));
+            winnerAvatar.setMinimumSize(new Dimension(avatar.getIconWidth(), avatar.getIconHeight()));
+            winnerAvatar.setMaximumSize(new Dimension(avatar.getIconWidth(), avatar.getIconHeight()));
+//            winnerAvatar.setPreferredSize(new Dimension(85, 85));
+//            winnerAvatar.setMaximumSize(new Dimension(85, 85));
+//            winnerAvatar.setMinimumSize(new Dimension(85, 85));
             winnerAvatar.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 3));
+            wrapperWinnerAvatar.add(winnerAvatar);
             JLabel winnerName = new JLabel(gameWinner.getUsername());
             winnerName.setFont(new Font("Montserrat", Font.BOLD, 24));
             winnerName.setHorizontalAlignment(0);
@@ -409,10 +415,10 @@ public class ResultPanel extends JPanel {
             JPanel winnerPanel = new JPanel();
             winnerPanel.setBackground(new Color(30, 144, 255));
             winnerPanel.setLayout(new BorderLayout());
-            winnerPanel.setPreferredSize(new Dimension(75, 75));
-            winnerPanel.setMaximumSize(new Dimension(75, 75));
-            winnerPanel.setMinimumSize(new Dimension(75, 75));
-            winnerPanel.add(winnerAvatar, BorderLayout.CENTER);
+//            winnerPanel.setPreferredSize(new Dimension(75, 75));
+//            winnerPanel.setMaximumSize(new Dimension(75, 75));
+//            winnerPanel.setMinimumSize(new Dimension(75, 75));
+            winnerPanel.add(wrapperWinnerAvatar, BorderLayout.CENTER);
             winnerPanel.add(winnerName, BorderLayout.SOUTH);
 
             resPanel.add(Box.createHorizontalGlue());
