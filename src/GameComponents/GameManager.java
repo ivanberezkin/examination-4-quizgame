@@ -31,8 +31,9 @@ public class GameManager implements Serializable {
             for (Game g : activeGames) {
                 if (g.getNumberOfPlayers() == 1) {
                     g.addPlayer(player);
+                    return g;
                 }
-                return g;
+
             }
         }
         return null;
@@ -41,16 +42,24 @@ public class GameManager implements Serializable {
     //Här startas ett nytt spel och den kollar ifall det är en eller två spelare.
     public void startGame(User player, Question.Category category) {
         boolean newGame = false;
+        Game joinableGame = null;
         if (findActiveGame(player) == null) {
             newGame = true;
         }
-            this.category = category;
+        IO.println("Is newgame true" + newGame);
+        this.category = category;
             if (newGame) {
                 if (!activeGames.isEmpty()) {
                     for (Game g : activeGames) {
                         if (g.getNumberOfPlayers() == 1) {
-                            g.addPlayer(player);
+                            joinableGame = g;
+                            break;
                         }
+                    }
+                    if(joinableGame != null){
+                        joinableGame.addPlayer(player);
+                    } else{
+                        createNewGame(player, category);
                     }
                 } else {
                     createNewGame(player, category);
@@ -97,7 +106,7 @@ public class GameManager implements Serializable {
         ServerProtocol.processInput(new Message(MessageType.CATEGORY_REQUEST, player));
     }
 
-    private static Game findActiveGame(User user) {
+    public static Game findActiveGame(User user) {
         for (Game g : getActiveGames()) {
             for (User player : g.getPlayers()) {
                 if (player.getUsername().equals(user.getUsername())) {

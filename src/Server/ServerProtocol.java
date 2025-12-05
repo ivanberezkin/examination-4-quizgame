@@ -82,7 +82,8 @@ public class ServerProtocol {
                 if (message.getData() instanceof Quizgame.shared.UserAndCategory startingParameters) {
                     Question.Category category = startingParameters.getCategory();
                     User user = startingParameters.getUser();
-                    Game game = gameManager.checkAvailableGames(user);
+//                    Game game = gameManager.checkAvailableGames(user);
+                    Game game = GameManager.findActiveGame(user);
                     gameManager.startGame(user, category);
 
                     User opponent;
